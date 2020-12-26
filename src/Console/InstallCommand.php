@@ -1,0 +1,202 @@
+<?php
+
+namespace JoelButcher\Socialstream\Console;
+
+use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
+use Laravel\Jetstream\Jetstream;
+
+class InstallCommand extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'socialstream:install';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Install the Socialstream components and resources';
+
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        // Check if Jetstream has been installed.
+        if (! file_exists(config_path('jetstream.php'))) {
+            $this->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
+
+            if ($this->ask('Do you want to install Jetstream? (yes/no)', 'no') !== 'yes') {
+                return 0;
+            }
+
+            $stack = $this->choice('Which Jetstream stack do you prefer', ['livewire', 'inertia']);
+
+            $teams = $this->ask('Will your application use teams? (yes/no)', 'no');
+
+            $this->callSilent('jetstream:install', ['stack' => $stack, '--teams' => $teams === 'yes']);
+        }
+
+        // Publish...
+        $this->callSilent('vendor:publish', ['--tag' => 'socialstream-config', '--force' => true]);
+        $this->callSilent('vendor:publish', ['--tag' => 'socialstream-migrations', '--force' => true]);
+
+        if (config('jetstream.stack') === 'livewire') {
+            $this->installLivewireStack();
+        } elseif (config('jetstream.stack') === 'inertia') {
+            $this->installInertiaStack();
+        }
+
+        if (Jetstream::hasTeamFeatures()) {
+            $this->ensureTeamsCompatibility();
+        }
+
+        $this->line('');
+        $this->info('Socialstream installed successfully.');
+        $this->comment('Please execute "npm install && npm run dev" to build your assets.');
+
+        return 0;
+    }
+
+    /**
+     * Install the Livewire stack into the application.
+     *
+     * @return void
+     */
+    protected function installLivewireStack()
+    {
+        // Directories...
+        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
+
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
+
+        // Service Providers...
+        copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
+        $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
+
+        // Models...
+        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
+        copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
+
+        // Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
+
+        copy(__DIR__.'/../../stubs/livewire/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
+        copy(__DIR__.'/../../stubs/livewire/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
+
+        // Auth views...
+        copy(__DIR__.'/../../stubs/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
+        copy(__DIR__.'/../../stubs/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
+
+        // Profile views...
+        copy(__DIR__.'/../../stubs/livewire/resources/views/profile/connected-accounts-form.blade.php', resource_path('views/profile/connected-accounts-form.blade.php'));
+        copy(__DIR__.'/../../stubs/livewire/resources/views/profile/set-password-form.blade.php', resource_path('views/profile/set-password-form.blade.php'));
+        copy(__DIR__.'/../../stubs/livewire/resources/views/profile/show.blade.php', resource_path('views/profile/show.blade.php'));
+
+        $this->replaceInFile("// 'github',", "'github'", config_path('socialstream.php'));
+    }
+
+    /**
+     * Install the Inertia stack into the application.
+     *
+     * @return void
+     */
+    protected function installInertiaStack()
+    {
+        // Directories...
+        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('js/ProviderIcons'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
+
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
+
+        // Service Providers...
+        copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
+        $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
+
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialite', resource_path('js/Socialite'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialstream', resource_path('js/Socialstream'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/ProviderIcons', resource_path('js/ProviderIcons'));
+
+        // Models...
+        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
+        copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
+
+        // Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
+
+        copy(__DIR__.'/../../stubs/resources/views/components/socialstream-providers.blade.php', resource_path('views/components/socialstream-providers.blade.php'));
+
+        // Auth views...
+        copy(__DIR__.'/../../stubs/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
+        copy(__DIR__.'/../../stubs/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
+
+        // Profile views...
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/ConnectedAccountsForm.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/SetPasswordForm.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
+
+        $this->replaceInFile("// 'github',", "'github'", config_path('socialstream.php'));
+    }
+
+    /**
+     * Ensure the application is ready for Jetstream's "teams" feature.
+     *
+     * @return void
+     */
+    protected function ensureTeamsCompatibility()
+    {
+        // User model...
+        copy(__DIR__.'/../../stubs/app/Models/UserWithTeams.php', app_path('Models/User.php'));
+
+        // Create user action...
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+    }
+
+    /**
+     * Install the Jetstream service providers in the application configuration file.
+     *
+     * @param  string  $after
+     * @param  string  $name
+     * @return void
+     */
+    protected function installServiceProviderAfter($after, $name)
+    {
+        if (! Str::contains($appConfig = file_get_contents(config_path('app.php')), 'App\\Providers\\'.$name.'::class')) {
+            file_put_contents(config_path('app.php'), str_replace(
+                'App\\Providers\\'.$after.'::class,',
+                'App\\Providers\\'.$after.'::class,'.PHP_EOL.'        App\\Providers\\'.$name.'::class,',
+                $appConfig
+            ));
+        }
+    }
+
+    /**
+     * Replace a given string within a given file.
+     *
+     * @param  string  $search
+     * @param  string  $replace
+     * @param  string  $path
+     * @return void
+     */
+    protected function replaceInFile($search, $replace, $path)
+    {
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+    }
+}
