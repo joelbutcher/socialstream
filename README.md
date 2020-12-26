@@ -31,7 +31,7 @@ composer require joelbutcher/socialstream
 php artisan socialstream:install
 ```
 
-The `socialstream:install` command will overwrite the Jetstream publushed files which are required for Socialstream to work. 
+The `socialstream:install` command will overwrite the Jetstream published files which are required for Socialstream to work. 
 
 > Note: If you don't have Laravel Jetstream installed, the above command will walk you through the steps required to install it.
 
