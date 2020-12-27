@@ -5,7 +5,7 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v0.0.3...1.x)
 
-## [v0.0.2](https://github.com/joelbutcher/socialstream/compare/v0.0.2...v0.0.3)
+## [v0.0.3](https://github.com/joelbutcher/socialstream/compare/v0.0.2...v0.0.3)
 
 ### Changed
 - Added an error message to the connected accounts components (#3)
