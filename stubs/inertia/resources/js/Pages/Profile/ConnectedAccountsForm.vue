@@ -30,7 +30,7 @@
                         </template>
                     </connected-account>
 
-                    <connected-account v-else-if="$page.socialstream.show" :provider="provider">
+                    <connected-account v-else :provider="provider">
                         <template #action>
                             <action-link :href="route('oauth.redirect', {provider})">
                                 Connect
