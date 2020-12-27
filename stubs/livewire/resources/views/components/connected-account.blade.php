@@ -44,9 +44,9 @@
         </div>
     </div>
 
-    @if(Session::has($provider.'connect_error'))
+    @error($provider.'_connect_error')
         <div class="text-sm font-semibold text-red-500 px-3 mt-2">
-            {{ Session::get($provider.'connect_error') }}
+            {{ $message }}
         </div>
-    @endif
+    @enderror
 </div>

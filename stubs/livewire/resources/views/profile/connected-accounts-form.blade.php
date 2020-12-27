@@ -22,7 +22,7 @@
 
         <div class="mt-5 space-y-6">
             @foreach ($this->providers as $provider)
-                @if ($account = $this->accounts->contains('provider_name', $provider))
+                @if ($account = $this->accounts->where('provider_name', $provider)->first())
                     <x-connected-account provider="{{ $account->provider_name }}" created-at="{{ $account->created_at }}">
 
                         <x-slot name="action">

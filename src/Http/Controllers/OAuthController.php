@@ -98,10 +98,10 @@ class OAuthController extends Controller
         // Authenticated...
         if (! is_null($user = Auth::user())) {
             if ($account && $account->user_id !== $user->id) {
-                return redirect()->route('profile.show')->with(
-                    $provider.'connect_error',
+                return redirect()->route('profile.show')->withErrors([
+                    $provider.'_connect_error',
                     __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider])
-                );
+                ]);
             }
 
             if (! $account) {
@@ -110,10 +110,10 @@ class OAuthController extends Controller
                 return redirect()->route('profile.show');
             }
 
-            return redirect()->route('profile.show')->with(
-                $provider.'connect_error',
+            return redirect()->route('profile.show')->withErrors([
+                $provider.'_connect_error',
                 __('This :Provider sign in account is already associated with your user.', ['provider' => $provider])
-            );
+            ]);
         }
 
         // Registration...
