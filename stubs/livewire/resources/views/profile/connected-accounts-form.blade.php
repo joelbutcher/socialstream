@@ -21,8 +21,8 @@
         </div>
 
         <div class="mt-5 space-y-6">
-            @foreach ($this->providers as $provider => $enabled)
-                @if ($account = $this->accounts->where('provider_name', $provider)->first())
+            @foreach ($this->providers as $provider)
+                @if ($account = $this->accounts->contains('provider_name', $provider))
                     <x-connected-account provider="{{ $account->provider_name }}" created-at="{{ $account->created_at }}">
 
                         <x-slot name="action">
@@ -34,7 +34,7 @@
                         </x-slot>
 
                     </x-connected-account>
-                @elseif ($enabled)
+                @else
                     <x-connected-account provider="{{ $provider }}" created-at="Not connected">
                         <x-slot name="action">
                             <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
