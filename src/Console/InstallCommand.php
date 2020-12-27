@@ -40,22 +40,26 @@ class InstallCommand extends Command
 
             $stack = $this->choice('Which Jetstream stack do you prefer', ['livewire', 'inertia']);
 
-            $teams = $this->ask('Will your application use teams? (yes/no)', 'no');
+            $useTeams = $this->ask('Will your application use teams? (yes/no)', 'no') === 'yes';
 
-            $this->callSilent('jetstream:install', ['stack' => $stack, '--teams' => $teams === 'yes']);
+            $this->callSilent('jetstream:install', ['stack' => $stack, '--teams' => $useTeams]);
+        } else {
+            $stack = config('jetstream.stack');
+
+            $useTeams = Jetstream::hasTeamFeatures();
         }
 
         // Publish...
         $this->callSilent('vendor:publish', ['--tag' => 'socialstream-config', '--force' => true]);
         $this->callSilent('vendor:publish', ['--tag' => 'socialstream-migrations', '--force' => true]);
 
-        if (config('jetstream.stack') === 'livewire') {
+        if ($stack === 'livewire') {
             $this->installLivewireStack();
-        } elseif (config('jetstream.stack') === 'inertia') {
+        } elseif ($stack === 'inertia') {
             $this->installInertiaStack();
         }
 
-        if (Jetstream::hasTeamFeatures()) {
+        if ($useTeams) {
             $this->ensureTeamsCompatibility();
         }
 
@@ -120,7 +124,6 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/ProviderIcons'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
