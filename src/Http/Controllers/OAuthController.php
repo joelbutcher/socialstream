@@ -5,15 +5,15 @@ namespace JoelButcher\Socialstream\Http\Controllers;
 use App\Models\ConnectedAccount;
 use App\Models\User;
 use Illuminate\Contracts\Auth\StatefulGuard;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
+use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class OAuthController extends Controller
 {
@@ -44,22 +44,6 @@ class OAuthController extends Controller
     }
 
     /**
-     * Sets the user's password.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Laravel\Jetstream\Contracts\SetsUserPasswords  $updater
-     * @return \Illuminate\Http\Response
-     */
-    public function setPassword(Request $request, SetsUserPasswords $setter)
-    {
-        $setter->set($request->user(), $request->all());
-
-        return $request->wantsJson()
-                    ? new JsonResponse('', 200)
-                    : back()->with('status', 'password-set');
-    }
-
-    /**
      * Get the redirect for the given Socialite provider.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -80,7 +64,7 @@ class OAuthController extends Controller
      * @param  string  $provider
      * @return \Illuminate\Routing\Pipeline
      */
-    public function handleProviderCallback(Request $request, string $provider)
+    public function handleProviderCallback(Request $request, string $provider, HandlesInvalidState $handler)
     {
         if ($request->has('error')) {
             return Auth::check()
@@ -88,7 +72,11 @@ class OAuthController extends Controller
                 : redirect()->route('register')->withErrors($request->error_description);
         }
 
-        $providerAccount = Socialite::driver($provider)->user();
+        try {
+            $providerAccount = Socialite::driver($provider)->user();
+        } catch (InvalidStateException $e) {
+            $handler->handle($e);
+        }
 
         $account = ConnectedAccount::firstWhere([
             'provider_id' => $providerAccount->getId(),

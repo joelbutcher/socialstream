@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream;
 
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 
 class Socialstream
@@ -106,5 +107,16 @@ class Socialstream
     public static function setUserPasswordsUsing(string $callback)
     {
         return app()->singleton(SetsUserPasswords::class, $callback);
+    }
+
+    /**
+     * Register a class / callback that should be used to set user passwords.
+     *
+     * @param  string  $callback
+     * @return void
+     */
+    public static function handlesInvalidStateUsing(string $callback)
+    {
+        return app()->singleton(HandlesInvalidState::class, $callback);
     }
 }
