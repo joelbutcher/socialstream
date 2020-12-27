@@ -35,6 +35,16 @@ The `socialstream:install` command will overwrite the Jetstream published files 
 
 > Note: If you don't have Laravel Jetstream installed, the above command will walk you through the steps required to install it.
 
+### Invalid State
+
+To handle instances where Socialite throws an `InvalidStateException` a dedicated `HandleInvalidState` action is made available to you when you first install Socialstream. You are free to modify or extend this action according to your needs. 
+
+Alternatively, you may write your own action to handle the exception. To do so, you'll need to implement `JoelButcher\Socialstream\Contracts\HandlesInvalidState` and update the following line in `App\Providers\SocialstreamServiceProvider`
+
+```php
+    Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
+```
+
 ## Socialite Providers
 
 If you wish to use the community driven [socialiteproviders](https://socialiteproviders.com) package with Socialstream, you may do so by following their documentation on installing the package into a Laravel project. There are a few configuration steps you will need to go through first.
