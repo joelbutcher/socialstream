@@ -8,7 +8,7 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 ## [v0.0.2](https://github.com/joelbutcher/socialstream/compare/v0.0.2...v0.0.3)
 
 ### Changed
-- Added an error mssage to the connected accounts components (#3)
+- Added an error message to the connected accounts components (#3)
 - Added an exception handler for `Laravel\Socialite\Two\InvalidStateException` (#3)
 
 ## [v0.0.2](https://github.com/joelbutcher/socialstream/compare/v0.0.1...v0.0.2)
