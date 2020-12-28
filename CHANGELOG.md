@@ -5,23 +5,23 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v0.0.3...1.x)
 
-## [v0.0.4](https://github.com/joelbutcher/socialstream/compare/v0.0.3...v0.0.4)
+## [v0.0.4 (2020-12-28)](https://github.com/joelbutcher/socialstream/compare/v0.0.3...v0.0.4)
 
 ### Changed
 - Fixed namesace of `HandleInvalidState` action
 
-## [v0.0.3](https://github.com/joelbutcher/socialstream/compare/v0.0.2...v0.0.3)
+## [v0.0.3 (2020-12-27)](https://github.com/joelbutcher/socialstream/compare/v0.0.2...v0.0.3)
 
 ### Changed
 - Added an error message to the connected accounts components (#3)
 - Added an exception handler for `Laravel\Socialite\Two\InvalidStateException` (#3)
 
-## [v0.0.2](https://github.com/joelbutcher/socialstream/compare/v0.0.1...v0.0.2)
+## [v0.0.2 (2020-12-27)](https://github.com/joelbutcher/socialstream/compare/v0.0.1...v0.0.2)
 
 ### Changed
 - Fixed README typo (#1)
 - Removed .DS_Store (#2)
 
-## v0.0.1
+## v0.0.1 (2020-12-26)
 
 Initial release. 
