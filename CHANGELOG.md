@@ -5,6 +5,11 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v0.0.3...1.x)
 
+## [v0.0.4](https://github.com/joelbutcher/socialstream/compare/v0.0.3...v0.0.4)
+
+### Changed
+- Fixed namesace of `HandleInvalidState` action
+
 ## [v0.0.3](https://github.com/joelbutcher/socialstream/compare/v0.0.2...v0.0.3)
 
 ### Changed
