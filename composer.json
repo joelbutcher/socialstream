@@ -38,6 +38,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-master": "2.x-dev"
+        },
         "laravel": {
             "providers": [
                 "JoelButcher\\Socialstream\\SocialstreamServiceProvider"
