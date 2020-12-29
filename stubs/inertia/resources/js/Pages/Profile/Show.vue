@@ -42,7 +42,7 @@
                     <logout-other-browser-sessions-form  :sessions="sessions" class="mt-10 sm:mt-0" />
                 </div>
 
-                <div v-if="$page.socialstream.hasPassword != null">
+                <div v-if="$page.socialstream.hasPassword">
                     <jet-section-border />
 
                     <delete-user-form class="mt-10 sm:mt-0" />
