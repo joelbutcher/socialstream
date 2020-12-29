@@ -10,7 +10,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -51,8 +50,12 @@ class OAuthController extends Controller
      * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
      * @return void
      */
-    public function __construct(StatefulGuard $guard, CreatesUserFromProvider $createsUser, CreatesConnectedAccounts $createsConnectedAccounts, HandleInvalidState $invalidStateHandler)
-    {
+    public function __construct(
+        StatefulGuard $guard,
+        CreatesUserFromProvider $createsUser,
+        CreatesConnectedAccounts $createsConnectedAccounts,
+        HandleInvalidState $invalidStateHandler
+    ) {
         $this->guard = $guard;
         $this->createsUser = $createsUser;
         $this->createsConnectedAccounts = $createsConnectedAccounts;

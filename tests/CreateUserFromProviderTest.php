@@ -24,6 +24,7 @@ class CreateUserFromProviderTest extends TestCase
         $user = $action->create('github', $providerUser);
 
         $this->assertEquals($providerUser->email, $user->email);
+        $this->assertCount(1, $user->connectedAccounts);
     }
 
     public function test_user_can_be_created_from_o_auth_2_provider()
@@ -41,6 +42,7 @@ class CreateUserFromProviderTest extends TestCase
         $user = $action->create('github', $providerUser);
 
         $this->assertEquals($providerUser->email, $user->email);
+        $this->assertCount(1, $user->connectedAccounts);
     }
 
     protected function migrate()
