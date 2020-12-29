@@ -128,7 +128,11 @@ class OAuthController extends Controller
                 $providerAccount
             );
 
-            $this->guard->login($account->user);
+            $this->guard->login($user);
+
+            $user->forceFill([
+                'current_connected_account_id' => $account->id,
+            ]);
 
             return redirect(config('fortify.home'));
         }
@@ -140,6 +144,10 @@ class OAuthController extends Controller
         }
 
         $this->guard->login($account->user);
+
+        $account->user->forceFill([
+            'current_connected_account_id' => $account->id,
+        ]);
 
         return redirect(config('fortify.home'));
     }
