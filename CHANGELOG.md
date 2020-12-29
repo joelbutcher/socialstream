@@ -5,6 +5,8 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v0.0.3...1.x)
 
+## [v1.0.0 (2020-12-28)](https://github.com/joelbutcher/socialstream/compare/v0.0.4...v1.0.0)
+
 ## [v0.0.4 (2020-12-28)](https://github.com/joelbutcher/socialstream/compare/v0.0.3...v0.0.4)
 
 ### Fixed
