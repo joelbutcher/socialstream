@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Actions\Socialstream\CreateConnectedAccount;
 use App\Actions\Socialstream\CreateUserFromProvider;
 use App\Actions\Socialstream\HandleInvalidState;
 use App\Actions\Socialstream\SetUserPassword;
@@ -28,6 +29,7 @@ class SocialstreamServiceProvider extends ServiceProvider
     public function boot()
     {
         Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
+        Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
         Socialstream::setUserPasswordsUsing(SetUserPassword::class);
         Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
     }

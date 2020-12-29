@@ -2,6 +2,7 @@
 
 namespace JoelButcher\Socialstream;
 
+use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
@@ -96,6 +97,17 @@ class Socialstream
     public static function createUsersFromProviderUsing(string $class)
     {
         return app()->singleton(CreatesUserFromProvider::class, $class);
+    }
+
+    /**
+     * Register a class / callback that should be used to create connected accounts
+     *
+     * @param  string  $class
+     * @return void
+     */
+    public static function createConnectedAccountsUsing(string $class)
+    {
+        return app()->singleton(CreatesConnectedAccounts::class, $class);
     }
 
     /**

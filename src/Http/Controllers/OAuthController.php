@@ -2,16 +2,16 @@
 
 namespace JoelButcher\Socialstream\Http\Controllers;
 
+use App\Actions\Socialstream\HandleInvalidState;
 use App\Models\ConnectedAccount;
-use App\Models\User;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
@@ -32,15 +32,31 @@ class OAuthController extends Controller
     protected $createsUser;
 
     /**
+     * The creates connected accounts implementation.
+     *
+     * @var  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
+     */
+    protected $createsConnectedAccounts;
+
+    /**
+     * The handler for Socialite's InvalidStateException
+     *
+     * @var  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
+     */
+    protected $invalidStateHandler;
+
+    /**
      * Create a new controller instance.
      *
      * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
      * @return void
      */
-    public function __construct(StatefulGuard $guard, CreatesUserFromProvider $createsUser)
+    public function __construct(StatefulGuard $guard, CreatesUserFromProvider $createsUser, CreatesConnectedAccounts $createsConnectedAccounts, HandleInvalidState $invalidStateHandler)
     {
         $this->guard = $guard;
         $this->createsUser = $createsUser;
+        $this->createsConnectedAccounts = $createsConnectedAccounts;
+        $this->invalidStateHandler = $invalidStateHandler;
     }
 
     /**
@@ -64,7 +80,7 @@ class OAuthController extends Controller
      * @param  string  $provider
      * @return \Illuminate\Routing\Pipeline
      */
-    public function handleProviderCallback(Request $request, string $provider, HandlesInvalidState $handler)
+    public function handleProviderCallback(Request $request, string $provider)
     {
         if ($request->has('error')) {
             return Auth::check()
@@ -75,7 +91,7 @@ class OAuthController extends Controller
         try {
             $providerAccount = Socialite::driver($provider)->user();
         } catch (InvalidStateException $e) {
-            $handler->handle($e);
+            $this->invalidStateHandler->handle($e);
         }
 
         $account = ConnectedAccount::firstWhere([
@@ -92,7 +108,7 @@ class OAuthController extends Controller
             }
 
             if (! $account) {
-                $this->createProviderForUser($user, $provider, $providerAccount);
+                $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
 
                 return redirect()->route('profile.show');
             }
@@ -122,17 +138,9 @@ class OAuthController extends Controller
                 );
             }
 
-            $account = $this->createProviderForUser(
-                $user = $this->createsUser->create($provider, $providerAccount),
-                $provider,
-                $providerAccount
-            );
+            $user = $this->createsUser->create($provider, $providerAccount);
 
             $this->guard->login($user);
-
-            $user->forceFill([
-                'current_connected_account_id' => $account->id,
-            ]);
 
             return redirect(config('fortify.home'));
         }
@@ -150,24 +158,5 @@ class OAuthController extends Controller
         ]);
 
         return redirect(config('fortify.home'));
-    }
-
-    /**
-     * Authenticate the user via Socialite.
-     *
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\Contracts\User  $providerAccount
-     * @return \Laravel\Socialite\Contracts\User
-     */
-    protected function createProviderForUser(User $user, string $provider, SocialiteUserContract $providerAccount)
-    {
-        return $user->connectedAccounts()->create([
-            'provider_name' => strtolower($provider),
-            'provider_id' => $providerAccount->getId(),
-            'token' => $providerAccount->token,
-            'secret' => $providerAccount->tokenSecret ?? null,
-            'refresh_token' => $providerAccount->refreshToken ?? null,
-            'expires_at' => $providerAccount->expiresAt ?? null,
-        ]);
     }
 }
