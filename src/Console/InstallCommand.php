@@ -78,6 +78,7 @@ class InstallCommand extends Command
     protected function installLivewireStack()
     {
         // Directories...
+        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
@@ -92,6 +93,9 @@ class InstallCommand extends Command
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
+
+        // Jetstream Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
 
         // Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
@@ -122,6 +126,7 @@ class InstallCommand extends Command
     protected function installInertiaStack()
     {
         // Directories...
+        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/ProviderIcons'));
@@ -141,6 +146,9 @@ class InstallCommand extends Command
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
+
+        // Jetstream Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
 
         // Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
@@ -172,7 +180,10 @@ class InstallCommand extends Command
         // User model...
         copy(__DIR__.'/../../stubs/app/Models/UserWithTeams.php', app_path('Models/User.php'));
 
-        // Create user action...
+        // Jetstream Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', app_path('Actions/Jetstream/DeleteUser.php'));
+
+        // Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
     }
 
