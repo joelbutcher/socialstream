@@ -3,7 +3,12 @@
 
 This changelog follows [the Keep a Changelog standard](https://keepachangelog.com).
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v0.0.3...1.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v1.0.0...1.x)
+
+## [v1.0.1 (2020-12-29)](https://github.com/joelbutcher/socialstream/compare/v1.0.0...v1.0.1)
+
+### Fixed
+- Fixed `Show.vue` showing the delete account form if a password hasn't been set.
 
 ## [v1.0.0 (2020-12-28)](https://github.com/joelbutcher/socialstream/compare/v0.0.4...v1.0.0)
 
