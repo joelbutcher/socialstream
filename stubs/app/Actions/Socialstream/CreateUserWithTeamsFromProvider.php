@@ -19,16 +19,40 @@ class CreateUserFromProvider implements CreatesUserFromProvider
      */
     public function create(string $provider, ProviderUserContract $providerUser)
     {
-        return DB::transaction(function () use ($providerUser) {
+        return DB::transaction(function () use ($provider, $providerUser) {
             return tap(User::create([
                 'name' => $providerUser->getName(),
                 'email' => $providerUser->getEmail(),
-            ]), function (User $user) {
+            ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
+
+                $user->switchConnectedAccount(
+                    $this->createConnectedAccount($user, $provider, $providerUser)
+                );
 
                 $this->createTeam($user);
             });
         });
+    }
+
+    /**
+     * Create a connected account for the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $provider
+     * @param  \Laravel\Socialite\Contracts\User  $providerUser
+     * @return \JoelButcher\Socialstream\ConnectedAccount
+     */
+    protected function createConnectedAccount(User $user, string $provider, ProviderUserContract $providerUser)
+    {
+        return $user->connectedAccounts()->create([
+            'provider_name' => strtolower($provider),
+            'provider_id' => $providerUser->getId(),
+            'token' => $providerUser->token,
+            'secret' => $providerUser->tokenSecret ?? null,
+            'refresh_token' => $providerUser->refreshToken ?? null,
+            'expires_at' => $providerUser->expiresAt ?? null,
+        ]);
     }
 
     /**
