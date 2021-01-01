@@ -16,16 +16,19 @@ class ShareInertiaData
      */
     public function handle($request, $next)
     {
-        Inertia::share(array_filter([
-            'socialstream' => function () use ($request) {
-                return [
-                    'show' => Socialstream::show(),
-                    'providers' => Socialstream::providers(),
-                    'hasPassword' => ! is_null($request->user()->password),
-                    'connectedAccounts' => $request->user()->connectedAccounts,
-                ];
-            },
-        ]));
+        $user = $request->user();
+        if ($user) {
+            Inertia::share(array_filter([
+                'socialstream' => function () use ($user) {
+                    return [
+                        'show' => Socialstream::show(),
+                        'providers' => Socialstream::providers(),
+                        'hasPassword' =>  !is_null($user->password),
+                        'connectedAccounts' => $user->connectedAccounts,
+                    ];
+                },
+            ]));
+        }
 
         return $next($request);
     }
