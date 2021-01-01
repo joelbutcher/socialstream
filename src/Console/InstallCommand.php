@@ -101,7 +101,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
-        
+
         // Auth views...
         copy(__DIR__.'/../../stubs/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
         copy(__DIR__.'/../../stubs/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
