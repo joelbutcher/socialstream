@@ -1,4 +1,3 @@
-php:
-  preset: laravel
-  disabled:
-    - no_unused_imports
+preset: laravel
+disabled:
+  - no_unused_imports
