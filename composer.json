@@ -16,7 +16,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "illuminate/support": "^8.0",
-        "laravel/jetstream": "^1.0|^2.0",
+        "laravel/jetstream": "dev-master",
         "laravel/socialite": "^5.0"
     },
     "require-dev": {
