@@ -27,7 +27,6 @@ class ShareInertiaData
                 ];
             },
         ]));
-        
         return $next($request);
     }
 }
