@@ -100,7 +100,7 @@ class Socialstream
     }
 
     /**
-     * Register a class / callback that should be used to create connected accounts
+     * Register a class / callback that should be used to create connected accounts.
      *
      * @param  string  $class
      * @return void

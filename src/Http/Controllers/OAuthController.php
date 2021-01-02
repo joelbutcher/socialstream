@@ -38,7 +38,7 @@ class OAuthController extends Controller
     protected $createsConnectedAccounts;
 
     /**
-     * The handler for Socialite's InvalidStateException
+     * The handler for Socialite's InvalidStateException.
      *
      * @var  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
      */
