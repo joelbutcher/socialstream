@@ -22,7 +22,7 @@ class ShareInertiaData
                     'show' => Socialstream::show(),
                     'providers' => Socialstream::providers(),
                     'hasPassword' => $request->user() && ! is_null($request->user()->password),
-                    'connectedAccounts' => $request->user() && $request->user()->connectedAccounts,
+                    'connectedAccounts' => $request->user() ? $request->user()->connectedAccounts : [],
                 ];
             },
         ]));
