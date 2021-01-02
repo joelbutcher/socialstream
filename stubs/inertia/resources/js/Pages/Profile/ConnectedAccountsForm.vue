@@ -128,16 +128,6 @@
                 return null;
             },
 
-            getAccountForProvider(provider) {
-                const account = this.$page.socialstream.connectedAccounts.filter(account => account.provider_name === provider).shift();
-
-                if (account !== undefined) {
-                    return account;
-                }
-
-                return null;
-            },
-
             removeConnectedAccount(id) {
                 this.form.post(route('connected-accounts.destroy', {id}), {
                     preserveScroll: true,
