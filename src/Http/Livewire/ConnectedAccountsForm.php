@@ -9,7 +9,6 @@ use Livewire\Component;
 
 class ConnectedAccountsForm extends Component
 {
-
     /**
      * Indicates whether or not removal of a provider is being confirmed.
      *

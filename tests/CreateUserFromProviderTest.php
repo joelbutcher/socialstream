@@ -3,9 +3,9 @@
 namespace JoelButcher\Socialstream\Tests;
 
 use App\Actions\Socialstream\CreateUserFromProvider;
+use Illuminate\Support\Str;
 use Laravel\Socialite\One\User as OAuth1User;
 use Laravel\Socialite\Two\User as OAuth2User;
-use Illuminate\Support\Str;
 
 class CreateUserFromProviderTest extends TestCase
 {
@@ -30,7 +30,7 @@ class CreateUserFromProviderTest extends TestCase
     public function test_user_can_be_created_from_o_auth_2_provider()
     {
         $this->migrate();
-        
+
         $providerUser = new OAuth2User;
         $providerUser->id = '1234567890';
         $providerUser->name = 'Joel Butcher';
