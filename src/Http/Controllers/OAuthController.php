@@ -38,7 +38,7 @@ class OAuthController extends Controller
     protected $createsConnectedAccounts;
 
     /**
-     * The handler for Socialite's InvalidStateException
+     * The handler for Socialite's InvalidStateException.
      *
      * @var  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
      */
@@ -87,7 +87,7 @@ class OAuthController extends Controller
     {
         if ($request->has('error')) {
             return Auth::check()
-                ? redirect(config('fortify.home'))->withErrors($request->error_description)
+                ? redirect(config('fortify.home'))->dangerBanner($request->error_description)
                 : redirect()->route('register')->withErrors($request->error_description);
         }
 
@@ -105,7 +105,7 @@ class OAuthController extends Controller
         // Authenticated...
         if (! is_null($user = Auth::user())) {
             if ($account && $account->user_id !== $user->id) {
-                return redirect()->route('profile.show')->withErrors([
+                return redirect()->route('profile.show')->dangerBanner([
                     $provider.'_connect_error' => __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider]),
                 ]);
             }
@@ -113,10 +113,12 @@ class OAuthController extends Controller
             if (! $account) {
                 $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
 
-                return redirect()->route('profile.show');
+                return redirect()->route('profile.show')->banner(
+                    __('You have successfully connected :Provider to your account.', ['provider' => $provider])
+                );
             }
 
-            return redirect()->route('profile.show')->withErrors([
+            return redirect()->route('profile.show')->dangerBanner([
                 $provider.'_connect_error' => __('This :Provider sign in account is already associated with your user.', ['provider' => $provider]),
             ]);
         }
@@ -124,19 +126,19 @@ class OAuthController extends Controller
         // Registration...
         if (session()->get('origin_url') === route('register')) {
             if ($account) {
-                return redirect()->route('register')->withErrors(
+                return redirect()->route('register')->dangerBanner(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
                 );
             }
 
             if (! $providerAccount->getEmail()) {
-                return redirect()->route('register')->withErrors(
+                return redirect()->route('register')->dangerBanner(
                     __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider])
                 );
             }
 
             if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->first()) {
-                return redirect()->route('register')->withErrors(
+                return redirect()->route('register')->dangerBanner(
                     __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
                 );
             }
@@ -149,7 +151,7 @@ class OAuthController extends Controller
         }
 
         if (! $account) {
-            return redirect()->route('login')->withErrors(
+            return redirect()->route('login')->dangerBanner(
                 __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
             );
         }

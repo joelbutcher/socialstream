@@ -83,7 +83,7 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
-        
+
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/app/Actions/Socialstream', app_path('Actions/Socialstream'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
 
@@ -128,7 +128,7 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('js/ProviderIcons'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
-        
+
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/app/Actions/Socialstream', app_path('Actions/Socialstream'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
 

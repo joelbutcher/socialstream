@@ -9,7 +9,7 @@ interface CreatesConnectedAccounts
 {
     /**
      * Create a connected account for a given user.
-     * 
+     *
      * @param  \App\Models\User  $user
      * @param  string  $provider
      * @param  \Laravel\Socialite\Contracts\User  $providerUser

@@ -5,10 +5,13 @@ namespace JoelButcher\Socialstream\Http\Livewire;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
 
 class ConnectedAccountsForm extends Component
 {
+    use InteractsWithBanner;
+
     /**
      * Indicates whether or not removal of a provider is being confirmed.
      *
@@ -69,6 +72,8 @@ class ConnectedAccountsForm extends Component
             ->delete();
 
         $this->confirmingRemove = false;
+
+        $this->banner(__('Connected account removed.'));
     }
 
     /**

@@ -10,7 +10,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
 {
     /**
      * Create a connected account for a given user.
-     * 
+     *
      * @param  \App\Models\User  $user
      * @param  string  $provider
      * @param  \Laravel\Socialite\Contracts\User  $providerUser
@@ -20,7 +20,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
     {
         if ($user->hasTokenFor($provider)) {
             $connectedAccount = $user->getTokenFor($provider);
-            
+
             $connectedAccount->forceFill([
                 'provider_name' => strtolower($provider),
                 'provider_id' => $providerUser->getId(),
