@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream;
 
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 
@@ -130,5 +131,16 @@ class Socialstream
     public static function handlesInvalidStateUsing(string $callback)
     {
         return app()->singleton(HandlesInvalidState::class, $callback);
+    }
+
+    /**
+     * Register a class / callback that should be used for generating provider redirects.
+     *
+     * @param  string  $callback
+     * @return void
+     */
+    public static function generatesProvidersRedirectsUsing(string $callback)
+    {
+        return app()->singleton(GeneratesProviderRedirect::class, $callback);
     }
 }
