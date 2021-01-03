@@ -134,7 +134,7 @@ class Socialstream
     }
 
     /**
-     * Register a class / callback that should be used for generating provider redirects
+     * Register a class / callback that should be used for generating provider redirects.
      *
      * @param  string  $callback
      * @return void
