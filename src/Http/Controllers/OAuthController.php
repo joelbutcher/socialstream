@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -69,11 +70,11 @@ class OAuthController extends Controller
      * @param  string  $provider
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function redirectToProvider(Request $request, string $provider)
+    public function redirectToProvider(Request $request, string $provider, GeneratesProviderRedirect $generator)
     {
         session()->put('origin_url', back()->getTargetUrl());
 
-        return Socialite::driver($provider)->redirect();
+        return $generator->generate($provider);
     }
 
     /**
