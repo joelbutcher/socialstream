@@ -29,7 +29,7 @@ class CreateUserFromProviderTest extends TestCase
         $user = $action->create('github', $providerUser);
 
         $this->assertEquals($providerUser->email, $user->email);
-        
+
         $connectedAccount = $user->currentConnectedAccount;
         $this->assertInstanceOf(ConnectedAccount::class, $connectedAccount);
         $this->assertEquals($providerUser->id, $connectedAccount->provider_id);
@@ -56,9 +56,9 @@ class CreateUserFromProviderTest extends TestCase
         $action = new CreateUserFromProvider(new CreateConnectedAccount);
 
         $user = $action->create('github', $providerUser);
-        
+
         $this->assertEquals($providerUser->email, $user->email);
-        
+
         $connectedAccount = $user->currentConnectedAccount;
         $this->assertInstanceOf(ConnectedAccount::class, $connectedAccount);
         $this->assertEquals($providerUser->id, $connectedAccount->provider_id);

@@ -17,7 +17,7 @@ class Credentials implements CredentialsContract, Arrayable, Jsonable, JsonSeria
      * @var string
      */
     protected $id;
-    
+
     /**
      * The credentials token.
      *
@@ -51,7 +51,8 @@ class Credentials implements CredentialsContract, Arrayable, Jsonable, JsonSeria
      *
      * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
      */
-    public function __construct(ConnectedAccount $connectedAccount) {
+    public function __construct(ConnectedAccount $connectedAccount)
+    {
         $this->id = $connectedAccount->provider_id;
         $this->token = $connectedAccount->token;
         $this->tokenSecret = $connectedAccount->secret;
@@ -80,7 +81,7 @@ class Credentials implements CredentialsContract, Arrayable, Jsonable, JsonSeria
     }
 
     /**
-     * Get the token secret for the credentials
+     * Get the token secret for the credentials.
      *
      * @return string|null
      */
@@ -90,7 +91,7 @@ class Credentials implements CredentialsContract, Arrayable, Jsonable, JsonSeria
     }
 
     /**
-     * Get the refresh token for the credentials
+     * Get the refresh token for the credentials.
      *
      * @return string|null
      */
@@ -100,7 +101,7 @@ class Credentials implements CredentialsContract, Arrayable, Jsonable, JsonSeria
     }
 
     /**
-     * Get the expiry date for the credentials
+     * Get the expiry date for the credentials.
      *
      * @return DateTimeInterface|null
      */
