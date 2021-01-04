@@ -33,7 +33,7 @@ class CreateUserFromProviderTest extends TestCase
         $connectedAccount = $user->currentConnectedAccount;
         $this->assertInstanceOf(ConnectedAccount::class, $connectedAccount);
         $this->assertEquals($providerUser->id, $connectedAccount->provider_id);
-        
+
         $credentials = $connectedAccount->getCredentials();
         $this->assertInstanceOf(Credentials::class, $credentials);
         $this->assertEquals($providerUser->id, $credentials->getId());
