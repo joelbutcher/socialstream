@@ -104,7 +104,7 @@ trait HasConnectedAccounts
     {
         return $this->connectedAccounts
             ->where('provider', $provider)
-            ->where('id', $id)
+            ->where('provider_id', $id)
             ->first();
     }
 

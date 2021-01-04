@@ -21,7 +21,11 @@ class ConnectedAccount extends SocialstreamConnectedAccount
      */
     protected $fillable = [
         'provider',
-        'id',
+        'provider_id',
+        'name',
+        'nickname',
+        'email',
+        'avatar_path',
         'token',
         'refresh_token',
         'expires_at',

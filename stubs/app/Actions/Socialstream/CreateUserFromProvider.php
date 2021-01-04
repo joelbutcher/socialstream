@@ -43,9 +43,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
 
-                $user->switchConnectedAccount(
-                    $this->createsConnectedAccounts->create($user, $provider, $providerUser)
-                );
+                $this->createsConnectedAccounts->create($user, $provider, $providerUser);
             });
         });
     }
