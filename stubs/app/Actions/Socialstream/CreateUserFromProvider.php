@@ -4,11 +4,29 @@ namespace App\Actions\Socialstream;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class CreateUserFromProvider implements CreatesUserFromProvider
 {
+    /**
+     * The creates connected accounts instance.
+     *
+     * @var \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts
+     */
+    public $createsConnectedAccounts;
+
+    /**
+     * Create a new action instance.
+     *
+     * @param  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts  $createsConnectedAccounts
+     */
+    public function __construct(CreatesConnectedAccounts $createsConnectedAccounts)
+    {
+        $this->createsConnectedAccounts = $createsConnectedAccounts;
+    }
+
     /**
      * Create a new user from a social provider user.
      *
@@ -26,29 +44,9 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 $user->markEmailAsVerified();
 
                 $user->switchConnectedAccount(
-                    $this->createConnectedAccount($user, $provider, $providerUser)
+                    $this->createsConnectedAccounts->create($user, $provider, $providerUser)
                 );
             });
         });
-    }
-
-    /**
-     * Create a connected account for the user.
-     *
-     * @param  \App\Models\User  $user
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\Contracts\User  $providerUser
-     * @return \JoelButcher\Socialstream\ConnectedAccount
-     */
-    protected function createConnectedAccount(User $user, string $provider, ProviderUser $providerUser)
-    {
-        return $user->connectedAccounts()->create([
-            'provider_name' => strtolower($provider),
-            'provider_id' => $providerUser->getId(),
-            'token' => $providerUser->token,
-            'secret' => $providerUser->tokenSecret ?? null,
-            'refresh_token' => $providerUser->refreshToken ?? null,
-            'expires_at' => $providerUser->expiresAt ?? null,
-        ]);
     }
 }

@@ -23,7 +23,9 @@ trait HasConnectedAccounts
     public function currentConnectedAccount()
     {
         if (is_null($this->current_connected_account_id) && $this->id) {
-            $this->switchConnectedAccount($this->personalTeam());
+            $this->switchConnectedAccount(
+                $this->connectedAccounts()->orderBy('created_at')->first()
+            );
         }
 
         return $this->belongsTo(Socialstream::connectedAccountModel(), 'current_connected_account_id');
@@ -37,7 +39,7 @@ trait HasConnectedAccounts
      */
     public function switchConnectedAccount($connectedAccount)
     {
-        if ($this->ownsConnectedAccount($connectedAccount)) {
+        if (! $this->ownsConnectedAccount($connectedAccount)) {
             return false;
         }
 
