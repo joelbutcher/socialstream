@@ -20,8 +20,8 @@ class ConnectedAccount extends SocialstreamConnectedAccount
      * @var array
      */
     protected $fillable = [
-        'provider_name',
-        'provider_id',
+        'provider',
+        'id',
         'token',
         'refresh_token',
         'expires_at',
