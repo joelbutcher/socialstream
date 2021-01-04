@@ -22,8 +22,12 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             $connectedAccount = $user->getTokenFor($provider);
 
             $connectedAccount->forceFill([
-                'provider_name' => strtolower($provider),
-                'provider_id' => $providerUser->getId(),
+                'provider' => strtolower($provider),
+                'id' => $providerUser->getId(),
+                'name' => $providerUser->getName(),
+                'nickname' => $providerUser->getNickname(),
+                'email' => $providerUser->getEmail(),
+                'avatar_path' => $providerUser->getAvatar(),
                 'token' => $providerUser->token,
                 'secret' => $providerUser->tokenSecret ?? null,
                 'refresh_token' => $providerUser->refreshToken ?? null,
@@ -34,8 +38,12 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
         }
 
         return $user->connectedAccounts()->create([
-            'provider_name' => strtolower($provider),
-            'provider_id' => $providerUser->getId(),
+            'provider' => strtolower($provider),
+            'id' => $providerUser->getId(),
+            'name' => $providerUser->getName(),
+            'nickname' => $providerUser->getNickname(),
+            'email' => $providerUser->getEmail(),
+            'avatar_path' => $providerUser->getAvatar(),
             'token' => $providerUser->token,
             'secret' => $providerUser->tokenSecret ?? null,
             'refresh_token' => $providerUser->refreshToken ?? null,
