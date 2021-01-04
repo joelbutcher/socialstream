@@ -21,21 +21,21 @@ interface Credentials
     public function getToken();
 
     /**
-     * Get the token secret for the credentials
+     * Get the token secret for the credentials.
      *
      * @return string|null
      */
     public function getTokenSecret();
 
     /**
-     * Get the refresh token for the credentials
+     * Get the refresh token for the credentials.
      *
      * @return string|null
      */
     public function getRefreshToken();
 
     /**
-     * Get the expiry date for the credentials
+     * Get the expiry date for the credentials.
      *
      * @return DateTimeInterface|null
      */
