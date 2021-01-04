@@ -1,6 +1,6 @@
 <?php
 
-namespace JoelButcher\Socialstream\Actions;
+namespace App\Actions\Socialstream;
 
 use App\Models\User;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;

@@ -2,7 +2,10 @@
 
 namespace JoelButcher\Socialstream\Tests;
 
+use App\Actions\Socialstream\CreateConnectedAccount;
 use App\Actions\Socialstream\CreateUserFromProvider;
+use App\Models\ConnectedAccount;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Socialite\One\User as OAuth1User;
 use Laravel\Socialite\Two\User as OAuth2User;
@@ -19,12 +22,12 @@ class CreateUserFromProviderTest extends TestCase
         $providerUser->email = 'joel@socialstream.com';
         $providerUser->token = Str::random(64);
 
-        $action = new CreateUserFromProvider;
+        $action = new CreateUserFromProvider(new CreateConnectedAccount);
 
         $user = $action->create('github', $providerUser);
 
         $this->assertEquals($providerUser->email, $user->email);
-        $this->assertCount(1, $user->connectedAccounts);
+        $this->assertInstanceOf(ConnectedAccount::class, $user->currentConnectedAccount);
     }
 
     public function test_user_can_be_created_from_o_auth_2_provider()
@@ -37,12 +40,13 @@ class CreateUserFromProviderTest extends TestCase
         $providerUser->email = 'joel@socialstream.com';
         $providerUser->token = Str::random(64);
 
-        $action = new CreateUserFromProvider;
+        $action = new CreateUserFromProvider(new CreateConnectedAccount);
 
         $user = $action->create('github', $providerUser);
+        $user->fresh();
 
         $this->assertEquals($providerUser->email, $user->email);
-        $this->assertCount(1, $user->connectedAccounts);
+        $this->assertInstanceOf(ConnectedAccount::class, $user->currentConnectedAccount);
     }
 
     protected function migrate()
