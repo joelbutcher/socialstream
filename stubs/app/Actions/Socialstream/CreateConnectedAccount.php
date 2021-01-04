@@ -31,7 +31,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
                 'token' => $providerUser->token,
                 'secret' => $providerUser->tokenSecret ?? null,
                 'refresh_token' => $providerUser->refreshToken ?? null,
-                'expires_at' => $providerUser->expiresAt ?? null,
+                'expires_at' => property_exists($providerUser, 'expiresIn') ? now()->addSeconds($providerUser->expiresIn) : null,
             ])->save();
 
             return $connectedAccount;
@@ -47,7 +47,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             'token' => $providerUser->token,
             'secret' => $providerUser->tokenSecret ?? null,
             'refresh_token' => $providerUser->refreshToken ?? null,
-            'expires_at' => $providerUser->expiresAt ?? null,
+            'expires_at' => property_exists($providerUser, 'expiresIn') ? now()->addSeconds($providerUser->expiresIn) : null,
         ]);
     }
 }
