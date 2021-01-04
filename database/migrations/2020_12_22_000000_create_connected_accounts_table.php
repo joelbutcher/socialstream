@@ -17,7 +17,7 @@ class CreateConnectedAccountsTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('provider');
-            $table->string('id');
+            $table->string('provider_id');
             $table->string('name')->nullable();
             $table->string('nickname')->nullable();
             $table->string('email')->nullable();

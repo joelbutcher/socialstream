@@ -23,7 +23,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
 
             $connectedAccount->forceFill([
                 'provider' => strtolower($provider),
-                'id' => $providerUser->getId(),
+                'provider_id' => $providerUser->getId(),
                 'name' => $providerUser->getName(),
                 'nickname' => $providerUser->getNickname(),
                 'email' => $providerUser->getEmail(),
@@ -41,7 +41,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             'provider' => strtolower($provider),
             'id' => $providerUser->getId(),
             'name' => $providerUser->getName(),
-            'nickname' => $providerUser->getNickname(),
+            'provider_id' => $providerUser->getNickname(),
             'email' => $providerUser->getEmail(),
             'avatar_path' => $providerUser->getAvatar(),
             'token' => $providerUser->token,
