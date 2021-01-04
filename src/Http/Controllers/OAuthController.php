@@ -99,8 +99,8 @@ class OAuthController extends Controller
         }
 
         $account = ConnectedAccount::firstWhere([
+            'provider' => $provider,
             'provider_id' => $providerAccount->getId(),
-            'provider_name' => $provider,
         ]);
 
         // Authenticated...

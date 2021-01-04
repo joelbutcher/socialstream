@@ -16,8 +16,13 @@ class CreateConnectedAccountsTable extends Migration
         Schema::create('connected_accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->string('provider_name');
+            $table->string('provider');
             $table->string('provider_id');
+            $table->string('name')->nullable();
+            $table->string('nickname')->nullable();
+            $table->string('email')->nullable();
+            $table->string('telephone')->nullable();
+            $table->string('avatar_path')->nullable();
             $table->string('token');
             $table->string('secret')->nullable(); // OAuth1
             $table->string('refresh_token')->nullable(); // OAuth2

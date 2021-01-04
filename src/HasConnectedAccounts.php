@@ -71,7 +71,7 @@ trait HasConnectedAccounts
      */
     public function hasTokenFor(string $provider)
     {
-        return $this->connectedAccounts->contains('provider_name', Str::lower($provider));
+        return $this->connectedAccounts->contains('provider', Str::lower($provider));
     }
 
     /**
@@ -84,7 +84,7 @@ trait HasConnectedAccounts
     {
         if ($this->hasTokenFor($provider)) {
             return $this->connectedAccounts
-                ->where('provider_name', Str::lower($provider))
+                ->where('provider', Str::lower($provider))
                 ->first()
                 ->token;
         }
@@ -94,17 +94,17 @@ trait HasConnectedAccounts
 
     /**
      * Attempt to find a connected account that belongs to the user,
-     * for the given provider and provider id.
+     * for the given provider and ID.
      *
      * @param  string  $provider
-     * @param  string  $providerId
+     * @param  string  $id
      * @return \Laravel\Jetstream\ConnectedAccount
      */
-    public function getConnectedAccountFor(string $provider, string $providerId)
+    public function getConnectedAccountFor(string $provider, string $id)
     {
         return $this->connectedAccounts
-            ->where('provider_name', $provider)
-            ->where('provider_id', $providerId)
+            ->where('provider', $provider)
+            ->where('provider_id', $id)
             ->first();
     }
 
