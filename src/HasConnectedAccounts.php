@@ -81,7 +81,7 @@ trait HasConnectedAccounts
     public function getTokenFor(string $provider, $default = null)
     {
         if ($this->hasTokenFor($provider)) {
-            $this->connectedAccounts
+            return $this->connectedAccounts
                 ->where('provider_name', Str::lower($provider))
                 ->first()
                 ->token;
