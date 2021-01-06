@@ -84,7 +84,6 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/app/Actions/Socialstream', app_path('Actions/Socialstream'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
 
         // Service Providers...
@@ -97,6 +96,12 @@ class InstallCommand extends Command
 
         // Jetstream Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
+
+        // Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
 
         // Auth views...
         copy(__DIR__.'/../../stubs/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
@@ -129,7 +134,6 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/app/Actions/Socialstream', app_path('Actions/Socialstream'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
 
         // Service Providers...
@@ -146,6 +150,12 @@ class InstallCommand extends Command
 
         // Jetstream Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
+
+        // Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
 
         // Auth views...
         copy(__DIR__.'/../../stubs/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
