@@ -22,7 +22,7 @@
 
             <div class="mt-5 space-y-6">
                 <div v-for="(provider) in $page.socialstream.providers" :key="provider">
-                    <connected-account v-if="hasAccountForProvider(provider)" :provider="getAccountForProvider(provider).provider_name" :created-at="getAccountForProvider(provider).created_at">
+                    <connected-account v-if="hasAccountForProvider(provider)" :provider="getAccountForProvider(provider).provider" :created-at="getAccountForProvider(provider).created_at">
                         <template #action>
                             <jet-button @click.native="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.socialstream.canRemoveAccounts || $page.socialstream.hasPassword">
                                 Remove
@@ -117,12 +117,12 @@
             },
 
             hasAccountForProvider(provider) {
-                return this.$page.socialstream.connectedAccounts.filter(account => account.provider_name === provider).length > 0;
+                return this.$page.socialstream.connectedAccounts.filter(account => account.provider === provider).length > 0;
             },
 
             getAccountForProvider(provider) {
                 if (this.hasAccountForProvider(provider)) {
-                    return this.$page.socialstream.connectedAccounts.filter(account => account.provider_name === provider).shift();
+                    return this.$page.socialstream.connectedAccounts.filter(account => account.provider === provider).shift();
                 }
 
                 return null;

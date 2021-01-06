@@ -84,10 +84,11 @@ class ConnectedAccountsForm extends Component
     public function getAccountsProperty()
     {
         return Auth::user()->connectedAccounts
+            ->push(Auth::user()->currentConnectedAccount)
             ->map(function ($account) {
                 return (object) [
                     'id' => $account->id,
-                    'provider_name' => $account->provider_name,
+                    'provider_name' => $account->provider,
                     'created_at' => (new \DateTime($account->created_at))->format('d/m/Y H:i'),
                 ];
             });
