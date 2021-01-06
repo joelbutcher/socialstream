@@ -61,6 +61,53 @@ class UpdateConnectedAccountsTable extends Migration
 
 ```
 
+#### Current Connected Account Context
+
+When you login using a social provider, Socialstream will now set the context for the most-recent, or "current" provider being used. To do this, a new `current_connected_account_id` column will need adding to your users table.
+
+Generate a new `users` migration:
+
+```sh
+php artisan make:migration update_users_table --table=users
+```
+
+The migration should be popuplated with the following content:
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class UpdateUsersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('current_connected_account_id')->after('current_team_id')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
+    }
+}
+```
+
 #### Create Connected Account Action
 
 Socialstream 2.x adds a new action for creating connected accounts on registration with a provider. You should copy the new [CreateConnectedAccount](https://github.com/joelbutcher/socialstream/blob/2.x/stubs/app/Actions/Socialstream/CreateConnectedAccount.php) action to the `App/Actions/Socialstream` directory in your project.
