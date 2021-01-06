@@ -127,19 +127,19 @@ class OAuthController extends Controller
         // Registration...
         if (session()->get('origin_url') === route('register')) {
             if ($account) {
-                return redirect()->route('register')->dangerBanner(
+                return redirect()->route('register')->withErrors(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
                 );
             }
 
             if (! $providerAccount->getEmail()) {
-                return redirect()->route('register')->dangerBanner(
+                return redirect()->route('register')->withErrors(
                     __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider])
                 );
             }
 
             if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->first()) {
-                return redirect()->route('register')->dangerBanner(
+                return redirect()->route('register')->withErrors(
                     __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
                 );
             }
@@ -152,7 +152,7 @@ class OAuthController extends Controller
         }
 
         if (! $account) {
-            return redirect()->route('login')->dangerBanner(
+            return redirect()->route('login')->withErrors(
                 __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
             );
         }
