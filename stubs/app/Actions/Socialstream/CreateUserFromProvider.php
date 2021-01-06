@@ -43,7 +43,15 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
 
-                $this->createsConnectedAccounts->create($user, $provider, $providerUser);
+                if (Features::profilePhotos()) {
+                    $user->forceFill([
+                        'profile_photo_path' => $providerUser->getAvatar(),
+                    ]);
+                }
+
+                $user->switchConnectedAccount(
+                    $this->createsConnectedAccounts->create($user, $provider, $providerUser)
+                );
             });
         });
     }
