@@ -172,3 +172,57 @@ $connectedAccount = \App\Models\ConnectedAccount::first();
 
 $credentials = $connectedAccount->getCredentials();
 ```
+
+### Inertia Stack
+
+
+#### Authentication Views
+
+To upgrade your application's authentication views to use the new Vue files from Jetstream 2.x, you should copy the [Jetstream auth files](https://github.com/laravel/jetstream/tree/2.x/stubs/inertia/resources/js/Pages/Auth), then the [Socialstream auth files](https://github.com/joelbutcher/socialstream/tree/2.x/stubs/inertia/resources/js/Pages/Auth) to the `resources/js/Pages/Auth` folder location. 
+
+You will also need to copy the [Providers.vue](https://github.com/joelbutcher/socialstream/blob/2.x/stubs/inertia/resources/js/Socialstream/Providers.vue) file to the `resources/js/Socialstream` directory.
+
+However, if you wish to continue to render the Blade based authentication views, you should add the following code to the `boot` method of your application's `JetstreamServiceProvider` class:
+
+```php
+use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Fortify;
+
+Fortify::loginView(function () {
+    return view('auth/login', [
+        'canResetPassword' => Route::has('password.request'),
+        'status' => session('status'),
+    ]);
+});
+
+Fortify::requestPasswordResetLinkView(function () {
+    return view('auth/forgot-password', [
+        'status' => session('status'),
+    ]);
+});
+
+Fortify::resetPasswordView(function (Request $request) {
+    return view('auth/reset-password', [
+        'email' => $request->input('email'),
+        'token' => $request->route('token'),
+    ]);
+});
+
+Fortify::registerView(function () {
+    return view('auth/register');
+});
+
+Fortify::verifyEmailView(function () {
+    return view('auth/verify-email', [
+        'status' => session('status'),
+    ]);
+});
+
+Fortify::twoFactorChallengeView(function () {
+    return view('auth/two-factor-challenge');
+});
+
+Fortify::confirmPasswordView(function () {
+    return view('auth/confirm-password');
+});
+```
