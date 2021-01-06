@@ -6,9 +6,9 @@
 
 #### Connected Account Details
 
-Version 2.x of Socialstream now captures more user data from a provider and saves them to your `connected_accounts` table. In order to correctly save this data, you will need to create a new migration to make the appropriate changes.
-
 > Note: Socialstream now requires the `doctrine/dbal` package for renaming columns.
+
+Version 2.x of Socialstream now captures more user data from a provider and saves them to your `connected_accounts` table. In order to correctly save this data, you will need to create a new migration to make the appropriate changes.
 
 To do this, you should create a new `connected_accounts` migration:
 
