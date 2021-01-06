@@ -2,36 +2,36 @@
     <div>
         <div class="flex flex-row items-center justify-between py-4 text-gray-500">
             <hr class="w-full mr-2">
-                {{ $t('Or Continue With') }}
+                Or
             <hr class="w-full ml-2">
         </div>
 
         <div class="flex items-center justify-center">
-            <a v-sh="hasProvider('facebook')" :href="route('oauth.redirect', 'facebook')">
+            <a v-if="$page.props.socialstream.providers.includes('facebook')" :href="route('oauth.redirect', 'facebook')">
                 <facebook-icon class="h-6 w-6 mx-2" />
             </a>
 
-            <a v-sh="hasProvider('google')" :href="route('oauth.redirect', 'google')" >
+            <a v-if="$page.props.socialstream.providers.includes('google')" :href="route('oauth.redirect', 'google')" >
                 <google-icon class="h-6 w-6 mx-2" />
             </a>
 
-            <a v-sh="hasProvider('twitter')" :href="route('oauth.redirect', 'twitter')">
+            <a v-if="$page.props.socialstream.providers.includes('twitter')" :href="route('oauth.redirect', 'twitter')">
                 <twitter-icon class="h-6 w-6 mx-2" />
             </a>
 
-            <a v-sh="hasProvider('linkedin')" :href="route('oauth.redirect', 'linkedin')">
+            <a v-if="$page.props.socialstream.providers.includes('linkedin')" :href="route('oauth.redirect', 'linkedin')">
                 <linked-in-icon class="h-6 w-6 mx-2" />
             </a>
 
-            <a v-sh="hasProvider('github')" :href="route('oauth.redirect', 'github')">
+            <a v-if="$page.props.socialstream.providers.includes('github')" :href="route('oauth.redirect', 'github')">
                 <github-icon class="h-6 w-6 mx-2" />
             </a>
 
-            <a v-sh="hasProvider('gitlab')" :href="route('oauth.redirect', 'gitlab')">
+            <a v-if="$page.props.socialstream.providers.includes('gitlab')" :href="route('oauth.redirect', 'gitlab')">
                 <git-lab-icon class="h-6 w-6 mx-2" />
             </a>
 
-            <a v-sh="hasProvider('bitbucket')" :href="route('oauth.redirect', 'bitbucket')">
+            <a v-if="$page.props.socialstream.providers.includes('bitbucket')" :href="route('oauth.redirect', 'bitbucket')">
                 <bitbucket-icon class="h-6 w-6 mx-2" />
             </a>
         </div>
@@ -57,11 +57,5 @@ import BitbucketIcon from '@/ProviderIcons/BitbucketIcon';
             GitLabIcon,
             BitbucketIcon,
         },
-
-        method: {
-            hasProvider(provider) {
-                return this.$page.socialstream.providers.includes(provider);
-            }
-        }
     }
 </script>
