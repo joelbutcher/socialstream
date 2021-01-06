@@ -4,7 +4,6 @@ namespace JoelButcher\Socialstream;
 
 use App\Actions\Jetstream\CreateUserFromProvider;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -22,7 +21,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'jetstream');
+        $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
 
         $this->app->afterResolving(BladeCompiler::class, function () {
             if (config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
@@ -66,10 +65,6 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
         ], 'socialstream-config');
-
-        $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/socialstream'),
-        ], 'socialstream-views');
 
         $this->publishes([
             __DIR__.'/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
