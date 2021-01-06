@@ -84,7 +84,6 @@ class ConnectedAccountsForm extends Component
     public function getAccountsProperty()
     {
         return Auth::user()->connectedAccounts
-            ->push(Auth::user()->currentConnectedAccount)
             ->map(function ($account) {
                 return (object) [
                     'id' => $account->id,
