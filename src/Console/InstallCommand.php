@@ -140,7 +140,6 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialite', resource_path('js/Socialite'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialstream', resource_path('js/Socialstream'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/ProviderIcons', resource_path('js/ProviderIcons'));
 
@@ -158,11 +157,8 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
 
         // Auth views...
-        copy(__DIR__.'/../../stubs/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
-        copy(__DIR__.'/../../stubs/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
-
-        // Components...
-        copy(__DIR__.'/../../stubs/resources/views/components/socialstream-providers.blade.php', resource_path('views/components/socialstream-providers.blade.php'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Auth/Register.vue', resource_path('js/Pages/Auth/Register.vue'));
 
         // Profile views...
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/ConnectedAccountsForm.vue'));

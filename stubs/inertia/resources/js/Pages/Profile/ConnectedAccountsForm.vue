@@ -9,7 +9,7 @@
         </template>
 
         <template #content>
-            <h3 class="text-lg font-medium text-gray-900" v-if="$page.socialstream.connectedAccounts.length === 0">
+            <h3 class="text-lg font-medium text-gray-900" v-if="$page.props.socialstream.connectedAccounts.length === 0">
                 You have no connected accounts.
             </h3>
             <h3 class="text-lg font-medium text-gray-900" v-else>
@@ -21,10 +21,10 @@
             </div>
 
             <div class="mt-5 space-y-6">
-                <div v-for="(provider) in $page.socialstream.providers" :key="provider">
+                <div v-for="(provider) in $page.props.socialstream.providers" :key="provider">
                     <connected-account v-if="hasAccountForProvider(provider)" :provider="getAccountForProvider(provider).provider" :created-at="getAccountForProvider(provider).created_at">
                         <template #action>
-                            <jet-button @click.native="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.socialstream.canRemoveAccounts || $page.socialstream.hasPassword">
+                            <jet-button @click.native="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.props.socialstream.canRemoveAccounts || $page.props.socialstream.hasPassword">
                                 Remove
                             </jet-button>
                         </template>
@@ -117,12 +117,12 @@
             },
 
             hasAccountForProvider(provider) {
-                return this.$page.socialstream.connectedAccounts.filter(account => account.provider === provider).length > 0;
+                return this.$page.props.socialstream.connectedAccounts.filter(account => account.provider === provider).length > 0;
             },
 
             getAccountForProvider(provider) {
                 if (this.hasAccountForProvider(provider)) {
-                    return this.$page.socialstream.connectedAccounts.filter(account => account.provider === provider).shift();
+                    return this.$page.props.socialstream.connectedAccounts.filter(account => account.provider === provider).shift();
                 }
 
                 return null;
