@@ -3,18 +3,7 @@
 
 This changelog follows [the Keep a Changelog standard](https://keepachangelog.com).
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.2...2.x)
-
-## [v2.0.1 (2022-02-06)](https://github.com/joelbutcher/socialstream/compare/v2.0.1...v2.0.2)
-
-### Fixed
-- Fixed `socialstream:install` command publishing both `CreateUserFromProvider` and `CreateUserWithTeamsFromProvider` stubs
-
-## [v2.0.1 (2022-02-06)](https://github.com/joelbutcher/socialstream/compare/v2.0.0...v2.0.1)
-
-### Fixed
-- Auth errors not showing on registration / login views
-- Incorrect key name used for connected accounts forms
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.0...2.x)
 
 ## v2.0.0 (2021-01-06)
 Initial V2 release
