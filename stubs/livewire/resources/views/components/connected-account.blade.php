@@ -30,12 +30,18 @@
 
             <div>
                 <div class="text-sm font-semibold text-gray-600">
-                    {{ ucfirst($provider) }}
+                    {{ __(ucfirst($provider)) }}
                 </div>
 
-                <div class="text-xs text-gray-500">
-                    {{ $createdAt }}
-                </div>
+                @if (! is_null($createdAt))
+                    <div class="text-xs text-gray-500">
+                        Added on {{ $createdAt }}
+                    </div>
+                @else
+                    <div class="text-xs text-gray-500">
+                        {{ __('Not connected.') }}
+                    </div>
+                @endif
             </div>
         </div>
 
