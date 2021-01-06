@@ -1,4 +1,4 @@
-# Socialstream
+<p align="center"><img src="https://ik.imagekit.io/r6kac144kke/socialstream_hMGWow11B.svg" width="450"></p>
 
 <p align="center">
     <a href="https://github.com/joelbutcher/socialstream/actions">
