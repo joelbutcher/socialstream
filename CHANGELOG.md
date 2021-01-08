@@ -5,6 +5,10 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.0...2.x)
 
+## [v2.0.2 (2021-01-08)](https://github.com/joelbutcher/socialstream/compare/v2.0.1...v2.0.2)
+### Fixed
+- Fixed missing terms & conditions / privacy policy from livewire `register` stub
+
 ## [v2.0.1 (2021-01-08)](https://github.com/joelbutcher/socialstream/compare/v2.0.0...v2.0.1)
 ### Fixed
 - Fixed an issue with `view:clear` throwing DirectoryNotFound (#33)
