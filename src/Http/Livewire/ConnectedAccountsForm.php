@@ -13,6 +13,15 @@ class ConnectedAccountsForm extends Component
     use InteractsWithBanner;
 
     /**
+     * The component's listeners.
+     *
+     * @var array
+     */
+    protected $listeners = [
+        'refresh-navigation-menu' => '$refresh',
+    ];
+
+    /**
      * Indicates whether or not removal of a provider is being confirmed.
      *
      * @var bool
@@ -59,6 +68,25 @@ class ConnectedAccountsForm extends Component
     }
 
     /**
+     * Set the providers avatar url as the users profile photo url.
+     *
+     * @param  mixed  $accountId
+     */
+    public function setAvatarAsProfilePhoto($accountId)
+    {
+        $account = Auth::user()->connectedAccounts
+            ->where('user_id', Auth::user()->getAuthIdentifier())
+            ->where('id', $accountId)
+            ->first();
+
+        Auth::user()->forceFill([
+            'profile_photo_path' => $account->avatar_path ?? null
+        ])->save();
+
+        return redirect()->route('profile.show');
+    }
+
+    /**
      * Remove an OAuth Provider.
      *
      * @param  mixed  $accountId
@@ -88,6 +116,7 @@ class ConnectedAccountsForm extends Component
                 return (object) [
                     'id' => $account->id,
                     'provider_name' => $account->provider,
+                    'avatar_path' => $account->avatar_path,
                     'created_at' => (new \DateTime($account->created_at))->format('d/m/Y H:i'),
                 ];
             });

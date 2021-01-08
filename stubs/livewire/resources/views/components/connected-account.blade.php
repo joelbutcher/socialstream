@@ -1,7 +1,7 @@
 @props(['provider', 'createdAt'])
 
 <div>
-    <div class="px-3 flex items-center justify-between">
+    <div class="pl-3 flex items-center justify-between">
         <div class="flex items-center">
             @switch($provider)
                 @case('facebook')
@@ -33,7 +33,7 @@
                     {{ __(ucfirst($provider)) }}
                 </div>
 
-                @if (! is_null($createdAt))
+                @if (! empty($createdAt))
                     <div class="text-xs text-gray-500">
                         Added on {{ $createdAt }}
                     </div>

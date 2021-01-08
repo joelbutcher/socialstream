@@ -22,27 +22,33 @@
 
         <div class="mt-5 space-y-6">
             @foreach ($this->providers as $provider)
-                @if ($account = $this->accounts->where('provider_name', $provider)->first())
-                    <x-connected-account provider="{{ $account->provider_name }}" created-at="{{ $account->created_at }}">
+                @php
+                    $account = null;
+                    $account = $this->accounts->where('provider_name', $provider)->first()
+                @endphp
 
-                        <x-slot name="action">
-                            @if ($this->accounts->count() > 1 || ! is_null($this->user->password))
-                                <x-jet-button wire:click="confirmRemove({{ $account->id }})" wire:loading.attr="disabled">
+                <x-connected-account provider="{{ $provider }}" created-at="{{ $account->created_at ?? null }}">
+                    <x-slot name="action">
+                        @if (! is_null($account) && ($this->accounts->count() > 1 || ! is_null($this->user->password)))
+                            <div class="flex items-center space-x-6">
+                                @if (! is_null($account->avatar_path) && ($account->avatar_path !== $this->user->profile_photo_path))
+                                    <button class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none" wire:click="setAvatarAsProfilePhoto({{ $account->id }})">
+                                        {{ __('Use Avatar as Profile Photo') }}
+                                    </button>
+                                @endif
+
+                                <x-jet-danger-button wire:click="confirmRemove({{ $account->id }})" wire:loading.attr="disabled">
                                     {{ __('Remove') }}
-                                </x-jet-button>
-                            @endif
-                        </x-slot>
-
-                    </x-connected-account>
-                @else
-                    <x-connected-account provider="{{ $provider }}" created-at="Not connected">
-                        <x-slot name="action">
+                                </x-jet-danger-button>
+                            </div>
+                        @else
                             <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
                                 {{ __('Connect') }}
                             </x-action-link>
-                        </x-slot>
-                    </x-connected-account>
-                @endif
+                        @endif
+                    </x-slot>
+
+                </x-connected-account>
             @endforeach
         </div>
 
@@ -61,9 +67,9 @@
                     {{ __('Nevermind') }}
                 </x-jet-secondary-button>
 
-                <x-jet-button class="ml-2" wire:click="removeConnectedAccount({{ $this->selectedAccountId }})" wire:loading.attr="disabled">
+                <x-jet-danger-button class="ml-2" wire:click="removeConnectedAccount({{ $this->selectedAccountId }})" wire:loading.attr="disabled">
                     {{ __('Remove Connected Account') }}
-                </x-jet-button>
+                </x-jet-danger-button>
             </x-slot>
         </x-jet-dialog-modal>
     </x-slot>
