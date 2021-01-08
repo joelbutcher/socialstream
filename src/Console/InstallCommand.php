@@ -84,8 +84,6 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
         (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
-
         // Service Providers...
         copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
@@ -104,12 +102,11 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
 
         // Auth views...
-        copy(__DIR__.'/../../stubs/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
-        copy(__DIR__.'/../../stubs/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
+        copy(__DIR__.'/../../stubs/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
+        copy(__DIR__.'/../../stubs/livewire/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
 
-        // Components...
-        copy(__DIR__.'/../../stubs/livewire/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
-        copy(__DIR__.'/../../stubs/livewire/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
+        // Requuired components...
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/components', resource_path('views/components'));
 
         // Profile views...
         copy(__DIR__.'/../../stubs/livewire/resources/views/profile/connected-accounts-form.blade.php', resource_path('views/profile/connected-accounts-form.blade.php'));
