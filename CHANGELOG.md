@@ -5,7 +5,11 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.0...2.x)
 
-## v2.0.0 (2021-01-06)
+## [v2.0.1 (2021-01-08)](https://github.com/joelbutcher/socialstream/compare/v2.0.0...v2.0.1)
+### Fixed
+- Fixed an issue with `view:clear` throwing DirectoryNotFound (#33)
+
+## [v2.0.0 (2021-01-06)](https://github.com/joelbutcher/socialstream/compare/v1.1.1...v2.0.0)
 Initial V2 release
 
 ## [v1.1.2 (2021-01-08)](https://github.com/joelbutcher/socialstream/compare/v1.1.1...v1.1.2)
