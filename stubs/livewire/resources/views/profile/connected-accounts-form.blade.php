@@ -35,7 +35,7 @@
 
                     </x-connected-account>
                 @else
-                    <x-connected-account provider="{{ $provider }}" created-at="Not connected">
+                    <x-connected-account provider="{{ $provider }}">
                         <x-slot name="action">
                             <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
                                 {{ __('Connect') }}

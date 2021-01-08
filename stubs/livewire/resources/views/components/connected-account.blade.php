@@ -1,4 +1,4 @@
-@props(['provider', 'createdAt'])
+@props(['provider', 'createdAt' => null])
 
 <div>
     <div class="px-3 flex items-center justify-between">
@@ -35,7 +35,7 @@
 
                 @if (! is_null($createdAt))
                     <div class="text-xs text-gray-500">
-                        Added on {{ $createdAt }}
+                        Connected on {{ $createdAt }}
                     </div>
                 @else
                     <div class="text-xs text-gray-500">
