@@ -23,11 +23,7 @@ class ShareInertiaData
                     'providers' => Socialstream::providers(),
                     'hasPassword' => $request->user() && ! is_null($request->user()->password),
                     'connectedAccounts' => $request->user() ? $request->user()->connectedAccounts->map(function ($account) {
-                        return (object) [
-                            'id' => $account->id,
-                            'provider' => $account->provider,
-                            'created_at' => (new \DateTime($account->created_at))->format('d/m/Y H:i'),
-                        ];
+                        return (object) $account->jsonSerialize();
                     }) : [],
                 ];
             },
