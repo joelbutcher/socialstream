@@ -128,10 +128,8 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/ProviderIcons'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Auth'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
-
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/resources/views/components', resource_path('views/components'));
 
         // Service Providers...
         copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
