@@ -41,4 +41,13 @@ class ConnectedAccount extends SocialstreamConnectedAccount
         'updated' => ConnectedAccountUpdated::class,
         'deleted' => ConnectedAccountDeleted::class,
     ];
+    
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'provider' => $this->provider,
+            'created_at' => (new \DateTime($this->created_at))->format('d/m/Y H:i'),
+        ];
+    }
 }
