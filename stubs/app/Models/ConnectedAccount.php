@@ -41,7 +41,7 @@ class ConnectedAccount extends SocialstreamConnectedAccount
         'updated' => ConnectedAccountUpdated::class,
         'deleted' => ConnectedAccountDeleted::class,
     ];
-    
+
     public function jsonSerialize()
     {
         return [
