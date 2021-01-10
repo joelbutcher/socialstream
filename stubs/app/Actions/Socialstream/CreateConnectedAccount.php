@@ -2,6 +2,7 @@
 
 namespace App\Actions\Socialstream;
 
+use App\Models\ConnectedAccount;
 use App\Models\User;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use Laravel\Socialite\Contracts\User as ProviderUser;
@@ -37,7 +38,8 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             return $connectedAccount;
         }
 
-        return $user->connectedAccounts()->forceCreate([
+        return ConnectedAccount::forceCreate([
+            'user_id' => $user->id,
             'provider' => strtolower($provider),
             'provider_id' => $providerUser->getId(),
             'name' => $providerUser->getName(),
