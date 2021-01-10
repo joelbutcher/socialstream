@@ -37,7 +37,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             return $connectedAccount;
         }
 
-        return $user->connectedAccounts()->create([
+        return $user->connectedAccounts()->forceCreate([
             'provider' => strtolower($provider),
             'provider_id' => $providerUser->getId(),
             'name' => $providerUser->getName(),
