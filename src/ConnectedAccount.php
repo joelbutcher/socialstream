@@ -26,4 +26,18 @@ abstract class ConnectedAccount extends Model
     {
         return $this->belongsTo(Jetstream::userModel(), 'user_id');
     }
+
+    /**
+     * Get the data that should be shared with Inertia.
+     *
+     * @return array
+     */
+    public function getSharedInertiaData()
+    {
+        return [
+            'id' => $this->id,
+            'provider' => $this->provider,
+            'created_at' => (new \DateTime($this->created_at))->format('d/m/Y H:i'),
+        ];
+    }
 }
