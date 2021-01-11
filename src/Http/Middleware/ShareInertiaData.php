@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream\Http\Middleware;
 
 use Inertia\Inertia;
+use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Socialstream;
 
 class ShareInertiaData
@@ -22,13 +23,10 @@ class ShareInertiaData
                     'show' => Socialstream::show(),
                     'providers' => Socialstream::providers(),
                     'hasPassword' => $request->user() && ! is_null($request->user()->password),
-                    'connectedAccounts' => $request->user() ? $request->user()->connectedAccounts->map(function ($account) {
-                        return (object) [
-                            'id' => $account->id,
-                            'provider' => $account->provider,
-                            'created_at' => (new \DateTime($account->created_at))->format('d/m/Y H:i'),
-                        ];
-                    }) : [],
+                    'connectedAccounts' => $request->user() ? $request->user()->connectedAccounts
+                        ->map(function (ConnectedAccount $account) {
+                            return (object) $account->getSharedInertiaData();
+                        }) : [],
                 ];
             },
         ]));
