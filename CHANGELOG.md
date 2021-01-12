@@ -5,6 +5,11 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.3...master)
 
+## [v2.1.1 (2021-01-12)](https://github.com/joelbutcher/socialstream/compare/v2.1.0...v2.1.1)
+
+### Fixed
+- Fixed conflicting `doctrine/dbal` version with Laravel Nova 3.x: `^2.9|^3.0`
+
 ## [v2.1.0 (2021-01-11)](https://github.com/joelbutcher/socialstream/compare/v2.0.3...v2.1.0)
 
 ### Changed
