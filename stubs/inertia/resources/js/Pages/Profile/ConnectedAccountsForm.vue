@@ -110,10 +110,6 @@
                 this.accountId = id;
 
                 this.confirmingRemove = true;
-
-                setTimeout(() => {
-                    this.$refs.password.focus();
-                }, 250);
             },
 
             hasAccountForProvider(provider) {
