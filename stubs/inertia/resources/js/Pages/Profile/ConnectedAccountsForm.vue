@@ -5,7 +5,7 @@
         </template>
 
         <template #description>
-            Manage and remove your connect accounts.
+            Manage and remove your connected accounts.
         </template>
 
         <template #content>
