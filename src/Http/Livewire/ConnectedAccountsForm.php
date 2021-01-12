@@ -80,7 +80,7 @@ class ConnectedAccountsForm extends Component
             ->first();
 
         Auth::user()->forceFill([
-            'profile_photo_path' => $account->avatar_path ?? null
+            'profile_photo_path' => $account->avatar_path ?? null,
         ])->save();
 
         return redirect()->route('profile.show');
