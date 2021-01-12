@@ -127,11 +127,7 @@
             removeConnectedAccount(id) {
                 this.form.post(route('connected-accounts.destroy', {id}), {
                     preserveScroll: true,
-                    onSuccess: () => {
-                        if (! this.form.hasErrors()) {
-                            this.confirmingRemove = false;
-                        }
-                    },
+                    onSuccess: () => (this.confirmingRemove = false),
                 });
             },
         }
