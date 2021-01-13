@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Http\Livewire;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
@@ -84,12 +85,8 @@ class ConnectedAccountsForm extends Component
     public function getAccountsProperty()
     {
         return Auth::user()->connectedAccounts
-            ->map(function ($account) {
-                return (object) [
-                    'id' => $account->id,
-                    'provider_name' => $account->provider,
-                    'created_at' => optional($account->created_at)->diffForHumans(),
-                ];
+            ->map(function (ConnectedAccount $account) {
+                return (object) $account->getSharedData();
             });
     }
 
