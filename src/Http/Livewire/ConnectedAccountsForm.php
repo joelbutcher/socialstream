@@ -88,7 +88,7 @@ class ConnectedAccountsForm extends Component
                 return (object) [
                     'id' => $account->id,
                     'provider_name' => $account->provider,
-                    'created_at' => (new \DateTime($account->created_at))->format('d/m/Y H:i'),
+                    'created_at' => optional($account->created_at)->diffForHumans(),
                 ];
             });
     }

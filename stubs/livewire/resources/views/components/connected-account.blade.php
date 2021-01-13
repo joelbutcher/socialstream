@@ -35,7 +35,7 @@
 
                 @if (! is_null($createdAt))
                     <div class="text-xs text-gray-500">
-                        Connected on {{ $createdAt }}
+                        Connected {{ $createdAt }}
                     </div>
                 @else
                     <div class="text-xs text-gray-500">
