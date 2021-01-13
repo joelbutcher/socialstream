@@ -17,7 +17,7 @@
                     </div>
 
                     <div v-if="createdAt !== null" class="text-xs text-gray-500">
-                        Connected on {{ createdAt }}
+                        Connected {{ createdAt }}
                     </div>
 
                     <div v-else class="text-xs text-gray-500">
