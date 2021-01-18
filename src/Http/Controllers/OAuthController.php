@@ -146,7 +146,7 @@ class OAuthController extends Controller
 
             $user = $this->createsUser->create($provider, $providerAccount);
 
-            $this->guard->login($user);
+            $this->guard->login($user, config('socialstream.remember'));
 
             return redirect(config('fortify.home'));
         }
