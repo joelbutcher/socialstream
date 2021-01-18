@@ -17,7 +17,7 @@ return [
     */
 
     'show' => env('SHOW_SOCIALSTREAM', true),
-    
+
     /*
     |--------------------------------------------------------------------------
     | Socialstream Remember Session
