@@ -146,7 +146,7 @@ class OAuthController extends Controller
 
             $user = $this->createsUser->create($provider, $providerAccount);
 
-            $this->guard->login($user);
+            $this->guard->login($user, config('socialstream.remember'));
 
             return redirect(config('fortify.home'));
         }
@@ -157,7 +157,7 @@ class OAuthController extends Controller
             );
         }
 
-        $this->guard->login($account->user);
+        $this->guard->login($account->user, config('socialstream.remember'));
 
         $account->user->forceFill([
             'current_connected_account_id' => $account->id,

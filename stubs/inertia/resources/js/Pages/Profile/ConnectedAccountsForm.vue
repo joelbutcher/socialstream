@@ -5,7 +5,7 @@
         </template>
 
         <template #description>
-            Manage and remove your connect accounts.
+            Manage and remove your connected accounts.
         </template>
 
         <template #content>
@@ -110,10 +110,6 @@
                 this.accountId = id;
 
                 this.confirmingRemove = true;
-
-                setTimeout(() => {
-                    this.$refs.password.focus();
-                }, 250);
             },
 
             hasAccountForProvider(provider) {
@@ -131,11 +127,7 @@
             removeConnectedAccount(id) {
                 this.form.post(route('connected-accounts.destroy', {id}), {
                     preserveScroll: true,
-                    onSuccess: () => {
-                        if (! this.form.hasErrors()) {
-                            this.confirmingRemove = false;
-                        }
-                    },
+                    onSuccess: () => (this.confirmingRemove = false),
                 });
             },
         }

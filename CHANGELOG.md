@@ -5,6 +5,12 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.3...master)
 
+## [v2.2.0 (2021-01-13)](https://github.com/joelbutcher/socialstream/compare/v2.1.1...v2.2.0)
+
+### Changes
+- Define data shared method on connected account abstract [(#42)](https://github.com/joelbutcher/socialstream/pull/42)
+- Use `diffForHumans` for connected account dates [(#41)](https://github.com/joelbutcher/socialstream/pull/41)
+
 ## [v2.1.1 (2021-01-12)](https://github.com/joelbutcher/socialstream/compare/v2.1.0...v2.1.1)
 
 ### Fixed

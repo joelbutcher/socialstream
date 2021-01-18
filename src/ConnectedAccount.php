@@ -34,10 +34,20 @@ abstract class ConnectedAccount extends Model
      */
     public function getSharedInertiaData()
     {
+        return $this->getSharedData();
+    }
+
+    /**
+     * Get the data that should be shared.
+     *
+     * @return array
+     */
+    public function getSharedData()
+    {
         return [
             'id' => $this->id,
             'provider' => $this->provider,
-            'created_at' => (new \DateTime($this->created_at))->format('d/m/Y H:i'),
+            'created_at' => optional($this->created_at)->diffForHumans(),
         ];
     }
 }
