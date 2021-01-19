@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'show' => env('SHOW_SOCIALSTREAM', true),
+    'show' => env('SOCIALSTREAM_SHOW', true),
 
     /*
     |--------------------------------------------------------------------------
