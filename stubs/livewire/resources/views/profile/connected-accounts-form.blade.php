@@ -22,8 +22,8 @@
 
         <div class="mt-5 space-y-6">
             @foreach ($this->providers as $provider)
-                @if ($account = $this->accounts->where('provider_name', $provider)->first())
-                    <x-connected-account provider="{{ $account->provider_name }}" created-at="{{ $account->created_at }}">
+                @if ($account = $this->accounts->where('provider', $provider)->first())
+                    <x-connected-account provider="{{ $account->provider }}" created-at="{{ $account->created_at }}">
 
                         <x-slot name="action">
                             @if ($this->accounts->count() > 1 || ! is_null($this->user->password))
