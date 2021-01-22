@@ -125,7 +125,7 @@ class OAuthController extends Controller
         }
 
         // Registration...
-        if (session()->get('origin_url') === route('register')) {
+        if (! $account || session()->get('origin_url') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
@@ -149,12 +149,6 @@ class OAuthController extends Controller
             $this->guard->login($user, config('socialstream.remember'));
 
             return redirect(config('fortify.home'));
-        }
-
-        if (! $account) {
-            return redirect()->route('login')->withErrors(
-                __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
-            );
         }
 
         $this->guard->login($account->user, config('socialstream.remember'));
