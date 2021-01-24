@@ -45,6 +45,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Socialstream Auto Create Account
+    |--------------------------------------------------------------------------
+    |
+    | This value is used to determine whether to auto create new account
+    | when a new user attempt to login.
+    |
+    */
+
+    'auto_create' => env('SOCIALSTREAM_AUTO_CREATE', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Socialstream Providers
     |--------------------------------------------------------------------------
     |
@@ -60,4 +72,5 @@ return [
     'providers' => [
         // 'github',
     ],
+
 ];
