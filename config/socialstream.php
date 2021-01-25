@@ -53,7 +53,7 @@ return [
     |
     */
 
-    'auto_create' => env('SOCIALSTREAM_AUTO_CREATE', false),
+    'autoCreate' => env('SOCIALSTREAM_AUTO_CREATE', false),
 
     /*
     |--------------------------------------------------------------------------

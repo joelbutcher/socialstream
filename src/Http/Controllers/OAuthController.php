@@ -124,7 +124,7 @@ class OAuthController extends Controller
             ]);
         }
 
-        $is_autocreate = config('socialstream.auto_create');
+        $is_autocreate = config('socialstream.autoCreate');
 
         // Registration...
         if ((! $account && $is_autocreate) || session()->get('origin_url') === route('register')) {
