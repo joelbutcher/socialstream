@@ -124,10 +124,10 @@ class OAuthController extends Controller
             ]);
         }
 
-        $is_autocreate = config('socialstream.autoCreate');
+        $isAutocreate = config('socialstream.autoCreate');
 
         // Registration...
-        if ((! $account && $is_autocreate) || session()->get('origin_url') === route('register')) {
+        if ((! $account && $isAutocreate) || session()->get('origin_url') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
@@ -153,7 +153,7 @@ class OAuthController extends Controller
             return redirect(config('fortify.home'));
         }
 
-        if (! $account && ! $is_autocreate) {
+        if (! $account && ! $isAutocreate) {
             return redirect()->route('login')->withErrors(
                 __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
             );
