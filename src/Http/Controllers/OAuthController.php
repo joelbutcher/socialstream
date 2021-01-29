@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
+use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Facades\Socialite;
@@ -72,7 +73,7 @@ class OAuthController extends Controller
      */
     public function redirectToProvider(Request $request, string $provider, GeneratesProviderRedirect $generator)
     {
-        session()->put('url.previous', back()->getTargetUrl());
+        session()->put('socialstream.previous_url', back()->getTargetUrl());
 
         return $generator->generate($provider);
     }
@@ -122,7 +123,7 @@ class OAuthController extends Controller
         }
 
         // Registration...
-        if (session()->get('url.previous') === route('register')) {
+        if (session()->get('socialstream.previous_url') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
@@ -135,7 +136,7 @@ class OAuthController extends Controller
                 );
             }
 
-            if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->first()) {
+            if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
                 return redirect()->route('register')->withErrors(
                     __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
                 );
@@ -148,10 +149,24 @@ class OAuthController extends Controller
             return redirect(config('fortify.home'));
         }
 
-        if (! $account) {
+        if (! Features::createsAccountsOnFirstLogin() && ! $account) {
             return redirect()->route('login')->withErrors(
                 __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
             );
+        }
+
+        if (Features::createsAccountsOnFirstLogin() && ! $account) {
+            if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
+                return redirect()->route('login')->withErrors(
+                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
+                );
+            }
+
+            $user = $this->createsUser->create($provider, $providerAccount);
+
+            $this->guard->login($user, config('socialstream.remember'));
+
+            return redirect(config('fortify.home'));
         }
 
         $this->guard->login($account->user, config('socialstream.remember'));
