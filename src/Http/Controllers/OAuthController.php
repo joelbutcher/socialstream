@@ -72,7 +72,7 @@ class OAuthController extends Controller
      */
     public function redirectToProvider(Request $request, string $provider, GeneratesProviderRedirect $generator)
     {
-        session()->put('origin_url', back()->getTargetUrl());
+        session()->put('url.previous', back()->getTargetUrl());
 
         return $generator->generate($provider);
     }
@@ -122,7 +122,7 @@ class OAuthController extends Controller
         }
 
         // Registration...
-        if (session()->get('origin_url') === route('register')) {
+        if (session()->get('url.previous') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
