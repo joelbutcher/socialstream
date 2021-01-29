@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream\Http\Controllers;
 
 use App\Actions\Socialstream\HandleInvalidState;
-use App\Models\ConnectedAccount;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
+use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -98,10 +98,7 @@ class OAuthController extends Controller
             $this->invalidStateHandler->handle($e);
         }
 
-        $account = ConnectedAccount::firstWhere([
-            'provider' => $provider,
-            'provider_id' => $providerAccount->getId(),
-        ]);
+        $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
 
         // Authenticated...
         if (! is_null($user = Auth::user())) {
