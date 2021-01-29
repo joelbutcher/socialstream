@@ -56,7 +56,7 @@ class Socialstream
 
     /**
      * Find a connected account instance fot a given provider and provider ID.
-     * 
+     *
      * @param  string  $provider
      * @param  string  $providerId
      * @return mixed
