@@ -18,7 +18,7 @@ class Features
     /**
      * Determine if the application supports creating accounts
      * when logging in for the first time via a provider.
-     * 
+     *
      * @return bool
      */
     public static function createsAccountsOnFirstLogin()
