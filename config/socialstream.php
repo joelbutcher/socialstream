@@ -22,18 +22,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Socialstream Remember Session
-    |--------------------------------------------------------------------------
-    |
-    | This value is used to determine if a session created by socialstream
-    | uses the "remember me" login parameter.
-    |
-    */
-
-    'remember' => env('SOCIALSTREAM_REMEMBER', false),
-
-    /*
-    |--------------------------------------------------------------------------
     | Socialstream Route Middleware
     |--------------------------------------------------------------------------
     |

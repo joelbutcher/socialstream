@@ -55,6 +55,16 @@ class Socialstream
     }
 
     /**
+     * Determine if the application should remember the users session om login.
+     *
+     * @return bool
+     */
+    public static function shouldRememberSession()
+    {
+        return Features::shouldRememberSession();
+    }
+
+    /**
      * Find a connected account instance fot a given provider and provider ID.
      *
      * @param  string  $provider
