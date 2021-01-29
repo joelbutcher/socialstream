@@ -28,7 +28,7 @@ class Features
 
     /**
      * Determine if the application should remember the users session om login.
-     * 
+     *
      * @return bool
      */
     public static function shouldRememberSession()
@@ -48,7 +48,7 @@ class Features
 
     /**
      * Enable the remember session feature for logging in.
-     * 
+     *
      * @return string
      */
     public static function rememberSession()
