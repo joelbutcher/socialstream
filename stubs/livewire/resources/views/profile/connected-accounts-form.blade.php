@@ -24,7 +24,7 @@
             @foreach ($this->providers as $provider)
                 @php
                     $account = null;
-                    $account = $this->accounts->where('provider_name', $provider)->first()
+                    $account = $this->accounts->where('provider', $provider)->first()
                 @endphp
 
                 <x-connected-account provider="{{ $provider }}" created-at="{{ $account->created_at ?? null }}">

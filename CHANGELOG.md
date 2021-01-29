@@ -5,6 +5,10 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.3...master)
 
+## [v2.3.0 (2021-01-29)](https://github.com/joelbutcher/socialstream/compare/v2.2.0...v2.3.0)
+## Changes
+- Create accounts on Login [(#58)](https://github.com/joelbutcher/socialstream/pull/58)
+
 ## [v2.2.0 (2021-01-13)](https://github.com/joelbutcher/socialstream/compare/v2.1.1...v2.2.0)
 
 ### Changes

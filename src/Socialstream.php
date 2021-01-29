@@ -55,6 +55,21 @@ class Socialstream
     }
 
     /**
+     * Find a connected account instance fot a given provider and provider ID.
+     *
+     * @param  string  $provider
+     * @param  string  $providerId
+     * @return mixed
+     */
+    public static function findConnectedAccountForProviderAndId(string $provider, string $providerId)
+    {
+        return static::newConnectedAccountModel()
+            ->where('provider', $provider)
+            ->where('provider_id', $providerId)
+            ->first();
+    }
+
+    /**
      * Get the name of the connected account model used by the application.
      *
      * @return string
