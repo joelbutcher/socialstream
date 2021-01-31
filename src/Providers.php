@@ -87,7 +87,7 @@ class Providers
 
     /**
      * Enable the bitbucket provider.
-     * 
+     *
      * @return string
      */
     public static function bitbucket()
@@ -97,7 +97,7 @@ class Providers
 
     /**
      * Enable the Facebook provider.
-     * 
+     *
      * @return string
      */
     public static function facebook()
@@ -107,7 +107,7 @@ class Providers
 
     /**
      * Enable the github provider.
-     * 
+     *
      * @return string
      */
     public static function github()
@@ -117,7 +117,7 @@ class Providers
 
     /**
      * Enable the gitlab provider.
-     * 
+     *
      * @return string
      */
     public static function gitlab()
@@ -127,7 +127,7 @@ class Providers
 
     /**
      * Enable the google provider.
-     * 
+     *
      * @return string
      */
     public static function google()
@@ -137,7 +137,7 @@ class Providers
 
     /**
      * Enable the linkedin provider.
-     * 
+     *
      * @return string
      */
     public static function linkedin()
@@ -147,7 +147,7 @@ class Providers
 
     /**
      * Enable the twitter provider.
-     * 
+     *
      * @return string
      */
     public static function twitter()
