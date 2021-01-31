@@ -6,7 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-use Laravel\Jetstream\Features;
+use JoelButcher\Socialstream\Socialstream;
+use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class CreateUserFromProvider implements CreatesUserFromProvider
@@ -44,7 +45,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
 
-                if (Features::profilePhotos()) {
+                if (Socialstream::hasProviderAvatarsFeature() && Jetstream::managesProfilePhotos()) {
                     $user->forceFill([
                         'profile_photo_path' => $providerUser->getAvatar(),
                     ]);
