@@ -27,6 +27,16 @@ class Features
     }
 
     /**
+     * Determine if the application should use provider avatars when registering.
+     * 
+     * @return bool
+     */
+    public static function hasProviderAvatarsFeature()
+    {
+        return static::enabled(static::providerAvatars());
+    }
+
+    /**
      * Determine if the application should remember the users session om login.
      *
      * @return bool
@@ -44,6 +54,16 @@ class Features
     public static function createAccountOnFirstLogin()
     {
         return 'create-account-on-first-login';
+    }
+
+    /**
+     * Enable the provider avatars feature.
+     * 
+     * @return string
+     */
+    public static function providerAvatars()
+    {
+        return 'provider-avatars';
     }
 
     /**
