@@ -55,13 +55,23 @@ class Socialstream
     }
 
     /**
+     * Determine if the application has the create account on first login feature.
+     * 
+     * @return bool
+     */
+    public static function hasCreateAccountOnFirstLoginFeatures()
+    {
+        return Features::hasCreateAccountOnFirstLoginFeatures();
+    }
+
+    /**
      * Determine if the application should remember the users session om login.
      *
      * @return bool
      */
-    public static function shouldRememberSession()
+    public static function hasRememberSessionFeatures()
     {
-        return Features::shouldRememberSession();
+        return Features::hasRememberSessionFeatures();
     }
 
     /**

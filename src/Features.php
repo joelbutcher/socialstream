@@ -21,7 +21,7 @@ class Features
      *
      * @return bool
      */
-    public static function createsAccountsOnFirstLogin()
+    public static function hasCreateAccountOnFirstLoginFeatures()
     {
         return static::enabled(static::createAccountOnFirstLogin());
     }
@@ -31,7 +31,7 @@ class Features
      *
      * @return bool
      */
-    public static function shouldRememberSession()
+    public static function hasRememberSessionFeatures()
     {
         return static::enabled(static::rememberSession());
     }
