@@ -56,7 +56,7 @@ class Socialstream
 
     /**
      * Determine if the application has the create account on first login feature.
-     * 
+     *
      * @return bool
      */
     public static function hasCreateAccountOnFirstLoginFeatures()
