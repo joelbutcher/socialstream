@@ -5,43 +5,43 @@
 </div>
 
 <div class="flex items-center justify-center">
-    @if (JoelButcher\Socialstream\Socialstream::hasSupportFor('facebook'))
+    @if (JoelButcher\Socialstream\Socialstream::hasFacebookSupport())
         <a href="{{ route('oauth.redirect', ['provider' => 'facebook']) }}">
             <x-facebook-icon class="h-6 w-6 mx-2" />
         </a>
     @endif
 
-    @if (JoelButcher\Socialstream\Socialstream::hasSupportFor('google'))
+    @if (JoelButcher\Socialstream\Socialstream::hasGoogleSupport())
         <a href="{{ route('oauth.redirect', ['provider' => 'google']) }}" >
             <x-google-icon class="h-6 w-6 mx-2" />
         </a>
     @endif
 
-    @if (JoelButcher\Socialstream\Socialstream::hasSupportFor('twitter'))
+    @if (JoelButcher\Socialstream\Socialstream::hasTwitterSupport())
         <a href="{{ route('oauth.redirect', ['provider' => 'twitter']) }}">
             <x-twitter-icon class="h-6 w-6 mx-2" />
         </a>
     @endif
 
-    @if (JoelButcher\Socialstream\Socialstream::hasSupportFor('linkedin'))
+    @if (JoelButcher\Socialstream\Socialstream::hasLinkedInSupport())
         <a href="{{ route('oauth.redirect', ['provider' => 'linkedin']) }}">
             <x-linked-in-icon class="h-6 w-6 mx-2" />
         </a>
     @endif
 
-    @if (JoelButcher\Socialstream\Socialstream::hasSupportFor('github'))
+    @if (JoelButcher\Socialstream\Socialstream::hasGithubSupport())
         <a href="{{ route('oauth.redirect', ['provider' => 'github']) }}">
             <x-github-icon class="h-6 w-6 mx-2" />
         </a>
     @endif
 
-    @if (JoelButcher\Socialstream\Socialstream::hasSupportFor('gitlab'))
+    @if (JoelButcher\Socialstream\Socialstream::hasGitlabSupport())
         <a href="{{ route('oauth.redirect', ['provider' => 'gitlab']) }}">
             <x-gitlab-icon class="h-6 w-6 mx-2" />
         </a>
     @endif
 
-    @if (JoelButcher\Socialstream\Socialstream::hasSupportFor('bitbucket'))
+    @if (JoelButcher\Socialstream\Socialstream::hasBitbucketSupport())
         <a href="{{ route('oauth.redirect', ['provider' => 'bitbucket']) }}">
             <x-bitbucket-icon />
         </a>
