@@ -136,7 +136,7 @@ class Socialstream
 
     /**
      * Determine if the application should use provider avatars when registering.
-     * 
+     *
      * @return bool
      */
     public static function hasProviderAvatarsFeature()

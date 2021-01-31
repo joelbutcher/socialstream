@@ -28,7 +28,7 @@ class Features
 
     /**
      * Determine if the application should use provider avatars when registering.
-     * 
+     *
      * @return bool
      */
     public static function hasProviderAvatarsFeature()
@@ -58,7 +58,7 @@ class Features
 
     /**
      * Enable the provider avatars feature.
-     * 
+     *
      * @return string
      */
     public static function providerAvatars()
