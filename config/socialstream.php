@@ -1,6 +1,7 @@
 <?php
 
 use JoelButcher\Socialstream\Features;
+use JoelButcher\Socialstream\Providers;
 
 return [
 
@@ -54,13 +55,11 @@ return [
     | Out of the box, Socialstream provides support for all of the OAuth
     | providers that are supported by Laravel Socialite.
     |
-    | Supported: "google", "facebook", "github", "gitlab",
-    |            "bitbucket", "linkedin", "twitter"
-    |
+    | @see \JoelButcher\Socialstream\Providers
     */
 
     'providers' => [
-        // 'github',
+        // Providers::github(),
     ],
 
     /*
