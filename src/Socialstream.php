@@ -45,13 +45,83 @@ class Socialstream
     }
 
     /**
-     * Determine if Socialistream supports a specific Socialite service.
+     * Determine if Socialistream supports a specific Socialite provider.
      *
      * @return bool
      */
-    public static function hasSupportFor(string $service)
+    public static function hasSupportFor(string $provider)
     {
-        return in_array($service, config('socialstream.providers'));
+        return Providers::enabled($provider);
+    }
+
+    /**
+     * Determine if the application has support for the Bitbucket provider..
+     *
+     * @return bool
+     */
+    public static function hasBitbucketSupport()
+    {
+        return Providers::hasBitbucketSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Facebook provider..
+     *
+     * @return bool
+     */
+    public static function hasFacebookSupport()
+    {
+        return Providers::hasFacebookSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Gitlab provider..
+     *
+     * @return bool
+     */
+    public static function hasGitlabSupport()
+    {
+        return Providers::hasGitlabSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Github provider..
+     *
+     * @return bool
+     */
+    public static function hasGithubSupport()
+    {
+        return Providers::hasGithubSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Google provider..
+     *
+     * @return bool
+     */
+    public static function hasGoogleSupport()
+    {
+        return Providers::hasGoogleSupport();
+    }
+
+    /**
+     * Determine if the application has support for the LinkedIn provider..
+     *
+     * @return bool
+     */
+    public static function hasLinkedInSupport()
+    {
+        return Providers::hasLinkedInSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Twitter provider..
+     *
+     * @return bool
+     */
+    public static function hasTwitterSupport()
+    {
+        return Providers::hasTwitterSupport();
     }
 
     /**
