@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use JoelButcher\Socialstream\HasConnectedAccounts;
+use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
@@ -69,7 +70,7 @@ class User extends Authenticatable
      */
     public function getProfilePhotoUrlAttribute()
     {
-        if (filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)) {
+        if (Socialstream::hasProviderAvatarsFeature() && filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)) {
             return $this->profile_photo_path;
         }
 

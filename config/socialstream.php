@@ -75,5 +75,6 @@ return [
 
     'features' => [
         // Features::createAccountOnFirstLogin(),
+        Features::providerAvatars(),
     ],
 ];

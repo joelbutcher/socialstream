@@ -135,6 +135,16 @@ class Socialstream
     }
 
     /**
+     * Determine if the application should use provider avatars when registering.
+     * 
+     * @return bool
+     */
+    public static function hasProviderAvatarsFeature()
+    {
+        return Features::hasProviderAvatarsFeature();
+    }
+
+    /**
      * Determine if the application should remember the users session om login.
      *
      * @return bool
