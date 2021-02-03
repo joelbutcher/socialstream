@@ -56,6 +56,8 @@ You will then need to alter the appropriate published components with your new i
 - Connected Account component
 - Socialstream Providers component
 
+> Note: Some providers will not return a token in the callback response. As such, you will need to modify the `2020_12_22_000000_create_connected_accounts_table.php` migration to allow the `token` field to accept `NULL` values
+
 ## Changelog
 
 Check out the [CHANGELOG](CHANGELOG.md) in this repository for all the recent changes.
