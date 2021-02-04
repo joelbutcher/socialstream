@@ -23,7 +23,7 @@ class UpdateUserProfilePhotoController extends Controller
         if (is_callable([$user, 'setProfilePhotoFromUrl']) && ! is_null($account->avatar_path)) {
             $user->setProfilePhotoFromUrl($account->avatar_path);
         }
-        
+
         return back(303);
     }
 }
