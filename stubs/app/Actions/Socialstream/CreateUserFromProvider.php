@@ -48,7 +48,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
 
                 if (Socialstream::hasProviderAvatarsFeature() && Jetstream::managesProfilePhotos() && $providerUser->getAvatar()) {
                     $name = pathinfo($providerUser->getAvatar())['basename'];
-                    file_put_contents($file = '/tmp/' . $name, file_get_contents($providerUser->getAvatar()));
+                    file_put_contents($file = '/tmp/'.$name, file_get_contents($providerUser->getAvatar()));
                     $user->updateProfilePhoto(new UploadedFile($file, $name));
                 }
 
