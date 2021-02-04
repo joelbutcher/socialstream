@@ -76,13 +76,13 @@ class ConnectedAccountsForm extends Component
     public function setAvatarAsProfilePhoto($accountId)
     {
         $account = Auth::user()->connectedAccounts
-            ->where('user_id', Auth::user()->getAuthIdentifier())
+            ->where('user_id', ($user = Auth::user())->getAuthIdentifier())
             ->where('id', $accountId)
             ->first();
 
-        Auth::user()->forceFill([
-            'profile_photo_path' => $account->avatar_path ?? null,
-        ])->save();
+        if (is_callable([$user, 'setProfilePhotoFromUrl']) && !is_null($account->avatar_path)) {
+            $user->setProfilePhotoFromUrl($account->avatar_path);
+        }
 
         return redirect()->route('profile.show');
     }
