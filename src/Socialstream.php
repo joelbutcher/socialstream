@@ -11,6 +11,13 @@ use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 class Socialstream
 {
     /**
+     * Determines if the application is using Socialstream.
+     *
+     * @var bool
+     */
+    public static $enabled = true;
+
+    /**
      * Indicates if Socialstream routes will be registered.
      *
      * @var bool
@@ -25,13 +32,28 @@ class Socialstream
     public static $connectedAccountModel = 'App\\Models\\ConnectedAccount';
 
     /**
+     * Determine whether or not Socialstream is enabled in the application.
+     *
+     * @param  callable  $callback
+     * @return bool
+     */
+    public static function enabled($callback = null)
+    {
+        if ($callback) {
+            static::$enabled = $callback();
+        }
+
+        return static::$enabled;
+    }
+
+    /**
      * Determine whether or not to show Socialstream components on login or registration.
      *
      * @return bool
      */
     public static function show()
     {
-        return config('socialstream.show');
+        return static::$enabled;
     }
 
     /**
