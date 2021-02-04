@@ -3,6 +3,7 @@
 namespace App\Actions\Socialstream;
 
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
@@ -46,9 +47,9 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 $user->markEmailAsVerified();
 
                 if (Socialstream::hasProviderAvatarsFeature() && Jetstream::managesProfilePhotos()) {
-                    $user->forceFill([
-                        'profile_photo_path' => $providerUser->getAvatar(),
-                    ]);
+                    $name = pathinfo($providerUser->getAvatar())['basename'];
+                    file_put_contents($file = '/tmp/' . $name, file_get_contents($providerUser->getAvatar()));
+                    $user->updateProfilePhoto(new UploadedFile($file, $name));
                 }
 
                 $user->switchConnectedAccount(
