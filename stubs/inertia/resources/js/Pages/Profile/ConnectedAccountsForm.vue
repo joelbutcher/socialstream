@@ -22,19 +22,35 @@
 
             <div class="mt-5 space-y-6">
                 <div v-for="(provider) in $page.props.socialstream.providers" :key="provider">
-                    <connected-account v-if="hasAccountForProvider(provider)" :provider="getAccountForProvider(provider).provider" :created-at="getAccountForProvider(provider).created_at">
+                    <connected-account :provider="provider" :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider).created_at : null">
                         <template #action>
-                            <jet-button @click.native="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.props.socialstream.canRemoveAccounts || $page.props.socialstream.hasPassword">
-                                Remove
-                            </jet-button>
-                        </template>
-                    </connected-account>
+                            <template v-if="hasAccountForProvider(provider)">
+                                <div class="flex items-center space-x-6">
+                                    <button
+                                        @click="setProfilePhoto(getAccountForProvider(provider).id)"
+                                        class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none">
+                                        Use Avatar as Profile Photo
+                                    </button>
 
-                    <connected-account v-else :provider="provider">
-                        <template #action>
-                            <action-link :href="route('oauth.redirect', {provider})">
-                                Connect
-                            </action-link>
+                                    <jet-danger-button @click.native="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword">
+                                        Remove
+                                    </jet-danger-button>
+                                </div>
+                            </template>
+
+                            <template v-else>
+                                <div class="flex items-center space-x-6">
+                                    <button
+                                        @click="setProfilePhoto(getAccountForProvider(provider).id)"
+                                        class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none">
+                                        Use Avatar as Profile Photo
+                                    </button>
+
+                                    <action-link :href="route('oauth.redirect', { provider })">
+                                        Connect
+                                    </action-link>
+                                </div>
+                            </template>
                         </template>
                     </connected-account>
                 </div>
@@ -70,6 +86,7 @@
     import JetActionMessage from '@/Jetstream/ActionMessage';
     import JetActionSection from '@/Jetstream/ActionSection';
     import JetButton from '@/Jetstream/Button';
+    import JetDangerButton from '@/Jetstream/DangerButton';
     import JetDialogModal from '@/Jetstream/DialogModal';
     import JetInput from '@/Jetstream/Input';
     import JetInputError from '@/Jetstream/InputError';
@@ -82,6 +99,7 @@
             JetActionMessage,
             JetActionSection,
             JetButton,
+            JetDangerButton,
             JetDialogModal,
             JetInput,
             JetInputError,
@@ -122,6 +140,12 @@
                 }
 
                 return null;
+            },
+
+            setProfilePhoto(id) {
+                this.form.put(route('user-profile-photo.set', {id}), {
+                    preserveScroll: true,
+                });
             },
 
             removeConnectedAccount(id) {
