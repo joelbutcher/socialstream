@@ -1,37 +1,8 @@
 <?php
 
 use JoelButcher\Socialstream\Features;
-use JoelButcher\Socialstream\Providers;
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Socialstream Visibility
-    |--------------------------------------------------------------------------
-    |
-    | This value is used to determine whether or not to show the providers
-    | on "/login" or "/register" routes.
-    |
-    | Note: if you have previously enabled socialstream, and have users in
-    | your database with any connected accounts, they will still be able to
-    | disconnect them from their profile.
-    |
-    */
-
-    'show' => env('SOCIALSTREAM_SHOW', true),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Socialstream Remember Session
-    |--------------------------------------------------------------------------
-    |
-    | This value is used to determine if a session created by socialstream
-    | uses the "remember me" login parameter.
-    |
-    */
-
-    'remember' => env('SOCIALSTREAM_REMEMBER', false),
 
     /*
     |--------------------------------------------------------------------------
