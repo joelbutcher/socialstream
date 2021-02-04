@@ -47,6 +47,7 @@ abstract class ConnectedAccount extends Model
         return [
             'id' => $this->id,
             'provider' => $this->provider,
+            'avatar_path' => $this->avatar_path,
             'created_at' => optional($this->created_at)->diffForHumans(),
         ];
     }

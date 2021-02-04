@@ -22,29 +22,26 @@
 
         <div class="mt-5 space-y-6">
             @foreach ($this->providers as $provider)
-<<<<<<< HEAD
                 @php
                     $account = null;
-                    $account = $this->accounts->where('provider_name', $provider)->first()
+                    $account = $this->accounts->where('provider', $provider)->first();
                 @endphp
-=======
-                @if ($account = $this->accounts->where('provider', $provider)->first())
-                    <x-connected-account provider="{{ $account->provider }}" created-at="{{ $account->created_at }}">
->>>>>>> 2.x
 
                 <x-connected-account provider="{{ $provider }}" created-at="{{ $account->created_at ?? null }}">
                     <x-slot name="action">
-                        @if (! is_null($account) && ($this->accounts->count() > 1 || ! is_null($this->user->password)))
+                        @if (! is_null($account))
                             <div class="flex items-center space-x-6">
-                                @if (! is_null($account->avatar_path) && ($account->avatar_path !== $this->user->profile_photo_path))
+                                @if (! is_null($account->avatar_path))
                                     <button class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none" wire:click="setAvatarAsProfilePhoto({{ $account->id }})">
                                         {{ __('Use Avatar as Profile Photo') }}
                                     </button>
                                 @endif
 
-                                <x-jet-danger-button wire:click="confirmRemove({{ $account->id }})" wire:loading.attr="disabled">
-                                    {{ __('Remove') }}
-                                </x-jet-danger-button>
+                                @if (($this->accounts->count() > 1 || ! is_null($this->user->password)))
+                                    <x-jet-danger-button wire:click="confirmRemove({{ $account->id }})" wire:loading.attr="disabled">
+                                        {{ __('Remove') }}
+                                    </x-jet-danger-button>
+                                @endif
                             </div>
                         @else
                             <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
