@@ -99,7 +99,6 @@ class OAuthController extends Controller
             if (Socialstream::generatesMissingEmails()) {
                 $providerAccount->email = $providerAccount->getEmail() ?? "{$providerAccount->id}@{$provider}".config('app.domain');
             }
-
         } catch (InvalidStateException $e) {
             $this->invalidStateHandler->handle($e);
         }
