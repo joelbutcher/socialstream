@@ -95,6 +95,11 @@ class OAuthController extends Controller
 
         try {
             $providerAccount = Socialite::driver($provider)->user();
+
+            if (Socialstream::generatesMissingEmails()) {
+                $providerAccount->email = $providerAccount->getEmail() ?? "{$providerAccount->id}@{$provider}".config('app.domain');
+            }
+
         } catch (InvalidStateException $e) {
             $this->invalidStateHandler->handle($e);
         }

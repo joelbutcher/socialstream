@@ -16,6 +16,16 @@ class Features
     }
 
     /**
+     * Determine if the application has the generates missing emails feature enabled.
+     *
+     * @return bool
+     */
+    public static function generatesMissingEmails()
+    {
+        return static::enabled(static::generateMissingEmails());
+    }
+
+    /**
      * Determine if the application supports creating accounts
      * when logging in for the first time via a provider.
      *
@@ -44,6 +54,16 @@ class Features
     public static function hasRememberSessionFeatures()
     {
         return static::enabled(static::rememberSession());
+    }
+
+    /**
+     * Enabled the generate missing emails feature.
+     *
+     * @return string
+     */
+    public static function generateMissingEmails()
+    {
+        'generate-missing-emails';
     }
 
     /**

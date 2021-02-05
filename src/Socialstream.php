@@ -147,6 +147,16 @@ class Socialstream
     }
 
     /**
+     * Determine if the application has the generates missing emails feature enabled.
+     *
+     * @return bool
+     */
+    public static function generatesMissingEmails()
+    {
+        return Features::generatesMissingEmails();
+    }
+
+    /**
      * Determine if the application has the create account on first login feature.
      *
      * @return bool
