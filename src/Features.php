@@ -63,6 +63,7 @@ class Features
      */
     public static function generateMissingEmails()
     {
+        return 'generate-missing-emails';
     }
 
     /**
