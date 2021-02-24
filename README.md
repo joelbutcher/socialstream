@@ -51,7 +51,7 @@ return [
 ```
 Once you’ve defined your providers, you will need to provider client_id , client_secret and redirect keys for each in your services.php config file. E.g.
 ```
-github => [
+'github' => [
   'client_id' => env('GITHUB_CLIENT_ID'),
   'client_secret' => env('GITHUB_CLIENT_SECRET'),
   'redirect' => env('GITHUB_REDIRECT'),
