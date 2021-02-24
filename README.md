@@ -34,7 +34,27 @@ php artisan socialstream:install
 The `socialstream:install` command will overwrite the Jetstream published files which are required for Socialstream to work. 
 
 > Note: If you don't have Laravel Jetstream installed, the above command will walk you through the steps required to install it.
-
+> 
+## Configuration & Setup
+Once Socialstream is installed, it will publish a config file. In this config file, you can define whether or not the packages alterations should be shown, the middleware used to wrap the routes as well as the providers that you wish to use:
+```<?php
+return [
+  'show' => true,
+  'middleware => ['web'],
+  'providers => [
+    'github',
+    'facebook',
+    'google'
+  ],
+];
+```
+Once you’ve defined your providers, you will need to provider client_id , client_secret and redirect keys for each in your services.php config file. E.g.
+```'github' => [
+  'client_id' => env('GITHUB_CLIENT_ID'),
+  'client_secret' => env('GITHUB_CLIENT_SECRET'),
+  'redirect' => env('GITHUB_REDIRECT'),
+],
+```
 ### Invalid State
 
 To handle instances where Socialite throws an `InvalidStateException` a dedicated `HandleInvalidState` action is made available to you when you first install Socialstream. You are free to modify or extend this action according to your needs. 
