@@ -37,7 +37,8 @@ The `socialstream:install` command will overwrite the Jetstream published files 
 > 
 ## Configuration & Setup
 Once Socialstream is installed, it will publish a config file. In this config file, you can define whether or not the packages alterations should be shown, the middleware used to wrap the routes as well as the providers that you wish to use:
-```<?php
+```
+<?php
 return [
   'show' => true,
   'middleware => ['web'],
@@ -49,7 +50,8 @@ return [
 ];
 ```
 Once you’ve defined your providers, you will need to provider client_id , client_secret and redirect keys for each in your services.php config file. E.g.
-```'github' => [
+```
+github' => [
   'client_id' => env('GITHUB_CLIENT_ID'),
   'client_secret' => env('GITHUB_CLIENT_SECRET'),
   'redirect' => env('GITHUB_REDIRECT'),
