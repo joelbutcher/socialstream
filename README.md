@@ -55,6 +55,7 @@ Once you’ve defined your providers, you will need to update your `services.php
   'client_id' => env('GITHUB_CLIENT_ID'),
   'client_secret' => env('GITHUB_CLIENT_SECRET'),
   'redirect' => env('GITHUB_REDIRECT'),
+  // default is 'https://domain.com/oauth/github/callback'
 ],
 ```
 ### Invalid State
