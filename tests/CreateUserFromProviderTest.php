@@ -6,7 +6,6 @@ use App\Actions\Socialstream\CreateConnectedAccount;
 use App\Actions\Socialstream\CreateUserFromProvider;
 use App\Models\ConnectedAccount;
 use DateTimeInterface;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\Credentials;
 use Laravel\Socialite\One\User as OAuth1User;
