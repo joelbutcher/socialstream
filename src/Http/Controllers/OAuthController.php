@@ -119,7 +119,7 @@ class OAuthController extends Controller
         if (! is_null($user = Auth::user())) {
             if ($account && $account->user_id !== $user->id) {
                 return redirect()->route('profile.show')->dangerBanner([
-                    $provider.'_connect_error' => __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider]),
+                    __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider]),
                 ]);
             }
 
@@ -132,7 +132,7 @@ class OAuthController extends Controller
             }
 
             return redirect()->route('profile.show')->dangerBanner([
-                $provider.'_connect_error' => __('This :Provider sign in account is already associated with your user.', ['provider' => $provider]),
+                __('This :Provider sign in account is already associated with your user.', ['provider' => $provider]),
             ]);
         }
 

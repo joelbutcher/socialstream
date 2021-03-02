@@ -7,7 +7,9 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [v2.3.0 (2021-01-29)](https://github.com/joelbutcher/socialstream/compare/v2.2.0...v2.3.0)
 ## Changes
-- Create accounts on Login [(#58)](https://github.com/joelbutcher/socialstream/pull/58)
+- Create an account on login (optional feature) [(#58)](https://github.com/joelbutcher/socialstream/pull/58)
+- Added remember session to config
+- Remove password focus & Fix error validation [(#39)](https://github.com/joelbutcher/socialstream/pull/39)
 
 ## [v2.2.0 (2021-01-13)](https://github.com/joelbutcher/socialstream/compare/v2.1.1...v2.2.0)
 
