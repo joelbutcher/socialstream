@@ -85,6 +85,7 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
         // Service Providers...
+        copy(__DIR__.'/../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
         copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
 
@@ -132,6 +133,7 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
 
         // Service Providers...
+        copy(__DIR__.'/../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
         copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
 
@@ -170,7 +172,10 @@ class InstallCommand extends Command
      */
     protected function ensureTeamsCompatibility()
     {
-        // User model...
+        // Service Provider...
+        copy(__DIR__.'/../../stubs/app/Providers/TeamsAuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
+
+        // User Model...
         copy(__DIR__.'/../../stubs/app/Models/UserWithTeams.php', app_path('Models/User.php'));
 
         // Jetstream Actions...
