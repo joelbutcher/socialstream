@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
+use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Jetstream;
@@ -40,6 +41,13 @@ class OAuthController extends Controller
     protected $createsConnectedAccounts;
 
     /**
+     * The updates connected accounts implementation.
+     *
+     * @var  \JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+     */
+    protected $updatesConnectedAccounts;
+
+    /**
      * The handler for Socialite's InvalidStateException.
      *
      * @var  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
@@ -56,11 +64,13 @@ class OAuthController extends Controller
         StatefulGuard $guard,
         CreatesUserFromProvider $createsUser,
         CreatesConnectedAccounts $createsConnectedAccounts,
+        UpdatesConnectedAccounts $updatesConnectedAccounts,
         HandleInvalidState $invalidStateHandler
     ) {
         $this->guard = $guard;
         $this->createsUser = $createsUser;
         $this->createsConnectedAccounts = $createsConnectedAccounts;
+        $this->updatesConnectedAccounts = $updatesConnectedAccounts;
         $this->invalidStateHandler = $invalidStateHandler;
     }
 
@@ -173,11 +183,13 @@ class OAuthController extends Controller
             return redirect(config('fortify.home'));
         }
 
-        $this->guard->login($account->user, Socialstream::hasRememberSessionFeatures());
+        $this->guard->login($user = $account->user, Socialstream::hasRememberSessionFeatures());
 
-        $account->user->forceFill([
+        $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
+
+        $user->forceFill([
             'current_connected_account_id' => $account->id,
-        ]);
+        ])->save();
 
         return redirect(config('fortify.home'));
     }

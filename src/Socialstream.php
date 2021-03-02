@@ -7,6 +7,7 @@ use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
+use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 
 class Socialstream
 {
@@ -256,6 +257,17 @@ class Socialstream
     public static function createConnectedAccountsUsing(string $class)
     {
         return app()->singleton(CreatesConnectedAccounts::class, $class);
+    }
+
+    /**
+     * Register a class / callback that should be used to update connected accounts.
+     *
+     * @param  string  $class
+     * @return void
+     */
+    public static function updateConnectedAccountsUsing(string $class)
+    {
+        return app()->singleton(UpdatesConnectedAccounts::class, $class);
     }
 
     /**

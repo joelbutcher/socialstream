@@ -2,24 +2,27 @@
 
 namespace App\Actions\Socialstream;
 
-use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-use JoelButcher\Socialstream\Socialstream;
-use Laravel\Socialite\Contracts\User as ProviderUser;
+use Illuminate\Support\Facades\Gate;
+use JoelButcher\Socialstream\ConnectedAccount;
+use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+use Laravel\Socialite\Contracts\User;
 
-class CreateConnectedAccount implements CreatesConnectedAccounts
+class UpdateConnectedAccount implements UpdatesConnectedAccounts
 {
     /**
-     * Create a connected account for a given user.
-     *
+     * Update a given connected account.
+     * 
      * @param  mixed  $user
+     * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
      * @param  string  $provider
      * @param  \Laravel\Socialite\Contracts\User  $providerUser
      * @return \JoelButcher\Socialstream\ConnectedAccount
      */
-    public function create($user, string $provider, ProviderUser $providerUser)
+    public function update($user, ConnectedAccount $connectedAccount, string $provider, User $providerUser)
     {
-        return Socialstream::connectedAccountModel()::forceCreate([
-            'user_id' => $user->id,
+        Gate::forUser($user)->authorize('update', $connectedAccount);
+
+        $connectedAccount->forceFill([
             'provider' => strtolower($provider),
             'provider_id' => $providerUser->getId(),
             'name' => $providerUser->getName(),
@@ -30,6 +33,8 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             'secret' => $providerUser->tokenSecret ?? null,
             'refresh_token' => $providerUser->refreshToken ?? null,
             'expires_at' => property_exists($providerUser, 'expiresIn') ? now()->addSeconds($providerUser->expiresIn) : null,
-        ]);
+        ])->save();
+
+        return $connectedAccount;
     }
 }
