@@ -3,7 +3,7 @@
 
 This changelog follows [the Keep a Changelog standard](https://keepachangelog.com).
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.3...master)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.3.0...master)
 
 ## [v2.4.0 (2021-03-09)](https://github.com/joelbutcher/socialstream/compare/v2.3.0...v2.4.0)
 ## Changes
