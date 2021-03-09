@@ -1,6 +1,6 @@
 <?php
 
-namespace JoelButcher\Socialstream\Actions;
+namespace App\Actions\Socialstream;
 
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;

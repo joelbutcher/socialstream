@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Actions\Socialstream\CreateConnectedAccount;
 use App\Actions\Socialstream\CreateUserFromProvider;
 use App\Actions\Socialstream\HandleInvalidState;
+use App\Actions\Socialstream\ResolveSocialiteUser;
 use App\Actions\Socialstream\SetUserPassword;
 use App\Actions\Socialstream\UpdateConnectedAccount;
 use Illuminate\Support\ServiceProvider;
@@ -34,6 +35,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             return config('sociastream.show', true);
         });
 
+        Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
         Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
         Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
         Socialstream::updateConnectedAccountsUsing(UpdateConnectedAccount::class);
