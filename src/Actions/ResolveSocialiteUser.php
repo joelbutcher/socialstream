@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream\Actions;
 
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
+use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Facades\Socialite;
 
 class ResolveSocialiteUser implements ResolvesSocialiteUsers
