@@ -5,6 +5,11 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v2.0.3...master)
 
+## [v2.4.0 (2021-03-09)](https://github.com/joelbutcher/socialstream/compare/v2.3.0...v2.4.0)
+## Changes
+- Allow developers to override Socialite user resolution [(#86)](https://github.com/joelbutcher/socialstream/pull/86
+
+
 ## [v2.3.0 (2021-01-29)](https://github.com/joelbutcher/socialstream/compare/v2.2.0...v2.3.0)
 ## Changes
 - Create an account on login (optional feature) [(#58)](https://github.com/joelbutcher/socialstream/pull/58)
