@@ -17,7 +17,6 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
-    use HasTeams;
     use HasConnectedAccounts;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
