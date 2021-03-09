@@ -89,6 +89,10 @@ Check out the [CHANGELOG](CHANGELOG.md) in this repository for all the recent ch
 
 Socialstream is developed and maintained by [Joel Butcher](https://joelbutcher.co.uk)
 
+## Credits
+
+Socialstream has a strong community of contributors helping make it the best package for integrating Socialite into your application. You can view all contributers [here](https://github.com/joelbutcher/socialstream/graphs/contributors)
+
 ## License
 
 Socialstream is open-sourced software licensed under the [MIT license](LICENSE.md).
