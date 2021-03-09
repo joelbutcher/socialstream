@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
+use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Jetstream;
@@ -85,7 +86,7 @@ class OAuthController extends Controller
      * @param  string  $provider
      * @return \Illuminate\Routing\Pipeline
      */
-    public function handleProviderCallback(Request $request, string $provider)
+    public function handleProviderCallback(Request $request, string $provider, ResolvesSocialiteUsers $resolver)
     {
         if ($request->has('error')) {
             return Auth::check()
@@ -94,7 +95,7 @@ class OAuthController extends Controller
         }
 
         try {
-            $providerAccount = Socialite::driver($provider)->user();
+            $providerAccount = $resolver->resolve($provider);
         } catch (InvalidStateException $e) {
             $this->invalidStateHandler->handle($e);
         }

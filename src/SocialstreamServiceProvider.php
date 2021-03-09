@@ -46,7 +46,8 @@ class SocialstreamServiceProvider extends ServiceProvider
             $this->bootInertia();
         }
 
-        $this->app->singleton(CreatesUserFromProvider::class, CreateUserFromProvider::class);
+        Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
+        Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
     }
 
     /**

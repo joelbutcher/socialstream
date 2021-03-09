@@ -6,6 +6,7 @@ use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
+use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 
 class Socialstream
@@ -102,6 +103,17 @@ class Socialstream
         static::$connectedAccountModel = $model;
 
         return new static;
+    }
+
+    /**
+     * Register a class / callback that should be used to resolve the user for a Socialite Provider.
+     *
+     * @param  string  $c;ass
+     * @return void
+     */
+    public static function resolvesSocialiteUsersUsing($class)
+    {
+        return app()->singleton(ResolvesSocialiteUsers::class, $class);
     }
 
     /**
