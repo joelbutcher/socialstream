@@ -6,7 +6,7 @@ interface ResolvesSocialiteUsers
 {
     /**
      * Resolve the user for a given provider.
-     * 
+     *
      * @param  string  $provider
      * @return \Laravel\Socialite\AbstractUser
      */
