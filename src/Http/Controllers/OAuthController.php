@@ -91,7 +91,7 @@ class OAuthController extends Controller
         if ($request->has('error')) {
             return Auth::check()
                 ? redirect(config('fortify.home'))->dangerBanner($request->error_description)
-                : redirect()->route('register')->withErrors($request->error_description);
+                : redirect()->route('register')->withErrors($request->error_description, 'socialstream');
         }
 
         try {
@@ -127,19 +127,19 @@ class OAuthController extends Controller
         if (session()->get('socialstream.previous_url') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
-                    __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
+                    __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider], 'socialstream')
                 );
             }
 
             if (! $providerAccount->getEmail()) {
                 return redirect()->route('register')->withErrors(
-                    __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider])
+                    __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider]), 'socialstream'
                 );
             }
 
             if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
                 return redirect()->route('register')->withErrors(
-                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
+                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider]), 'socialstream'
                 );
             }
 
@@ -152,14 +152,14 @@ class OAuthController extends Controller
 
         if (! Features::createsAccountsOnFirstLogin() && ! $account) {
             return redirect()->route('login')->withErrors(
-                __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
+                __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider]), 'socialstream'
             );
         }
 
         if (Features::createsAccountsOnFirstLogin() && ! $account) {
             if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
                 return redirect()->route('login')->withErrors(
-                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
+                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider]), 'socialstream'
                 );
             }
 
