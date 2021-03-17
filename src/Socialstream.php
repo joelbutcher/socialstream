@@ -36,7 +36,7 @@ class Socialstream
     /**
      * Determine whether or not Socialstream is enabled in the application.
      *
-     * @param  callable  $callback
+     * @param  callable|bool  $callback
      * @return bool
      */
     public static function enabled($callback = null)
