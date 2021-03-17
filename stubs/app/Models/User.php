@@ -15,7 +15,9 @@ class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
+    use HasProfilePhoto {
+        getProfilePhotoUrlAttribute as getPhotoUrl;
+    }
     use HasConnectedAccounts;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
@@ -59,4 +61,18 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * Get the URL to the user's profile photo.
+     *
+     * @return string
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if (filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)) {
+            return $this->profile_photo_path;
+        }
+
+        return $this->getPhotoUrl();
+    }
 }
