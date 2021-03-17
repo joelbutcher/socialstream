@@ -4,25 +4,25 @@
     <div class="pl-3 flex items-center justify-between">
         <div class="flex items-center">
             @switch($provider)
-                @case('facebook')
+                @case(JoelButcher\Socialstream\Providers::facebook())
                     <x-facebook-icon class="h-6 w-6 mr-2" />
                     @break
-                @case('google')
+                @case(JoelButcher\Socialstream\Providers::google())
                     <x-google-icon class="h-6 w-6 mr-2" />
                     @break
-                @case('twitter')
+                @case(JoelButcher\Socialstream\Providers::twitter())
                     <x-twitter-icon class="h-6 w-6 mr-2" />
                     @break
-                @case('linkedin')
+                @case(JoelButcher\Socialstream\Providers::linkedin())
                     <x-linked-in-icon class="h-6 w-6 mr-2" />
                     @break
-                @case('github')
+                @case(JoelButcher\Socialstream\Providers::github())
                     <x-github-icon class="h-6 w-6 mr-2" />
                     @break
-                @case('gitlab')
+                @case(JoelButcher\Socialstream\Providers::gitlab())
                     <x-gitlab-icon class="h-6 w-6 mr-2" />
                     @break
-                @case('bitbucket')
+                @case(JoelButcher\Socialstream\Providers::bitbucket())
                     <x-bitbucket-icon class="h-6 w-6 mr-2" />
                     @break
                 @default
