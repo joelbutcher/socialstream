@@ -95,7 +95,7 @@ class InstallCommand extends Command
 
         // Policies
         (new Filesystem)->ensureDirectoryExists(app_path('Policies'));
-        copy(__DIR__.'/../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccount.php'));
+        copy(__DIR__.'/../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccountPolicy.php'));
 
         // Jetstream Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
@@ -152,7 +152,7 @@ class InstallCommand extends Command
 
         // Policies
         (new Filesystem)->ensureDirectoryExists(app_path('Policies'));
-        copy(__DIR__.'/../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccount.php'));
+        copy(__DIR__.'/../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccountPolicy.php'));
 
         // Jetstream Actions...
         copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
