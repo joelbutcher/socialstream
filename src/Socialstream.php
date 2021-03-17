@@ -41,8 +41,12 @@ class Socialstream
      */
     public static function enabled($callback = null)
     {
-        if ($callback) {
+        if (is_callable($callback)) {
             static::$enabled = $callback();
+        }
+
+        if (is_bool($callback)) {
+            static::$enabled = $callback;
         }
 
         return static::$enabled;
