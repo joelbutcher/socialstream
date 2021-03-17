@@ -120,7 +120,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/livewire/resources/views/profile/set-password-form.blade.php', resource_path('views/profile/set-password-form.blade.php'));
         copy(__DIR__.'/../../stubs/livewire/resources/views/profile/show.blade.php', resource_path('views/profile/show.blade.php'));
 
-        $this->replaceInFile("// 'github',", "'github'", config_path('socialstream.php'));
+        $this->replaceInFile("// Providers::github(),", "Providers::github(),", config_path('socialstream.php'));
     }
 
     /**
@@ -173,7 +173,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/SetPasswordForm.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
 
-        $this->replaceInFile("// 'github',", "'github'", config_path('socialstream.php'));
+        $this->replaceInFile("// Providers::github(),", "Providers::github(),", config_path('socialstream.php'));
     }
 
     /**
