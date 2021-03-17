@@ -127,7 +127,7 @@ class OAuthController extends Controller
         if (session()->get('socialstream.previous_url') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
-                    __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider], 'socialstream')
+                    __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]), 'socialstream'
                 );
             }
 
