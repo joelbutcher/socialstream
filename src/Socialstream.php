@@ -36,13 +36,17 @@ class Socialstream
     /**
      * Determine whether or not Socialstream is enabled in the application.
      *
-     * @param  callable  $callback
+     * @param  callable|bool  $callback
      * @return bool
      */
     public static function enabled($callback = null)
     {
-        if ($callback) {
+        if (is_callable($callback)) {
             static::$enabled = $callback();
+        }
+
+        if (is_bool($callback)) {
+            static::$enabled = $callback;
         }
 
         return static::$enabled;
