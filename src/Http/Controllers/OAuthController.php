@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
+use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
@@ -103,7 +104,7 @@ class OAuthController extends Controller
         }
 
         // Registration...
-        if (session()->get('origin_url') === route('register')) {
+        if (FortifyFeatures::enabled(FortifyFeatures::registration()) && session()->get('origin_url') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider])
