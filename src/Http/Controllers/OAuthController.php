@@ -13,6 +13,7 @@ use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -124,7 +125,7 @@ class OAuthController extends Controller
         }
 
         // Registration...
-        if (session()->get('socialstream.previous_url') === route('register')) {
+        if (FortifyFeatures::enabled(FortifyFeatures::registration()) && session()->get('socialstream.previous_url') === route('register')) {
             if ($account) {
                 return redirect()->route('register')->withErrors(
                     __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]), 'socialstream'
