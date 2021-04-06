@@ -41,15 +41,15 @@ Once Socialstream is installed, it will publish a config file. In this config fi
 ```php
 <?php
 return [
-  'middleware => ['web'],
-  'providers => [
-    \JoelButcher\Socialstream\Providers::github(),
-    \JoelButcher\Socialstream\Providers::facebook(),
-    \JoelButcher\Socialstream\Providers::google()
-  ],
-  'features' => [
-    // \JoelButcher\Socialstream\Socialstream::rememberSession(),
-  ],
+    'middleware => ['web'],
+    'providers => [
+        \JoelButcher\Socialstream\Providers::github(),
+        \JoelButcher\Socialstream\Providers::facebook(),
+        \JoelButcher\Socialstream\Providers::google()
+    ],
+    'features' => [
+        // \JoelButcher\Socialstream\Features::rememberSession(),
+    ],
 ];
 ```
 
@@ -57,9 +57,9 @@ Once you’ve defined your providers, you will need to update your `services.php
 
 ```php
 '{provider}' => [
-  'client_id' => env('{PROVIDER}_CLIENT_ID'),
-  'client_secret' => env('{PROVIDER}_CLIENT_SECRET'),
-  'redirect' => env('{PROVIDER}_REDIRECT'), // e.g. 'https://your-domain.com/oauth/{provider}/callback'
+    'client_id' => env('{PROVIDER}_CLIENT_ID'),
+    'client_secret' => env('{PROVIDER}_CLIENT_SECRET'),
+    'redirect' => env('{PROVIDER}_REDIRECT'), // e.g. 'https://your-domain.com/oauth/{provider}/callback'
 ],
 ```
 
@@ -68,20 +68,20 @@ Once you’ve defined your providers, you will need to update your `services.php
 In some cases, you may want to customise how Socialite handles the generation of the redirect to a provider. For example, you may wish to To do this, you may alter the `GenerateRedirectForProvider` action found in `app/Actions/Socialstream`. For example, you may need to define scopes, the response type (e.g. implicit grant type), or any additional request info:
 
 ```php
-    /**
-     * Generates the redirect for a given provider.
-     * 
-     * @param  string  $provider
-     * 
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function generate(string $provider)
-    {
-        return Socialite::driver($provider)
-            ->scopes(['*'])
-            ->with(['response_type' => 'token'])
-            ->redirect();
-    }
+/**
+ * Generates the redirect for a given provider.
+ * 
+ * @param  string  $provider
+ * 
+ * @return \Symfony\Component\HttpFoundation\RedirectResponse
+ */
+public function generate(string $provider)
+{
+    return Socialite::driver($provider)
+        ->scopes(['*'])
+        ->with(['response_type' => 'token'])
+        ->redirect();
+}
 ```
 
 ### Resolving users
@@ -89,7 +89,7 @@ In some cases, you may want to customise how Socialite handles the generation of
 By default, Socialstream will resolve user information from Socialite using the following logic:
 
 ```php
-    Socialite::driver($provider)->user();
+Socialite::driver($provider)->user();
 ```
 
 Returning an instance of `\Laravel\Socialite\AbstractUser`. However, you may wish to customise the way user resolution is done. For example, you may wish to use the `stateless` method available for some Socialite providers. Socialstream makes this easy for you and publishes a `ResolveSocialiteUser` action to you applications `app/Actions/Socialstream` directory. Simply customise this class with the logic required for your use-casee.
@@ -101,7 +101,7 @@ To handle instances where Socialite throws an `InvalidStateException` a dedicate
 Alternatively, you may write your own action to handle the exception. To do so, you'll need to implement `JoelButcher\Socialstream\Contracts\HandlesInvalidState` and update the following line in `App\Providers\SocialstreamServiceProvider`
 
 ```php
-    Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
+Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
 ```
 
 ## Socialite Providers
