@@ -189,6 +189,5 @@ class OAuthController extends Controller
             'current_connected_account_id' => $account->id,
         ])->save();
 
-        return redirect(config('fortify.home'));
-    }
+        return app(LoginResponse::class);
 }
