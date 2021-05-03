@@ -14,9 +14,9 @@ use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
 class OAuthController extends Controller
@@ -95,7 +95,7 @@ class OAuthController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $provider
-     * @return \Illuminate\Routing\Pipeline
+     * @return mixed
      */
     public function handleProviderCallback(Request $request, string $provider, ResolvesSocialiteUsers $resolver)
     {
@@ -158,7 +158,7 @@ class OAuthController extends Controller
 
             $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-            return redirect(config('fortify.home'));
+            return app(LoginResponse::class);
         }
 
         if (! Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
@@ -178,7 +178,7 @@ class OAuthController extends Controller
 
             $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-            return redirect(config('fortify.home'));
+            return app(LoginResponse::class);
         }
 
         $this->guard->login($user = $account->user, Socialstream::hasRememberSessionFeatures());
@@ -189,6 +189,6 @@ class OAuthController extends Controller
             'current_connected_account_id' => $account->id,
         ])->save();
 
-        return redirect(config('fortify.home'));
+        return app(LoginResponse::class);
     }
 }
