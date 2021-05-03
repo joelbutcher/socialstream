@@ -190,4 +190,5 @@ class OAuthController extends Controller
         ])->save();
 
         return app(LoginResponse::class);
+    }
 }
