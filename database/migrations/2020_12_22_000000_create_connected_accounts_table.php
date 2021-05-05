@@ -28,6 +28,9 @@ class CreateConnectedAccountsTable extends Migration
             $table->string('refresh_token', 1000)->nullable(); // OAuth2
             $table->dateTime('expires_at')->nullable(); // OAuth2
             $table->timestamps();
+
+            $table->index(['user_id', 'id']);
+            $table->index(['provider', 'provider_id']);
         });
     }
 
