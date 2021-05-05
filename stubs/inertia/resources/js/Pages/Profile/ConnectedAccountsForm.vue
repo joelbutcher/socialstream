@@ -32,7 +32,7 @@
                                         Use Avatar as Profile Photo
                                     </button>
 
-                                    <jet-danger-button @click.native="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword">
+                                    <jet-danger-button @click="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword">
                                         Remove
                                     </jet-danger-button>
                                 </div>
@@ -67,12 +67,12 @@
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click.native="confirmingRemove = false">
+                    <jet-secondary-button @click="confirmingRemove = false">
                         Nevermind
                     </jet-secondary-button>
 
                     <jet-button class="ml-2"
-                                @click.native="removeConnectedAccount(accountId)"
+                                @click="removeConnectedAccount(accountId)"
                                 :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                         Remove Connected Account
                     </jet-button>
