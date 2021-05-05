@@ -116,9 +116,9 @@ class OAuthController extends Controller
         // Authenticated...
         if (! is_null($user = Auth::user())) {
             if ($account && $account->user_id !== $user->id) {
-                return redirect()->route('profile.show')->dangerBanner([
+                return redirect()->route('profile.show')->dangerBanner(
                     __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider]),
-                ]);
+                );
             }
 
             if (! $account) {
@@ -129,9 +129,9 @@ class OAuthController extends Controller
                 );
             }
 
-            return redirect()->route('profile.show')->dangerBanner([
+            return redirect()->route('profile.show')->dangerBanner(
                 __('This :Provider sign in account is already associated with your user.', ['provider' => $provider]),
-            ]);
+            );
         }
 
         // Registration...
