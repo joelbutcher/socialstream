@@ -215,7 +215,7 @@ class OAuthController extends Controller
 
     /**
      * Handle when a user is already registered.
-     * 
+     *
      * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
      * @param  \JoelButcher\Socialstream\ConnectedAccount|mixed|null  $account
      * @param  string  $provider
@@ -238,7 +238,7 @@ class OAuthController extends Controller
     }
 
     /**
-     * Authenticate the given user and return a login response
+     * Authenticate the given user and return a login response.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
      * @return mixed
