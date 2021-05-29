@@ -95,7 +95,7 @@ class Features
      */
     public static function loginOnRegistration()
     {
-        return 'login-on-registration'
+        return 'login-on-registration';
     }
 
     /**
