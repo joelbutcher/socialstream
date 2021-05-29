@@ -141,7 +141,7 @@ class OAuthController extends Controller
             return $this->login($user);
         }
 
-        $user = $account->user
+        $user = $account->user;
 
         $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
 
