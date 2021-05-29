@@ -115,50 +115,12 @@ class OAuthController extends Controller
 
         // Authenticated...
         if (! is_null($user = Auth::user())) {
-            if ($account && $account->user_id !== $user->id) {
-                return redirect()->route('profile.show')->dangerBanner(
-                    __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider]),
-                );
-            }
-
-            if (! $account) {
-                $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
-
-                return redirect()->route('profile.show')->banner(
-                    __('You have successfully connected :Provider to your account.', ['provider' => $provider])
-                );
-            }
-
-            return redirect()->route('profile.show')->dangerBanner(
-                __('This :Provider sign in account is already associated with your user.', ['provider' => $provider]),
-            );
+            return $this->alreadyAuthenticated($account, $user, $provider, $providerAccount);
         }
 
         // Registration...
         if (FortifyFeatures::enabled(FortifyFeatures::registration()) && session()->get('socialstream.previous_url') === route('register')) {
-            if ($account) {
-                return redirect()->route('register')->withErrors(
-                    __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]), 'socialstream'
-                );
-            }
-
-            if (! $providerAccount->getEmail()) {
-                return redirect()->route('register')->withErrors(
-                    __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider]), 'socialstream'
-                );
-            }
-
-            if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
-                return redirect()->route('register')->withErrors(
-                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider]), 'socialstream'
-                );
-            }
-
-            $user = $this->createsUser->create($provider, $providerAccount);
-
-            $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
-
-            return app(LoginResponse::class);
+            return $this->register($account, $provider, $providerAccount);
         }
 
         if (! Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
@@ -176,18 +138,114 @@ class OAuthController extends Controller
 
             $user = $this->createsUser->create($provider, $providerAccount);
 
-            $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
-
-            return app(LoginResponse::class);
+            return $this->login($user);
         }
 
-        $this->guard->login($user = $account->user, Socialstream::hasRememberSessionFeatures());
+        $user = $account->user
 
         $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
 
         $user->forceFill([
             'current_connected_account_id' => $account->id,
         ])->save();
+
+        return $this->login($user);
+    }
+
+    /**
+     * Handle connection of accounts for an already authenticated user.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
+     * @param  \JoelButcher\Socialstream\ConnectedAccount|mixed|null  $account
+     * @param  string  $provider
+     * @param  \Laravel\Socialite\AbstractUser|mixed  $providerAccount
+     * @return mixed
+     */
+    protected function alreadyAuthenticated($user, $account, $provider, $providerAccount)
+    {
+        if ($account && $account->user_id !== $user->id) {
+            return redirect()->route('profile.show')->dangerBanner(
+                __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider]),
+            );
+        }
+
+        if (! $account) {
+            $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
+
+            return redirect()->route('profile.show')->banner(
+                __('You have successfully connected :Provider to your account.', ['provider' => $provider])
+            );
+        }
+
+        return redirect()->route('profile.show')->dangerBanner(
+            __('This :Provider sign in account is already associated with your user.', ['provider' => $provider]),
+        );
+    }
+
+    /**
+     * Handle the registration of a new user.
+     *
+     * @param  \JoelButcher\Socialstream\ConnectedAccount|mixed|null  $account
+     * @param  string  $provider
+     * @param  \Laravel\Socialite\AbstractUser|mixed  $providerAccount
+     * @return mixed
+     */
+    protected function register($account, $provider, $providerAccount)
+    {
+        if ($account) {
+            return $this->alreadyRegistered($account, $provider);
+        }
+
+        if (! $providerAccount->getEmail()) {
+            return redirect()->route('register')->withErrors(
+                __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider]), 'socialstream'
+            );
+        }
+
+        if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
+            return redirect()->route('register')->withErrors(
+                __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider]), 'socialstream'
+            );
+        }
+
+        $user = $this->createsUser->create($provider, $providerAccount);
+
+        return $this->login($user);
+    }
+
+    /**
+     * Handle when a user is already registered.
+     * 
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
+     * @param  \JoelButcher\Socialstream\ConnectedAccount|mixed|null  $account
+     * @param  string  $provider
+     * @param  \Laravel\Socialite\AbstractUser|mixed  $providerAccount
+     * @return mixed
+     */
+    protected function alreadyRegistered($user, $account, $provider)
+    {
+        if (Features::hasLoginOnRegistrationFeatures()) {
+            $user = $account->user;
+
+            $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
+
+            return $this->loginUser($user);
+        }
+
+        return redirect()->route('register')->withErrors(
+            __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]), 'socialstream'
+        );
+    }
+
+    /**
+     * Authenticate the given user and return a login response
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
+     * @return mixed
+     */
+    protected function loginUser($user)
+    {
+        $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
         return app(LoginResponse::class);
     }
