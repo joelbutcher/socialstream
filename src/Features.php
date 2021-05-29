@@ -35,7 +35,7 @@ class Features
     {
         return static::enabled(static::createAccountOnFirstLogin());
     }
-    
+
     /**
      * Determine if the application supports logging into existing
      * accounts when registering with a provider who's email address
