@@ -120,6 +120,12 @@ class OAuthController extends Controller
 
         // Registration...
         if (FortifyFeatures::enabled(FortifyFeatures::registration()) && session()->get('socialstream.previous_url') === route('register')) {
+            $user = Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
+
+            if ($user) {
+                return $this->handleUserAlreadyRegistered($user, $account, $provider, $providerAccount);
+            }
+
             return $this->register($account, $provider, $providerAccount);
         }
 
@@ -155,10 +161,10 @@ class OAuthController extends Controller
     /**
      * Handle connection of accounts for an already authenticated user.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
-     * @param  \JoelButcher\Socialstream\ConnectedAccount|mixed|null  $account
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \JoelButcher\Socialstream\ConnectedAccount  $account
      * @param  string  $provider
-     * @param  \Laravel\Socialite\AbstractUser|mixed  $providerAccount
+     * @param  \Laravel\Socialite\AbstractUser  $providerAccount
      * @return mixed
      */
     protected function alreadyAuthenticated($user, $account, $provider, $providerAccount)
@@ -183,19 +189,41 @@ class OAuthController extends Controller
     }
 
     /**
+     * Handle when a user is already registered.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \JoelButcher\Socialstream\ConnectedAccount  $account
+     * @param  string  $provider
+     * @param  \Laravel\Socialite\AbstractUser  $providerAccount
+     * @return mixed
+     */
+    protected function handleUserAlreadyRegistered($user, $account, $provider, $providerAccount)
+    {
+        if (Features::hasLoginOnRegistrationFeatures()) {
+
+            // The user exists, but they're not registered with the given provider.
+            if (! $account) {
+                $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
+            }
+
+            return $this->loginUser($user);
+        }
+
+        return redirect()->route('register')->withErrors(
+            __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]), 'socialstream'
+        );
+    }
+
+    /**
      * Handle the registration of a new user.
      *
-     * @param  \JoelButcher\Socialstream\ConnectedAccount|mixed|null  $account
+     * @param  \JoelButcher\Socialstream\ConnectedAccount  $account
      * @param  string  $provider
-     * @param  \Laravel\Socialite\AbstractUser|mixed  $providerAccount
+     * @param  \Laravel\Socialite\AbstractUser  $providerAccount
      * @return mixed
      */
     protected function register($account, $provider, $providerAccount)
     {
-        if ($account) {
-            return $this->alreadyRegistered($account, $provider);
-        }
-
         if (! $providerAccount->getEmail()) {
             return redirect()->route('register')->withErrors(
                 __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider]), 'socialstream'
@@ -211,30 +239,6 @@ class OAuthController extends Controller
         $user = $this->createsUser->create($provider, $providerAccount);
 
         return $this->login($user);
-    }
-
-    /**
-     * Handle when a user is already registered.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
-     * @param  \JoelButcher\Socialstream\ConnectedAccount|mixed|null  $account
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\AbstractUser|mixed  $providerAccount
-     * @return mixed
-     */
-    protected function alreadyRegistered($user, $account, $provider)
-    {
-        if (Features::hasLoginOnRegistrationFeatures()) {
-            $user = $account->user;
-
-            $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
-
-            return $this->loginUser($user);
-        }
-
-        return redirect()->route('register')->withErrors(
-            __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]), 'socialstream'
-        );
     }
 
     /**
