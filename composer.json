@@ -4,8 +4,8 @@
     "keywords": ["laravel", "tailwind", "auth"],
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/laravel/jetstream/issues",
-        "source": "https://github.com/laravel/jetstream"
+        "issues": "https://github.com/joelbutcher/socialstream/issues",
+        "source": "https://github.com/joelbutcher/socialstream"
     },
     "authors": [
         {
