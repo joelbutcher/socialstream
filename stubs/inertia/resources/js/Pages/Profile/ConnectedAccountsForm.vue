@@ -27,7 +27,7 @@
                             <template v-if="hasAccountForProvider(provider)">
                                 <div class="flex items-center space-x-6">
                                     <button
-                                        v-if="$page.props.jetstream.managesProfilePhotos"
+                                        v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
                                         @click="setProfilePhoto(getAccountForProvider(provider).id)"
                                         class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none">
                                         Use Avatar as Profile Photo
