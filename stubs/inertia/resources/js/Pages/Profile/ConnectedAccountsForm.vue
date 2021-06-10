@@ -27,6 +27,7 @@
                             <template v-if="hasAccountForProvider(provider)">
                                 <div class="flex items-center space-x-6">
                                     <button
+                                        v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
                                         @click="setProfilePhoto(getAccountForProvider(provider).id)"
                                         class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none">
                                         Use Avatar as Profile Photo
@@ -39,17 +40,9 @@
                             </template>
 
                             <template v-else>
-                                <div class="flex items-center space-x-6">
-                                    <button
-                                        @click="setProfilePhoto(getAccountForProvider(provider).id)"
-                                        class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none">
-                                        Use Avatar as Profile Photo
-                                    </button>
-
-                                    <action-link :href="route('oauth.redirect', { provider })">
-                                        Connect
-                                    </action-link>
-                                </div>
+                                <action-link :href="route('oauth.redirect', { provider })">
+                                    Connect
+                                </action-link>
                             </template>
                         </template>
                     </connected-account>

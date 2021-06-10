@@ -31,7 +31,7 @@
                     <x-slot name="action">
                         @if (! is_null($account))
                             <div class="flex items-center space-x-6">
-                                @if (! is_null($account->avatar_path))
+                                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && ! is_null($account->avatar_path))
                                     <button class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none" wire:click="setAvatarAsProfilePhoto({{ $account->id }})">
                                         {{ __('Use Avatar as Profile Photo') }}
                                     </button>
