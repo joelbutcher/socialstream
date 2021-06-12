@@ -247,7 +247,7 @@ class OAuthController extends Controller
      * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
      * @return mixed
      */
-    protected function loginUser($user)
+    protected function login($user)
     {
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
