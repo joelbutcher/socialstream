@@ -40,9 +40,10 @@ Once Socialstream is installed, it will publish a config file. In this config fi
 
 ```php
 <?php
+
 return [
-    'middleware => ['web'],
-    'providers => [
+    'middleware' => ['web'],
+    'providers' => [
         \JoelButcher\Socialstream\Providers::github(),
         \JoelButcher\Socialstream\Providers::facebook(),
         \JoelButcher\Socialstream\Providers::google()
