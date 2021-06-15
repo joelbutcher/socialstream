@@ -115,7 +115,7 @@ class OAuthController extends Controller
 
         // Authenticated...
         if (! is_null($user = Auth::user())) {
-            return $this->alreadyAuthenticated($account, $user, $provider, $providerAccount);
+            return $this->alreadyAuthenticated($user, $account, $provider, $providerAccount);
         }
 
         // Registration...
@@ -206,7 +206,7 @@ class OAuthController extends Controller
                 $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
             }
 
-            return $this->loginUser($user);
+            return $this->login($user);
         }
 
         return redirect()->route('register')->withErrors(
