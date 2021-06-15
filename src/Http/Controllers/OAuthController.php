@@ -115,7 +115,7 @@ class OAuthController extends Controller
 
         // Authenticated...
         if (! is_null($user = Auth::user())) {
-            return $this->alreadyAuthenticated($account, $user, $provider, $providerAccount);
+            return $this->alreadyAuthenticated($user, $account, $provider, $providerAccount);
         }
 
         // Registration...
