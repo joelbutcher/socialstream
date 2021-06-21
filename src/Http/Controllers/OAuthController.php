@@ -2,7 +2,7 @@
 
 namespace JoelButcher\Socialstream\Http\Controllers;
 
-use App\Actions\Socialstream\HandleInvalidState;
+use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -67,7 +67,7 @@ class OAuthController extends Controller
         CreatesUserFromProvider $createsUser,
         CreatesConnectedAccounts $createsConnectedAccounts,
         UpdatesConnectedAccounts $updatesConnectedAccounts,
-        HandleInvalidState $invalidStateHandler
+        HandlesInvalidState $invalidStateHandler
     ) {
         $this->guard = $guard;
         $this->createsUser = $createsUser;
