@@ -23,9 +23,9 @@ class CreateConnectedAccountsTable extends Migration
             $table->string('email')->nullable();
             $table->string('telephone')->nullable();
             $table->string('avatar_path')->nullable();
-            $table->string('token', 1000);
+            $table->string('token', 1071);
             $table->string('secret')->nullable(); // OAuth1
-            $table->string('refresh_token', 1000)->nullable(); // OAuth2
+            $table->string('refresh_token', 1071)->nullable(); // OAuth2
             $table->dateTime('expires_at')->nullable(); // OAuth2
             $table->timestamps();
 
