@@ -134,7 +134,6 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/ProviderIcons'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Auth'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
 
@@ -144,7 +143,6 @@ class InstallCommand extends Command
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
 
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialstream', resource_path('js/Socialstream'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/ProviderIcons', resource_path('js/ProviderIcons'));
 
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));

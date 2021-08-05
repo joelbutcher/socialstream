@@ -37,6 +37,18 @@ class Features
     }
 
     /**
+     * Determine if the application supports logging into existing
+     * accounts when registering with a provider who's email address
+     * is already registered.
+     *
+     * @return bool
+     */
+    public static function hasLoginOnRegistrationFeatures()
+    {
+        return static::enabled(static::loginOnRegistration());
+    }
+
+    /**
      * Determine if the application should use provider avatars when registering.
      *
      * @return bool
@@ -74,6 +86,16 @@ class Features
     public static function createAccountOnFirstLogin()
     {
         return 'create-account-on-first-login';
+    }
+
+    /**
+     * Enable the login on registration feature.
+     *
+     * @return string
+     */
+    public static function loginOnRegistration()
+    {
+        return 'login-on-registration';
     }
 
     /**
