@@ -54,14 +54,14 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
-    import DeleteUserForm from './DeleteUserForm'
+    import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
-    import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm'
-    import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm'
-    import SetPasswordForm from './SetPasswordForm'
-    import UpdatePasswordForm from './UpdatePasswordForm'
-    import UpdateProfileInformationForm from './UpdateProfileInformationForm'
-    import ConnectedAccountsForm from './ConnectedAccountsForm';
+    import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm'
+    import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm'
+    import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm'
+    import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm'
+    import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm'
+    import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm';
 
     export default {
         props: ['sessions'],

@@ -170,8 +170,8 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Auth/Register.vue', resource_path('js/Pages/Auth/Register.vue'));
 
         // Profile views...
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/ConnectedAccountsForm.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/SetPasswordForm.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/Partials/ConnectedAccountsForm.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/Partials/SetPasswordForm.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
 
         $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
