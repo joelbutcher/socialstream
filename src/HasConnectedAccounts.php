@@ -60,11 +60,7 @@ trait HasConnectedAccounts
      */
     public function ownsConnectedAccount($connectedAccount)
     {
-        if(empty($connectedAccount->user_id)) {
-            return false;
-        }
-
-        return $this->id == $connectedAccount->user_id;
+        return $this->id == optional($connectedAccount)->user_id;
     }
 
     /**
