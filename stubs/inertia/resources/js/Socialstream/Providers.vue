@@ -29,7 +29,7 @@
 
             <a v-if="$page.props.socialstream.providers.includes('github')" :href="route('oauth.redirect', 'github')">
                 <github-icon class="h-6 w-6 mx-2" />
-                <span class="sr-only">Github</span>
+                <span class="sr-only">GitHub</span>
             </a>
 
             <a v-if="$page.props.socialstream.providers.includes('gitlab')" :href="route('oauth.redirect', 'gitlab')">
