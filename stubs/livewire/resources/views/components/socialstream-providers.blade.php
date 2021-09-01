@@ -36,7 +36,7 @@
     @if (JoelButcher\Socialstream\Socialstream::hasGithubSupport())
         <a href="{{ route('oauth.redirect', ['provider' => JoelButcher\Socialstream\Providers::github()]) }}">
             <x-github-icon class="h-6 w-6 mx-2" />
-            <span class="sr-only">Github</span>
+            <span class="sr-only">GitHub</span>
         </a>
     @endif
 
