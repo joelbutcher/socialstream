@@ -31,28 +31,28 @@ class OAuthController extends Controller
     /**
      * The creates user implementation.
      *
-     * @var  \JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+     * @var \JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
      */
     protected $createsUser;
 
     /**
      * The creates connected accounts implementation.
      *
-     * @var  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
+     * @var \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
      */
     protected $createsConnectedAccounts;
 
     /**
      * The updates connected accounts implementation.
      *
-     * @var  \JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+     * @var \JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
      */
     protected $updatesConnectedAccounts;
 
     /**
      * The handler for Socialite's InvalidStateException.
      *
-     * @var  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
+     * @var \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
      */
     protected $invalidStateHandler;
 
