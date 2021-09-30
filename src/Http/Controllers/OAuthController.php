@@ -16,7 +16,6 @@ use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Jetstream\Jetstream;
-use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
 class OAuthController extends Controller
