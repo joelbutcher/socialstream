@@ -11,7 +11,6 @@ class GenerateRedirectForProvider implements GeneratesProviderRedirect
      * Generates the redirect for a given provider.
      *
      * @param  string  $provider
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function generate(string $provider)
