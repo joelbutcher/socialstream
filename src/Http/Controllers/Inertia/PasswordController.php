@@ -13,7 +13,6 @@ class PasswordController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Laravel\Jetstream\Contracts\SetsUserPasswords  $setter
-     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request, SetsUserPasswords $setter)
