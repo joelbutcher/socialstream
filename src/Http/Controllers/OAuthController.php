@@ -14,6 +14,7 @@ use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -78,11 +79,10 @@ class OAuthController extends Controller
     /**
      * Get the redirect for the given Socialite provider.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  string  $provider
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function redirectToProvider(Request $request, string $provider, GeneratesProviderRedirect $generator)
+    public function redirectToProvider(string $provider, GeneratesProviderRedirect $generator)
     {
         session()->put('socialstream.previous_url', back()->getTargetUrl());
 
@@ -100,7 +100,7 @@ class OAuthController extends Controller
     {
         if ($request->has('error')) {
             return Auth::check()
-                ? redirect(config('fortify.home'))->dangerBanner($request->error_description)
+                ? app(LoginResponse::class)->dangerBanner($request->error_description)
                 : redirect()->route('register')->withErrors($request->error_description, 'socialstream');
         }
 
@@ -157,7 +157,7 @@ class OAuthController extends Controller
 
             $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-            return redirect(config('fortify.home'));
+            return app(LoginResponse::class);
         }
 
         if (! Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
@@ -177,7 +177,7 @@ class OAuthController extends Controller
 
             $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-            return redirect(config('fortify.home'));
+            return app(LoginResponse::class);
         }
 
         $this->guard->login($user = $account->user, Socialstream::hasRememberSessionFeatures());
@@ -188,6 +188,6 @@ class OAuthController extends Controller
             'current_connected_account_id' => $account->id,
         ])->save();
 
-        return redirect(config('fortify.home'));
+        return app(LoginResponse::class);
     }
 }
