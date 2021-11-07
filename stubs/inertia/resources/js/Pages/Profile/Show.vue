@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout title="Profile">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
