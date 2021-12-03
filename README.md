@@ -21,6 +21,9 @@ Socialstream is a third-party package for [Laravel Jetstream](https://github.com
 
 If you are unfamiliar with Laravel Socialite, it is strongly advised that you take a look at the [official documentation](https://laravel.com/docs/8.x/socialite). 
 
+**Important**
+Socialstream, like Jetstream, should only be installed on NEW applications, installing Socialstream into an existing application will break your applications functionality. It is strongly advised against installing this package within an existing applications.
+
 ## Installation
 
 Getting started with Socialstream is a breeze. With a simple two-step process to get you on your way to creating the next big thing. Inspired by the simplicity of Jetstream's installation process, Socialstream follows the same 'installation':
