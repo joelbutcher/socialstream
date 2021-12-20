@@ -1,7 +1,21 @@
 {
     "name": "joelbutcher/socialstream",
     "description": "A simple Socialite implementation for Laravel Jetstream.",
-    "keywords": ["laravel", "tailwind", "auth"],
+    "keywords": [
+        "socialstream",
+        "laravel",
+        "jetstream"
+        "laravel jetstream",
+        "laravel socialite",
+        "socialite",
+        "jetstream socialite",
+        "tailwind",
+        "oauth",
+        "laravel oauth",
+        "laravel livewire"
+        "inertia"
+        "vue"
+    ],
     "license": "MIT",
     "support": {
         "issues": "https://github.com/joelbutcher/socialstream/issues",
