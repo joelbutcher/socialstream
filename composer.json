@@ -4,7 +4,7 @@
     "keywords": [
         "socialstream",
         "laravel",
-        "jetstream"
+        "jetstream",
         "laravel jetstream",
         "laravel socialite",
         "socialite",
@@ -12,8 +12,8 @@
         "tailwind",
         "oauth",
         "laravel oauth",
-        "laravel livewire"
-        "inertia"
+        "laravel livewire",
+        "inertia",
         "vue"
     ],
     "license": "MIT",
