@@ -16,7 +16,7 @@ trait SetsProfilePhotoFromUrl
     public function setProfilePhotoFromUrl(string $url)
     {
         $name = pathinfo($url)['basename'];
-        file_put_contents($file = '/tmp/'.Str::uuid()->toString(), file_get_contents($url));
+        file_put_contents($file = sys_get_temp_dir().Str::uuid()->toString(), file_get_contents($url));
         $this->updateProfilePhoto(new UploadedFile($file, $name));
     }
 }
