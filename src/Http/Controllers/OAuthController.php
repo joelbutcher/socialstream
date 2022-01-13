@@ -28,7 +28,7 @@ class OAuthController extends Controller
     /**
      * The creates user implementation.
      *
-     * @var  \JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+     * @var \JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
      */
     protected $createsUser;
 
