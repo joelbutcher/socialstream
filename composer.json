@@ -30,7 +30,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "doctrine/dbal": "^2.9|^3.0",
-        "illuminate/support": "^8.79",
+        "illuminate/support": "^8.0|^9.0",
         "laravel/jetstream": "^2.0.0",
         "laravel/socialite": "^5.0"
     },
