@@ -109,6 +109,72 @@ Alternatively, you may write your own action to handle the exception. To do so, 
 Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
 ```
 
+# Features
+
+Below, you can find a complete list of optional features included with Socialstream as of version 3.x.
+
+## Create account on first login
+
+This feature enables the capability to register a new user account (and team if the Jetstream feature is enabled) when a user attempts to authenticate via the '/login' route.
+
+To turn on this feature add the following to `config/socialstream.php`:
+
+```php
+'features' => [
+    Feature::createAccountOnFirstLogin(),
+],
+```
+
+## Log in on registration
+
+If a user has already registered with a particular email address, and the OAuth account they attempt to register with returns the same email, the provider will be linked to the existing user and they will be logged in.
+
+To turn on this feature add the following to `config/socialstream.php`:
+
+```php
+'features' => [
+    Feature::loginOnRegistration(),
+],
+```
+
+## Remember Session
+
+This feature passes the boolean value "remember" value to `true` when authenticating with Laravel Fortify 
+
+To turn on this feature add the following to `config/socialstream.php`:
+
+```php
+'features' => [
+    Feature::rememberSession(),
+],
+```
+
+## Handling Missing Emails
+
+Some providers (such as GitHub), don't always return an email address when attempting to authenticate with them. In this case, Socialstream will generate a random email address for you.
+This email will be in the format `user_id.provider@yourappdomain.tld`. E.g. `35362324.github@myawesomeapp.com`
+
+To turn on this feature add the following to `config/socialstream.php`:
+
+```php
+'features' => [
+    Feature::generateMissingEmails(),
+],
+```
+
+## Provider Avatars
+
+This feature determines whether or not to pull in a users avatar / profile image from a provider.
+
+To turn on this feature add the following to `config/socialstream.php`:
+
+```php
+'features' => [
+    Feature::providerAvatars(),
+],
+```
+
+
 # Socialite Providers
 
 If you wish to use the community driven [socialiteproviders](https://socialiteproviders.com) package with Socialstream, you may do so by following their documentation on installing the package into a Laravel project. There are a few configuration steps you will need to go through first.
