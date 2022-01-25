@@ -119,7 +119,7 @@ class OAuthController extends Controller
         }
 
         // Registration...
-        if (FortifyFeatures::enabled(FortifyFeatures::registration()) && session()->get('socialstream.previous_url') === route('register')) {
+        if (FortifyFeatures::enabled(FortifyFeatures::registration()) && session()->get('socialstream.previous_url') === route('register') && ! $account) {
             $user = Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
             if ($user) {
