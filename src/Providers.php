@@ -63,7 +63,7 @@ class Providers
      *
      * @return bool
      */
-    public static function hasGoogleSupport(): bool
+    public static function hasGoogleSupport()
     {
         return static::enabled(static::google());
     }
