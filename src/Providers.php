@@ -2,6 +2,9 @@
 
 namespace JoelButcher\Socialstream;
 
+use BadMethodCallException;
+use Illuminate\Support\Str;
+
 class Providers
 {
     /**
@@ -60,7 +63,7 @@ class Providers
      *
      * @return bool
      */
-    public static function hasGoogleSupport()
+    public static function hasGoogleSupport(): bool
     {
         return static::enabled(static::google());
     }
@@ -153,5 +156,45 @@ class Providers
     public static function twitter()
     {
         return 'twitter';
+    }
+
+    /**
+     * Dynamically handle static calls.
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        // If the method exists on the class, call it. Otherwise, attempt to
+        // determine the provider from the method name being called.
+        if (method_exists(static::class, $name)) {
+            return static::$name(...$arguments);
+        }
+
+        /** @example $name = "HasMyCustomProviderSupport" */
+        if (preg_match('/^has.*Support$/', $name)) {
+            $provider = Str::remove('Support', Str::remove('has', $name));
+
+            return static::enabled(Str::kebab($provider)) || static::enabled(Str::lower($provider));
+        }
+
+        static::throwBadMethodCallException($name);
+    }
+
+    /**
+     * Throw a bad method call exception for the given method.
+     *
+     * @param  string  $method
+     * @return void
+     *
+     * @throws \BadMethodCallException
+     */
+    protected static function throwBadMethodCallException($method)
+    {
+        throw new BadMethodCallException(sprintf(
+            'Call to undefined method %s::%s()', static::class, $method
+        ));
     }
 }
