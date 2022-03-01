@@ -8,7 +8,7 @@ interface ResolvesSocialiteUsers
      * Resolve the user for a given provider.
      *
      * @param  string  $provider
-     * @return \Laravel\Socialite\AbstractUser
+     * @return \Laravel\Socialite\Contracts\User
      */
     public function resolve($provider);
 }
