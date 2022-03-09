@@ -70,7 +70,9 @@ class OAuthController extends Controller
         if ($request->has('error')) {
             return Auth::check()
                 ? redirect(config('fortify.home'))->withErrors($request->error_description)
-                : redirect()->route('register')->withErrors($request->error_description);
+                : redirect()->route(
+                    FortifyFeatures::emabled(FortifyFeatures::registration() ? 'register' : 'login'
+                )->withErrors($request->error_description);
         }
 
         try {
