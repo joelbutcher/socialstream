@@ -121,7 +121,7 @@ To turn on this feature add the following to `config/socialstream.php`:
 
 ```php
 'features' => [
-    Feature::createAccountOnFirstLogin(),
+    Features::createAccountOnFirstLogin(),
 ],
 ```
 
@@ -133,7 +133,7 @@ To turn on this feature add the following to `config/socialstream.php`:
 
 ```php
 'features' => [
-    Feature::loginOnRegistration(),
+    Features::loginOnRegistration(),
 ],
 ```
 
@@ -145,7 +145,7 @@ To turn on this feature add the following to `config/socialstream.php`:
 
 ```php
 'features' => [
-    Feature::rememberSession(),
+    Features::rememberSession(),
 ],
 ```
 
@@ -158,7 +158,7 @@ To turn on this feature add the following to `config/socialstream.php`:
 
 ```php
 'features' => [
-    Feature::generateMissingEmails(),
+    Features::generateMissingEmails(),
 ],
 ```
 
@@ -170,7 +170,7 @@ To turn on this feature add the following to `config/socialstream.php`:
 
 ```php
 'features' => [
-    Feature::providerAvatars(),
+    Features::providerAvatars(),
 ],
 ```
 
