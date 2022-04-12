@@ -12,14 +12,14 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
      * Resolve the user for a given provider.
      *
      * @param  string  $provider
-     * @return \Laravel\Socialite\AbstractUser
+     * @return \Laravel\Socialite\Contracts\User
      */
     public function resolve($provider)
     {
         $user = Socialite::driver($provider)->user();
 
         if (Socialstream::generatesMissingEmails()) {
-            $user->email = $user->getEmail() ?? "{$user->id}@{$provider}".config('app.domain');
+            $user->email = $user->getEmail() ?? ("{$user->id}@{$provider}".config('app.domain'));
         }
 
         return $user;
