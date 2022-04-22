@@ -103,6 +103,7 @@ class OAuthController extends Controller
         if ($request->has('error')) {
             $messageBag = new MessageBag;
             $messageBag->add('socialstream', $request->error_description);
+
             return Auth::check()
                 ? redirect(config('fortify.home'))->dangerBanner($request->error_description)
                 : redirect()->route(
@@ -140,18 +141,20 @@ class OAuthController extends Controller
                 'socialstream',
                 __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
             );
+
             return redirect()->route('login')->withErrors(
                 $messageBag
             );
         }
 
-        if (Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
+        if (Features::hasCreateAccountOnFirstLoginFeatures() && !$account) {
             if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
                 $messageBag = new MessageBag;
                 $messageBag->add(
                     'socialstream',
                     __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
                 );
+
                 return redirect()->route('login')->withErrors(
                     $messageBag
                 );
@@ -226,6 +229,7 @@ class OAuthController extends Controller
 
         $messageBag = new MessageBag;
         $messageBag->add('socialstream', __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]));
+
         return redirect()->route('register')->withErrors($messageBag);
     }
 
@@ -245,6 +249,7 @@ class OAuthController extends Controller
                 'socialstream',
                 __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider])
             );
+
             return redirect()->route('register')->withErrors($messageBag);
         }
 
@@ -254,6 +259,7 @@ class OAuthController extends Controller
                 'socialstream',
                 __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
             );
+
             return redirect()->route('register')->withErrors($messageBag);
         }
 
