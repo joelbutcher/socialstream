@@ -147,7 +147,7 @@ class OAuthController extends Controller
             );
         }
 
-        if (Features::hasCreateAccountOnFirstLoginFeatures() && !$account) {
+        if (Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
             if (Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
                 $messageBag = new MessageBag;
                 $messageBag->add(
