@@ -20,7 +20,7 @@ class UpdateUserProfilePhotoController extends Controller
             ->where('id', $request->id)
             ->first();
 
-        if (is_callable([$user, 'setProfilePhotoFromUrl']) && ! is_null($account->avatar_path)) {
+        if (is_callable([$user, 'setProfilePhotoFromUrl']) && isset($account->avatar_path)) {
             $user->setProfilePhotoFromUrl($account->avatar_path);
         }
 
