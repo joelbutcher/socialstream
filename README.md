@@ -109,6 +109,24 @@ Alternatively, you may write your own action to handle the exception. To do so, 
 Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
 ```
 
+## Laravel Passport Support
+
+If you wish to use this package alongside Laravel Passport, you may encounter the following error message when attempting to authorise with Passports OAuth server:
+
+```
+Driver [authorize] not supported
+```
+
+This is because SocialStream registers routes using the `oauth/{provider}` structure. This conflicts with Laravel Passports `oauth/authorize` route.
+This can be resolved by adding the following to the `boot` method of your applications `AuthServiceProvider.php` file:
+
+```
+
+Passport::routes([
+    'prefix' => 'passport-oauth',
+]);
+```
+
 # Features
 
 Below, you can find a complete list of optional features included with Socialstream as of version 3.x.
