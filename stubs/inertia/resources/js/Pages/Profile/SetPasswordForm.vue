@@ -1,5 +1,38 @@
+<script setup>
+import { ref } from 'vue';
+import { useForm } from '@inertiajs/inertia-vue3';
+import JetActionMessage from '@/Jetstream/ActionMessage.vue';
+import JetButton from '@/Jetstream/Button.vue';
+import JetFormSection from '@/Jetstream/FormSection.vue';
+import JetInput from '@/Jetstream/Input.vue';
+import JetInputError from '@/Jetstream/InputError.vue';
+import JetLabel from '@/Jetstream/Label.vue';
+
+const passwordInput = ref(null);
+const form = useForm({
+    current_password: '',
+    password: '',
+    password_confirmation: '',
+});
+
+const setPassword = () => {
+    form.put(route('user-password.set'), {
+        errorBag: 'setPassword',
+        preserveScroll: true,
+        onSuccess: () => form.reset(),
+        onError: () => {
+            if (form.errors.password) {
+                form.reset('password', 'password_confirmation');
+                passwordInput.value.focus();
+            }
+        },
+    });
+};
+</script>
+
+
 <template>
-    <jet-form-section @submitted="setPassword">
+    <JetFormSection @submitted="setPassword">
         <template #title>
             Set Password
         </template>
@@ -10,71 +43,39 @@
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <jet-label for="password" value="New Password" />
-                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" ref="password" autocomplete="new-password" />
-                <jet-input-error :message="form.errors.password" class="mt-2" />
+                <JetLabel for="password" value="New Password" />
+                <JetInput
+                    id="password"
+                    ref="passwordInput"
+                    v-model="form.password"
+                    type="password"
+                    class="mt-1 block w-full"
+                    autocomplete="new-password"
+                />
+                <JetInputError :message="form.errors.password" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" autocomplete="new-password" />
-                <jet-input-error :message="form.errors.password_confirmation" class="mt-2" />
+                <JetLabel for="password_confirmation" value="Confirm Password" />
+                <JetInput
+                    id="password_confirmation"
+                    v-model="form.password_confirmation"
+                    type="password"
+                    class="mt-1 block w-full"
+                    autocomplete="new-password"
+                />
+                <JetInputError :message="form.errors.password_confirmation" class="mt-2" />
             </div>
         </template>
 
         <template #actions>
-            <jet-action-message :on="form.recentlySuccessful" class="mr-3">
+            <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
                 Saved.
-            </jet-action-message>
+            </JetActionMessage>
 
-            <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Save
-            </jet-button>
+            </JetButton>
         </template>
-    </jet-form-section>
+    </JetFormSection>
 </template>
-
-<script>
-    import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetButton from '@/Jetstream/Button'
-    import JetFormSection from '@/Jetstream/FormSection'
-    import JetInput from '@/Jetstream/Input'
-    import JetInputError from '@/Jetstream/InputError'
-    import JetLabel from '@/Jetstream/Label'
-
-    export default {
-        components: {
-            JetActionMessage,
-            JetButton,
-            JetFormSection,
-            JetInput,
-            JetInputError,
-            JetLabel,
-        },
-
-        data() {
-            return {
-                form: this.$inertia.form({
-                    password: '',
-                    password_confirmation: '',
-                }),
-            }
-        },
-
-        methods: {
-            setPassword() {
-                this.form.put(route('user-password.set'), {
-                    errorBag: 'setPassword',
-                    preserveScroll: true,
-                    onSuccess: () => this.form.reset(),
-                    onError: () => {
-                        if (this.form.errors.password) {
-                            this.form.reset('password', 'password_confirmation')
-                            this.$refs.password.focus()
-                        }
-                    }
-                })
-            },
-        },
-    }
-</script>
