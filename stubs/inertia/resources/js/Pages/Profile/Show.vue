@@ -6,6 +6,7 @@ import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOther
 import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue';
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
 import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm.vue';
+import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue';
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
 
 defineProps({
@@ -50,7 +51,7 @@ defineProps({
                 </div>
 
                 <div v-if="$page.props.socialstream.show">
-                    <connected-accounts-form class="mt-10 sm:mt-0" />
+                    <ConnectedAccountsForm class="mt-10 sm:mt-0" />
                 </div>
 
                 <div v-if="$page.props.socialstream.hasPassword">
