@@ -7,6 +7,7 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import SocialstreamProviders from '@/Socialstream/Providers';
 const form = useForm({
     name: '',
     email: '',
