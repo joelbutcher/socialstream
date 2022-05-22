@@ -1,5 +1,21 @@
+<script setup>
+import AppLayout from '@/Layouts/AppLayout.vue';
+import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
+import JetSectionBorder from '@/Jetstream/SectionBorder.vue';
+import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue';
+import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue';
+import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
+import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm.vue';
+import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
+
+defineProps({
+    confirmsTwoFactorAuthentication: Boolean,
+    sessions: Array,
+});
+</script>
+
 <template>
-    <app-layout title="Profile">
+    <AppLayout title="Profile">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
@@ -8,28 +24,29 @@
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                 <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                    <update-profile-information-form :user="$page.props.user" />
+                <div v-if="$page.props.jetstream.canUpdateProfileInformation">
+                    <UpdateProfileInformationForm :user="$page.props.user" />
 
-                    <jet-section-border />
+                    <JetSectionBorder />
                 </div>
 
                 <div v-if="$page.props.jetstream.canUpdatePassword && $page.props.socialstream.hasPassword">
-                    <update-password-form class="mt-10 sm:mt-0" />
+                    <UpdatePasswordForm class="mt-10 sm:mt-0" />
 
-                    <jet-section-border />
+                    <JetSectionBorder />
                 </div>
 
                 <div v-else>
-                    <set-password-form class="mt-10 sm:mt-0" />
+                    <SetPasswordForm class="mt-10 sm:mt-0" />
 
-                    <jet-section-border />
+                    <JetSectionBorder />
                 </div>
 
-                <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword">
-                    <two-factor-authentication-form class="mt-10 sm:mt-0" />
+                <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication">
+                    <TwoFactorAuthenticationForm :requires-confirmation="confirmsTwoFactorAuthentication"
+                        class="mt-10 sm:mt-0" />
 
-                    <jet-section-border />
+                    <JetSectionBorder />
                 </div>
 
                 <div v-if="$page.props.socialstream.show">
@@ -37,45 +54,17 @@
                 </div>
 
                 <div v-if="$page.props.socialstream.hasPassword">
-                    <jet-section-border />
+                    <JetSectionBorder />
 
-                    <logout-other-browser-sessions-form  :sessions="sessions" class="mt-10 sm:mt-0" />
+                    <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
                 </div>
 
-                <div v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword">
-                    <jet-section-border />
+                <template v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword">
+                    <JetSectionBorder />
 
-                    <delete-user-form class="mt-10 sm:mt-0" />
-                </div>
+                    <DeleteUserForm class="mt-10 sm:mt-0" />
+                </template>
             </div>
         </div>
-    </app-layout>
+    </AppLayout>
 </template>
-
-<script>
-    import AppLayout from '@/Layouts/AppLayout'
-    import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm'
-    import JetSectionBorder from '@/Jetstream/SectionBorder'
-    import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm'
-    import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm'
-    import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm'
-    import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm'
-    import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm'
-    import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm';
-
-    export default {
-        props: ['sessions'],
-
-        components: {
-            ConnectedAccountsForm,
-            AppLayout,
-            DeleteUserForm,
-            JetSectionBorder,
-            LogoutOtherBrowserSessionsForm,
-            TwoFactorAuthenticationForm,
-            SetPasswordForm,
-            UpdatePasswordForm,
-            UpdateProfileInformationForm,
-        },
-    }
-</script>
