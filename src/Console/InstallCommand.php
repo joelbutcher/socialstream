@@ -32,13 +32,13 @@ class InstallCommand extends Command
     {
         // Check if Jetstream has been installed.
         if (! file_exists(config_path('jetstream.php'))) {
-            $this->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
+            $this->components->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
 
             if ($this->ask('Do you want to install Jetstream? (yes/no)', 'no') !== 'yes') {
                 return 0;
             }
 
-            $stack = $this->choice('Which Jetstream stack do you prefer', ['livewire', 'inertia']);
+            $stack = $this->components->choice('Which Jetstream stack do you prefer', ['livewire', 'inertia']);
 
             $useTeams = $this->ask('Will your application use teams? (yes/no)', 'no') === 'yes';
 
@@ -64,7 +64,7 @@ class InstallCommand extends Command
         }
 
         $this->line('');
-        $this->info('Socialstream installed successfully.');
+        $this->components->info('Socialstream installed successfully.');
         $this->comment('Please execute "npm install && npm run dev" to build your assets.');
 
         return 0;
