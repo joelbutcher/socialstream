@@ -61,12 +61,12 @@ jobs:
       - name: Setup Laravel
         run: |
           composer create-project laravel/laravel:^9 .
-          composer require laravel/jetstream:^2
-          rm -rf vendor/laravel/jetstream
+          composer require joelbutcher/socialstream:^2
+          rm -rf vendor/joelbutcher/socialstream
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          path: 'vendor/laravel/jetstream'
+          path: 'vendor/joelbutcher/socialstream'
 
       - name: Install Jetstream & Socialstream
         run: |
