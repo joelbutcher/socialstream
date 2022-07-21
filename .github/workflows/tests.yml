@@ -68,7 +68,7 @@ jobs:
         with:
           path: 'vendor/laravel/jetstream'
 
-      - name: Install Jetstream
+      - name: Install Jetstream & Socialstream
         run: |
           composer dump
           php artisan jetstream:install ${{ matrix.stack }} --teams --api --verification
