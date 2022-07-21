@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
+use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
@@ -65,7 +66,9 @@ class InstallCommand extends Command
 
         $this->line('');
         $this->components->info('Socialstream installed successfully.');
-        $this->comment('Please execute "npm install && npm run dev" to build your assets.');
+        $this->components->info('Running [npm install && npm run build]...');
+
+        $this->installNodeDependenciesAndBuild();
 
         return 0;
     }
@@ -211,6 +214,32 @@ class InstallCommand extends Command
                 $appConfig
             ));
         }
+    }
+
+    /**
+     * @return void
+     */
+    protected function installNodeDependenciesAndBuild()
+    {
+        $commands = ['npm install', 'npm run build'];
+
+        $this->runCommands($commands);
+    }
+
+    /**
+     * @param  array  $commands
+     * @param  array  $env
+     * @return Process
+     */
+    protected function runCommands(array $commands, array $env = [])
+    {
+        $process = Process::fromShellCommandline(implode(' && ', $commands), null, $env, null, null);
+
+        $process->run(function ($type, $line) {
+            $this->output->write('    '.$line);
+        });
+
+        return $process;
     }
 
     /**
