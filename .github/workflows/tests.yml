@@ -61,7 +61,7 @@ jobs:
       - name: Setup Laravel
         run: |
           composer create-project laravel/laravel:^9 .
-          composer require joelbutcher/socialstream:^2
+          composer require joelbutcher/socialstream:^3
           rm -rf vendor/joelbutcher/socialstream
       - name: Checkout code
         uses: actions/checkout@v2
