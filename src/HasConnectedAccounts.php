@@ -60,7 +60,7 @@ trait HasConnectedAccounts
      */
     public function ownsConnectedAccount($connectedAccount)
     {
-        return $this->id == $connectedAccount->user_id;
+        return $this->id == optional($connectedAccount)->user_id;
     }
 
     /**

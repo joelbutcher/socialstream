@@ -31,10 +31,6 @@ class RemoveConnectedAccountsController extends Controller
      */
     public function removeConnectedAccount(Request $request, $id)
     {
-        if (config('session.driver') !== 'database') {
-            return;
-        }
-
         DB::table('connected_accounts')
             ->where('user_id', $request->user()->getKey())
             ->where('id', $id)

@@ -50,7 +50,7 @@
                 </div>
             @endif
 
-            @if (! is_null($user->password))
+            @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures() && ! is_null($user->password))
                 <x-jet-section-border />
 
                 <div class="mt-10 sm:mt-0">

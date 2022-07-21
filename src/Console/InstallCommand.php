@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
+use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
@@ -32,13 +33,13 @@ class InstallCommand extends Command
     {
         // Check if Jetstream has been installed.
         if (! file_exists(config_path('jetstream.php'))) {
-            $this->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
+            $this->components->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
 
             if ($this->ask('Do you want to install Jetstream? (yes/no)', 'no') !== 'yes') {
                 return 0;
             }
 
-            $stack = $this->choice('Which Jetstream stack do you prefer', ['livewire', 'inertia']);
+            $stack = $this->components->choice('Which Jetstream stack do you prefer', ['livewire', 'inertia']);
 
             $useTeams = $this->ask('Will your application use teams? (yes/no)', 'no') === 'yes';
 
@@ -64,8 +65,10 @@ class InstallCommand extends Command
         }
 
         $this->line('');
-        $this->info('Socialstream installed successfully.');
-        $this->comment('Please execute "npm install && npm run dev" to build your assets.');
+        $this->components->info('Socialstream installed successfully.');
+        $this->components->info('Running [npm install && npm run build]...');
+
+        $this->installNodeDependenciesAndBuild();
 
         return 0;
     }
@@ -134,7 +137,6 @@ class InstallCommand extends Command
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/ProviderIcons'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Auth'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
 
@@ -144,7 +146,6 @@ class InstallCommand extends Command
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
 
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialstream', resource_path('js/Socialstream'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/ProviderIcons', resource_path('js/ProviderIcons'));
 
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
@@ -158,6 +159,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
 
         // Actions...
+        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
@@ -169,8 +171,8 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Auth/Register.vue', resource_path('js/Pages/Auth/Register.vue'));
 
         // Profile views...
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/ConnectedAccountsForm.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/SetPasswordForm.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/Partials/ConnectedAccountsForm.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/Partials/SetPasswordForm.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
 
         $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
@@ -212,6 +214,32 @@ class InstallCommand extends Command
                 $appConfig
             ));
         }
+    }
+
+    /**
+     * @return void
+     */
+    protected function installNodeDependenciesAndBuild()
+    {
+        $commands = ['npm install', 'npm run build'];
+
+        $this->runCommands($commands);
+    }
+
+    /**
+     * @param  array  $commands
+     * @param  array  $env
+     * @return Process
+     */
+    protected function runCommands(array $commands, array $env = [])
+    {
+        $process = Process::fromShellCommandline(implode(' && ', $commands), null, $env, null, null);
+
+        $process->run(function ($type, $line) {
+            $this->output->write('    '.$line);
+        });
+
+        return $process;
     }
 
     /**

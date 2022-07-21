@@ -1,11 +1,25 @@
 {
     "name": "joelbutcher/socialstream",
     "description": "A simple Socialite implementation for Laravel Jetstream.",
-    "keywords": ["laravel", "tailwind", "auth"],
+    "keywords": [
+        "socialstream",
+        "laravel",
+        "jetstream",
+        "laravel jetstream",
+        "laravel socialite",
+        "socialite",
+        "jetstream socialite",
+        "tailwind",
+        "oauth",
+        "laravel oauth",
+        "laravel livewire",
+        "inertia",
+        "vue"
+    ],
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/laravel/jetstream/issues",
-        "source": "https://github.com/laravel/jetstream"
+        "issues": "https://github.com/joelbutcher/socialstream/issues",
+        "source": "https://github.com/joelbutcher/socialstream"
     },
     "authors": [
         {
@@ -16,15 +30,15 @@
     "require": {
         "php": "^7.3|^8.0",
         "doctrine/dbal": "^2.9|^3.0",
-        "illuminate/support": "^8.0",
-        "laravel/jetstream": "^2.0.0",
+        "illuminate/support": "^8.0|^9.0",
+        "laravel/jetstream": "^2.7.0",
         "laravel/socialite": "^5.0"
     },
     "require-dev": {
-        "inertiajs/inertia-laravel": "^0.3",
-        "laravel/sanctum": "^2.6",
+        "inertiajs/inertia-laravel": "^0.5.2",
+        "laravel/sanctum": "^2.7",
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^6.0",
+        "orchestra/testbench": "^6.0|^7.0",
         "phpunit/phpunit": "^9.3"
     },
     "autoload": {
