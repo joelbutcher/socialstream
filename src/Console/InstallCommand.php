@@ -227,8 +227,8 @@ class InstallCommand extends Command
     }
 
     /**
-     * @param array $commands
-     * @param array $env
+     * @param  array  $commands
+     * @param  array  $env
      * @return Process
      */
     protected function runCommands(array $commands, array $env = [])
