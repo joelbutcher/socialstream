@@ -1,11 +1,11 @@
 <script setup>
-import FacebookIcon from './ProviderIcons/FacebookIcon';
-import GoogleIcon from './ProviderIcons/GoogleIcon';
-import TwitterIcon from './ProviderIcons/TwitterIcon';
-import LinkedInIcon from './ProviderIcons/LinkedInIcon';
-import GithubIcon from './ProviderIcons/GithubIcon';
-import GitLabIcon from './ProviderIcons/GitLabIcon';
-import BitbucketIcon from './ProviderIcons/BitbucketIcon';
+import FacebookIcon from './ProviderIcons/FacebookIcon.vue';
+import GoogleIcon from './ProviderIcons/GoogleIcon.vue';
+import TwitterIcon from './ProviderIcons/TwitterIcon.vue';
+import LinkedInIcon from './ProviderIcons/LinkedInIcon.vue';
+import GithubIcon from './ProviderIcons/GithubIcon.vue';
+import GitLabIcon from './ProviderIcons/GitLabIcon.vue';
+import BitbucketIcon from './ProviderIcons/BitbucketIcon.vue';
 
 defineProps({
     provider: String,
