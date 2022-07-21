@@ -7,17 +7,19 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
-import SocialstreamProviders from '@/Socialstream/Providers';
+import SocialstreamProviders from '@/Socialstream/Providers.vue';
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
 });
+
 const form = useForm({
     email: '',
     password: '',
     remember: false,
 });
+
 const submit = () => {
     form.transform(data => ({
         ...data,

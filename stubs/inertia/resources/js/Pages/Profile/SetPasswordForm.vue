@@ -9,6 +9,7 @@ import JetInputError from '@/Jetstream/InputError.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 
 const passwordInput = ref(null);
+
 const form = useForm({
     current_password: '',
     password: '',

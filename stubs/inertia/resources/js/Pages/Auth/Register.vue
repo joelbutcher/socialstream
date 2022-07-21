@@ -7,7 +7,8 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
-import SocialstreamProviders from '@/Socialstream/Providers';
+import SocialstreamProviders from '@/Socialstream/Providers.vue';
+
 const form = useForm({
     name: '',
     email: '',
@@ -15,6 +16,7 @@ const form = useForm({
     password_confirmation: '',
     terms: false,
 });
+
 const submit = () => {
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),

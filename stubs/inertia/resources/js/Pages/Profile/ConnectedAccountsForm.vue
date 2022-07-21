@@ -1,17 +1,20 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
-import JetActionSection from '@/Jetstream/ActionSection';
-import JetButton from '@/Jetstream/Button';
-import JetDangerButton from '@/Jetstream/DangerButton';
-import JetDialogModal from '@/Jetstream/DialogModal';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton';
-import ConnectedAccount from '@/Socialstream/ConnectedAccount';
-import ActionLink from '@/Socialstream/ActionLink';
+import JetActionSection from '@/Jetstream/ActionSection.vue';
+import JetButton from '@/Jetstream/Button.vue';
+import JetDangerButton from '@/Jetstream/DangerButton.vue';
+import JetDialogModal from '@/Jetstream/DialogModal.vue';
+import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
+import ConnectedAccount from '@/Socialstream/ConnectedAccount.vue';
+import ActionLink from '@/Socialstream/ActionLink.vue';
 
 const confirmingRemove = ref(false);
+
 const accountId = ref(null);
+
 const inertiaProps = usePage().props;
+
 const form = useForm({
     _method: 'DELETE',
     bag: 'removeConnectedAccount'
