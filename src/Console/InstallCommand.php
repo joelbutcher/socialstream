@@ -42,11 +42,7 @@ class InstallCommand extends Command
         if (! file_exists(config_path('jetstream.php'))) {
             $this->components->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
 
-            if ($this->ask('Do you want to install Jetstream? (yes/no)', 'no') !== 'yes') {
-                return 0;
-            }
-
-            $this->callSilent('jetstream:install', [
+            $this->call('jetstream:install', [
                 'stack' => $stack = $this->argument('stack'),
                 '--teams' => $this->option('teams'),
                 '--api' => $this->option('api'),
@@ -60,8 +56,8 @@ class InstallCommand extends Command
         }
 
         // Publish...
-        $this->callSilent('vendor:publish', ['--tag' => 'socialstream-config', '--force' => true]);
-        $this->callSilent('vendor:publish', ['--tag' => 'socialstream-migrations', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'socialstream-config', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'socialstream-migrations', '--force' => true]);
 
         if ($stack === 'livewire') {
             $this->installLivewireStack();
