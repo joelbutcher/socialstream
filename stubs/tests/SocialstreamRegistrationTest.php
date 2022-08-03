@@ -47,6 +47,8 @@ class SocialstreamRegistrationTest extends TestCase
 
         Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);
 
+        session()->put('socialstream.previous_url', route('register'));
+
         $response = $this->get("/oauth/$socialiteProvider/callback");
 
         $this->assertAuthenticated();

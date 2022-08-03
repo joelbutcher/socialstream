@@ -12,7 +12,6 @@ use Laravel\Socialite\Two\User;
 use Mockery as m;
 use Tests\TestCase;
 
-uses(TestCase::class);
 uses(RefreshDatabase::class);
 
 test('users can register using socialite providers', function (string $socialiteProvider) {
@@ -41,6 +40,8 @@ test('users can register using socialite providers', function (string $socialite
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);
+
+    session()->put('socialstream.previous_url', route('register'));
 
     $response = $this->get("/oauth/$socialiteProvider/callback");
 
