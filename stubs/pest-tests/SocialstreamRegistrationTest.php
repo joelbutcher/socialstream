@@ -7,10 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use JoelButcher\Socialstream\Providers;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Socialite\Facades\Socialite;
-use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\Two\User;
 use Mockery as m;
-use Tests\TestCase;
 
 uses(RefreshDatabase::class);
 

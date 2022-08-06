@@ -263,7 +263,6 @@ class InstallCommand extends Command
             });
     }
 
-
     /**
      * @return void
      */
