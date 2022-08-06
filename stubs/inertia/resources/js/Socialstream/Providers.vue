@@ -27,7 +27,8 @@
                 <span class="sr-only">Google</span>
             </a>
 
-            <a v-if="$page.props.socialstream.providers.includes('twitter')" :href="route('oauth.redirect', 'twitter')">
+            <a
+                v-if="$page.props.socialstream.providers.includes('twitter') || $page.props.socialstream.providers.includes('twitter-oauth-2')" :href="route('oauth.redirect', 'twitter')">
                 <TwitterIcon class="h-6 w-6 mx-2" />
                 <span class="sr-only">Twitter</span>
             </a>

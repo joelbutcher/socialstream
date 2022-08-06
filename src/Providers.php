@@ -79,17 +79,38 @@ class Providers
     }
 
     /**
-     * Determine if the application has support for the LinkedIn provider.
+     * Determine if the application has support for the Twitter provider.
      *
      * @return bool
      */
     public static function hasTwitterSupport()
     {
-        return static::enabled(static::twitter());
+        return static::enabled(static::twitterOAuth1())
+            || static::enabled(static::twitterOAuth2());
     }
 
     /**
-     * Enable the bitbucket provider.
+     * Determine if the application has support for the Twitter OAuth 1.0 provider.
+     *
+     * @return bool
+     */
+    public static function hasTwitterOAuth1Support()
+    {
+        return static::enabled(static::twitterOAuth1());
+    }
+
+    /**
+     * Determine if the application has support for the Twitter OAuth 2.0 provider.
+     *
+     * @return bool
+     */
+    public static function hasTwitterOAuth2Support()
+    {
+        return static::enabled(static::twitterOAuth2());
+    }
+
+    /**
+     * Enable the Bitbucket provider.
      *
      * @return string
      */
@@ -109,7 +130,7 @@ class Providers
     }
 
     /**
-     * Enable the github provider.
+     * Enable the GitHub provider.
      *
      * @return string
      */
@@ -119,7 +140,7 @@ class Providers
     }
 
     /**
-     * Enable the gitlab provider.
+     * Enable the GitLab provider.
      *
      * @return string
      */
@@ -129,7 +150,7 @@ class Providers
     }
 
     /**
-     * Enable the google provider.
+     * Enable the Google provider.
      *
      * @return string
      */
@@ -139,7 +160,7 @@ class Providers
     }
 
     /**
-     * Enable the linkedin provider.
+     * Enable the LinkedIn provider.
      *
      * @return string
      */
@@ -149,13 +170,33 @@ class Providers
     }
 
     /**
-     * Enable the twitter provider.
+     * Enable the Twitter provider.
      *
      * @return string
      */
     public static function twitter()
     {
         return 'twitter';
+    }
+
+    /**
+     * Enable the Twitter OAuth 1.0 provider.
+     *
+     * @return string
+     */
+    public static function twitterOAuth1()
+    {
+        return 'twitter';
+    }
+
+    /**
+     * Enable the Twitter OAuth 2.0 provider.
+     *
+     * @return string
+     */
+    public static function twitterOAuth2()
+    {
+        return 'twitter-oauth-2';
     }
 
     /**

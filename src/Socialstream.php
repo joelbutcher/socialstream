@@ -143,13 +143,33 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Twitter provider..
+     * Determine if the application has support for the Twitter provider.
      *
      * @return bool
      */
     public static function hasTwitterSupport()
     {
         return Providers::hasTwitterSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Twitter OAuth 1.0 provider..
+     *
+     * @return bool
+     */
+    public static function hasTwitterOAuth1Support()
+    {
+        return Providers::hasTwitterOAuth2Support();
+    }
+
+    /**
+     * Determine if the application has support for the Twitter OAuth 2.0 provider..
+     *
+     * @return bool
+     */
+    public static function hasTwitterOAuth2Support()
+    {
+        return Providers::hasTwitterOAuth2Support();
     }
 
     /**
