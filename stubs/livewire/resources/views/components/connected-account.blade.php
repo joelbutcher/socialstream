@@ -10,7 +10,7 @@
                 @case(JoelButcher\Socialstream\Providers::google())
                     <x-google-icon class="h-6 w-6 mr-2" />
                     @break
-                @case(JoelButcher\Socialstream\Providers::twitter())
+                @case(JoelButcher\Socialstream\Providers::twitter() || JoelButcher\Socialstream\Providers::twitterOAuth2())
                     <x-twitter-icon class="h-6 w-6 mr-2" />
                     @break
                 @case(JoelButcher\Socialstream\Providers::linkedin())

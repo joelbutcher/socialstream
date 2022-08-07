@@ -23,7 +23,7 @@ defineProps({
 
                 <FacebookIcon class="h-6 w-6 mr-2" v-if="provider === 'facebook'" />
                 <GoogleIcon class="h-6 w-6 mr-2" v-if="provider === 'google'" />
-                <TwitterIcon class="h-6 w-6 mr-2" v-if="provider === 'twitter'" />
+                <TwitterIcon class="h-6 w-6 mr-2" v-if="provider === 'twitter' || 'twitter-oauth-2'" />
                 <LinkedInIcon class="h-6 w-6 mr-2" v-if="provider === 'linkedin'" />
                 <GithubIcon class="h-6 w-6 mr-2" v-if="provider === 'github'" />
                 <GitLabIcon class="h-6 w-6 mr-2" v-if="provider === 'gitlab'" />
@@ -31,7 +31,7 @@ defineProps({
 
                 <div>
                     <div class="text-sm font-semibold text-gray-600">
-                        {{ provider.charAt(0).toUpperCase() + provider.slice(1) }}
+                        {{ provider === 'twitter-oauth-2' ? 'Twitter' : provider.charAt(0).toUpperCase() + provider.slice(1) }}
                     </div>
 
                     <div v-if="createdAt !== null" class="text-xs text-gray-500">
