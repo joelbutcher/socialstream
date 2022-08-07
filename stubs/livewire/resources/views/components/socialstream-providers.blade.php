@@ -19,8 +19,15 @@
         </a>
     @endif
 
-    @if (JoelButcher\Socialstream\Socialstream::hasTwitterSupport())
+    @if (JoelButcher\Socialstream\Socialstream::hasTwitterOAuth1Support())
         <a href="{{ route('oauth.redirect', ['provider' => JoelButcher\Socialstream\Providers::twitter()]) }}">
+            <x-twitter-icon class="h-6 w-6 mx-2" />
+            <span class="sr-only">Twitter</span>
+        </a>
+    @endif
+
+    @if (JoelButcher\Socialstream\Socialstream::hasTwitterOAuth2Support())
+        <a href="{{ route('oauth.redirect', ['provider' => JoelButcher\Socialstream\Providers::twitterOAuth2()]) }}">
             <x-twitter-icon class="h-6 w-6 mx-2" />
             <span class="sr-only">Twitter</span>
         </a>
