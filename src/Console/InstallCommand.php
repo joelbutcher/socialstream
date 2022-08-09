@@ -16,7 +16,6 @@ class InstallCommand extends Command
      * @var string
      */
     protected $signature = 'socialstream:install 
-                            {stack : The development stack that should be installed (inertia,livewire)}
                             {--teams : Indicates if team support should be installed}
                             {--api : Indicates if API support should be installed}
                             {--verification : Indicates if email verification support should be installed}
@@ -42,8 +41,16 @@ class InstallCommand extends Command
         if (! file_exists(config_path('jetstream.php'))) {
             $this->components->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
 
+            $stack = $this->components->choice('Which stack would you like to use [inertia] or [livewire]?', ['inertia', 'livewire']);
+
+            if (! in_array($stack, ['inertia', 'livewire'])) {
+                $this->components->error('Invalid stack. Supported stacks are [inertia] and [livewire].');
+
+                return 1;
+            }
+
             $this->callSilent('jetstream:install', [
-                'stack' => $stack = $this->argument('stack'),
+                'stack' => $stack,
                 '--teams' => $this->option('teams'),
                 '--api' => $this->option('api'),
                 '--verification' => $this->option('verification'),
