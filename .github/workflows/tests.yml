@@ -71,7 +71,7 @@ jobs:
       - name: Install
         run: |
           composer dump
-          php artisan socialstream:install ${{ matrix.stack }} --teams --api --verification
+          php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification
 
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
