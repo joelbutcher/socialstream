@@ -161,8 +161,6 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialstream', resource_path('js/Socialstream'));
-
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
@@ -190,6 +188,12 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/Partials/ConnectedAccountsForm.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/Partials/SetPasswordForm.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
+
+        // Socialstream components
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Components/SocialstreamProviderIcons', resource_path('js/Components/SocialstreamProviderIcons'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ConnectedAccount.vue.vue', resource_path('js/Components/ConnectedAccount.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/SocialstreamProviders.vue.vue', resource_path('js/Components/SocialstreamProviders.vue'));
 
         $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
     }

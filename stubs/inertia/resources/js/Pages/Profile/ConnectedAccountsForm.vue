@@ -1,13 +1,13 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
-import JetActionSection from '@/Jetstream/ActionSection.vue';
-import JetButton from '@/Jetstream/Button.vue';
-import JetDangerButton from '@/Jetstream/DangerButton.vue';
-import JetDialogModal from '@/Jetstream/DialogModal.vue';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
-import ConnectedAccount from '@/Socialstream/ConnectedAccount.vue';
-import ActionLink from '@/Socialstream/ActionLink.vue';
+import JetActionSection from '@/Components/ActionSection.vue';
+import JetButton from '@/Components/Button.vue';
+import JetDangerButton from '@/Components/DangerButton.vue';
+import JetDialogModal from '@/Components/DialogModal.vue';
+import JetSecondaryButton from '@/Components/SecondaryButton.vue';
+import ConnectedAccount from '@/Components/ConnectedAccount.vue';
+import ActionLink from '@/Components/ActionLink.vue';
 
 const confirmingRemove = ref(false);
 
