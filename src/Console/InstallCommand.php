@@ -194,7 +194,7 @@ class InstallCommand extends Command
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Components/SocialstreamProviderIcons', resource_path('js/Components/SocialstreamProviderIcons'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ConnectedAccount.vue', resource_path('js/Components/ConnectedAccount.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/SocialstreamProviders.vue', resource_path('js/Components/SocialstreamProviders.vue'));
+        copy(__DIR__ . '/../../stubs/inertia/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
 
         $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
     }
