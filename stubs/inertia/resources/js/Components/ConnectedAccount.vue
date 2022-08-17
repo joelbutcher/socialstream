@@ -23,7 +23,7 @@ defineProps({
 
                 <FacebookIcon class="h-6 w-6 mr-2" v-if="provider === 'facebook'" />
                 <GoogleIcon class="h-6 w-6 mr-2" v-if="provider === 'google'" />
-                <TwitterIcon class="h-6 w-6 mr-2" v-if="provider === 'twitter' || 'twitter-oauth-2'" />
+                <TwitterIcon class="h-6 w-6 mr-2" v-if="['twitter', 'twitter-oauth-2'].includes(provider)" />
                 <LinkedInIcon class="h-6 w-6 mr-2" v-if="provider === 'linkedin'" />
                 <GithubIcon class="h-6 w-6 mr-2" v-if="provider === 'github'" />
                 <GitLabIcon class="h-6 w-6 mr-2" v-if="provider === 'gitlab'" />
