@@ -191,7 +191,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
 
         // Socialstream components
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Components/SocialstreamProviderIcons', resource_path('js/Components/SocialstreamProviderIcons'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/inertia/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ConnectedAccount.vue', resource_path('js/Components/ConnectedAccount.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
