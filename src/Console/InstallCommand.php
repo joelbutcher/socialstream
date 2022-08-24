@@ -40,7 +40,7 @@ class InstallCommand extends Command
     {
         // Check if Jetstream has been installed.
         if (! file_exists(config_path('jetstream.php'))) {
-            $this->components->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
+            $this->components->warn('Jetstream hasn\'t been installed. Installing now...');
 
             $stack = $this->option('stack') ?: $this->components->choice('Which stack would you like to use [inertia] or [livewire]?', ['inertia', 'livewire']);
 
@@ -132,7 +132,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
         copy(__DIR__.'/../../stubs/livewire/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
 
-        // Requuired components...
+        // Custom components...
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/components', resource_path('views/components'));
 
         // Profile views...

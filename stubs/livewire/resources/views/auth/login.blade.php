@@ -46,7 +46,7 @@
         </form>
 
         @if (JoelButcher\Socialstream\Socialstream::show())
-            <x-socialstream-providers />
+            <x-socialstream />
         @endif
     </x-jet-authentication-card>
 </x-guest-layout>
