@@ -1,14 +1,14 @@
 <script setup>
 import {computed} from 'vue';
 import {usePage} from '@inertiajs/inertia-vue3';
-import JetInputError from '@/Components/InputError.vue';
+import BitbucketIcon from '@/Components/SocialstreamIcons/BitbucketIcon.vue';
 import FacebookIcon from '@/Components/SocialstreamIcons/FacebookIcon.vue';
-import GoogleIcon from '@/Components/SocialstreamIcons/GoogleIcon.vue';
-import TwitterIcon from '@/Components/SocialstreamIcons/TwitterIcon.vue';
-import LinkedInIcon from '@/Components/SocialstreamIcons/LinkedInIcon.vue';
 import GithubIcon from '@/Components/SocialstreamIcons/GithubIcon.vue';
 import GitLabIcon from '@/Components/SocialstreamIcons/GitLabIcon.vue';
-import BitbucketIcon from '@/Components/SocialstreamIcons/BitbucketIcon.vue';
+import GoogleIcon from '@/Components/SocialstreamIcons/GoogleIcon.vue';
+import InputError from '@/Components/InputError.vue';
+import LinkedInIcon from '@/Components/SocialstreamIcons/LinkedInIcon.vue';
+import TwitterIcon from '@/Components/SocialstreamIcons/TwitterIcon.vue';
 
 const error = computed(() => usePage().props.value.errors.socialstream);
 </script>
@@ -66,6 +66,6 @@ const error = computed(() => usePage().props.value.errors.socialstream);
       </a>
     </div>
 
-    <JetInputError class="mt-b text-center" :message="error" />
+    <InputError class="mt-b text-center" :message="error" />
   </div>
 </template>

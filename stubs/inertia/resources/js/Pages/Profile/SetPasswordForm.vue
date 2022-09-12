@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/inertia-vue3';
-import JetActionMessage from '@/Components/ActionMessage.vue';
-import JetButton from '@/Components/Button.vue';
-import JetFormSection from '@/Components/FormSection.vue';
-import JetInput from '@/Components/Input.vue';
-import JetInputError from '@/Components/InputError.vue';
-import JetLabel from '@/Components/Label.vue';
+import ActionMessage from '@/Components/ActionMessage.vue';
+import Button from '@/Components/PrimaryButton.vue';
+import FormSection from '@/Components/FormSection.vue';
+import InputError from '@/Components/InputError.vue';
+import Label from '@/Components/Label.vue';
+import TextInput from '@/Components/TextInput.vue';
 
 const passwordInput = ref(null);
 
@@ -33,7 +33,7 @@ const setPassword = () => {
 
 
 <template>
-    <JetFormSection @submitted="setPassword">
+    <FormSection @submitted="setPassword">
         <template #title>
             Set Password
         </template>
@@ -44,8 +44,8 @@ const setPassword = () => {
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="password" value="New Password" />
-                <JetInput
+                <Label for="password" value="New Password" />
+                <TextInput
                     id="password"
                     ref="passwordInput"
                     v-model="form.password"
@@ -53,30 +53,30 @@ const setPassword = () => {
                     class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
-                <JetInputError :message="form.errors.password" class="mt-2" />
+                <InputError :message="form.errors.password" class="mt-2" />
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="password_confirmation" value="Confirm Password" />
-                <JetInput
+                <Label for="password_confirmation" value="Confirm Password" />
+                <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
                     class="mt-1 block w-full"
                     autocomplete="new-password"
                 />
-                <JetInputError :message="form.errors.password_confirmation" class="mt-2" />
+                <InputError :message="form.errors.password_confirmation" class="mt-2" />
             </div>
         </template>
 
         <template #actions>
-            <JetActionMessage :on="form.recentlySuccessful" class="mr-3">
+            <ActionMessage :on="form.recentlySuccessful" class="mr-3">
                 Saved.
-            </JetActionMessage>
+            </ActionMessage>
 
-            <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <Button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 Save
-            </JetButton>
+            </Button>
         </template>
-    </JetFormSection>
+    </FormSection>
 </template>
