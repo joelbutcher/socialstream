@@ -4,7 +4,7 @@ import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
-import Label from '@/Components/Label.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Socialstream from '@/Components/Socialstream.vue';
 import TextInput from '@/Components/TextInput.vue';
@@ -34,7 +34,7 @@ const submit = () => {
 
     <form @submit.prevent="submit">
       <div>
-        <Label for="name" value="Name" />
+        <InputLabel for="name" value="Name" />
         <TextInput
             id="name"
             v-model="form.name"
@@ -48,7 +48,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="email" value="Email" />
+        <InputLabel for="email" value="Email" />
         <TextInput
             id="email"
             v-model="form.email"
@@ -60,7 +60,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password" value="Password" />
+        <InputLabel for="password" value="Password" />
         <TextInput
             id="password"
             v-model="form.password"
@@ -73,7 +73,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password_confirmation" value="Confirm Password" />
+        <InputLabel for="password_confirmation" value="Confirm Password" />
         <TextInput
             id="password_confirmation"
             v-model="form.password_confirmation"
@@ -86,7 +86,7 @@ const submit = () => {
       </div>
 
       <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
-        <Label for="terms">
+        <InputLabel for="terms">
           <div class="flex items-center">
             <Checkbox id="terms" v-model:checked="form.terms" name="terms" />
 
@@ -94,7 +94,7 @@ const submit = () => {
               I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
             </div>
           </div>
-        </Label>
+        </InputLabel>
       </div>
 
       <div class="flex items-center justify-end mt-4">

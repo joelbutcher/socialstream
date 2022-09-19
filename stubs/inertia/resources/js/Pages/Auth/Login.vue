@@ -4,7 +4,7 @@ import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
-import Label from '@/Components/Label.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Socialstream from '@/Components/Socialstream.vue';
 import TextInput from '@/Components/TextInput.vue';
@@ -44,7 +44,7 @@ const submit = () => {
 
     <form @submit.prevent="submit">
       <div>
-        <Label for="email" value="Email" />
+        <InputLabel for="email" value="Email" />
         <TextInput
             id="email"
             v-model="form.email"
@@ -57,7 +57,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password" value="Password" />
+        <InputLabel for="password" value="Password" />
         <TextInput
             id="password"
             v-model="form.password"

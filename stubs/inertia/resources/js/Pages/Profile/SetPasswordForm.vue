@@ -5,7 +5,7 @@ import ActionMessage from '@/Components/ActionMessage.vue';
 import Button from '@/Components/PrimaryButton.vue';
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
-import Label from '@/Components/Label.vue';
+import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 
 const passwordInput = ref(null);
@@ -44,7 +44,7 @@ const setPassword = () => {
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
-                <Label for="password" value="New Password" />
+                <InputLabel for="password" value="New Password" />
                 <TextInput
                     id="password"
                     ref="passwordInput"
@@ -57,7 +57,7 @@ const setPassword = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <Label for="password_confirmation" value="Confirm Password" />
+                <InputLabel for="password_confirmation" value="Confirm Password" />
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
