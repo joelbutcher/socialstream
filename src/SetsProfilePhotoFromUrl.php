@@ -24,7 +24,7 @@ trait SetsProfilePhotoFromUrl
             file_put_contents($file = sys_get_temp_dir().'/'.Str::uuid()->toString(), $response);
 
             $this->updateProfilePhoto(new UploadedFile($file, $name));
-        }else{
+        } else {
             session()->flash('flash.banner', 'Unable to retrive image');
             session()->flash('flash.bannerStyle', 'danger');
         }
