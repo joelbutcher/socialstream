@@ -159,7 +159,7 @@ class Socialstream
      */
     public static function hasTwitterOAuth1Support()
     {
-        return Providers::hasTwitterOAuth2Support();
+        return Providers::hasTwitterOAuth1Support();
     }
 
     /**
