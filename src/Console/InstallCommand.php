@@ -77,32 +77,9 @@ class InstallCommand extends Command
             $this->ensureTeamsCompatibility();
         }
 
-        // Tests...
-        $stubs = $this->getTestStubsPath();
-        copy($stubs.'/SocialstreamRegistrationTest.php', base_path('tests/Feature/SocialstreamRegistrationTest.php'));
-
-        $this->line('');
-        $this->components->info('Socialstream installed successfully.');
-        $this->components->info('Running [npm install && npm run build]...');
-
-        $this->installNodeDependenciesAndBuild();
-
-        return 0;
-    }
-
-    /**
-     * Install the Livewire stack into the application.
-     *
-     * @return void
-     */
-    protected function installLivewireStack()
-    {
         // Directories...
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
         // Service Providers...
         copy(__DIR__.'/../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
@@ -127,6 +104,31 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
         copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
+
+        // Tests...
+        $stubs = $this->getTestStubsPath();
+        copy($stubs.'/SocialstreamRegistrationTest.php', base_path('tests/Feature/SocialstreamRegistrationTest.php'));
+
+        $this->line('');
+        $this->components->info('Socialstream installed successfully.');
+        $this->components->info('Running [npm install && npm run build]...');
+
+        $this->installNodeDependenciesAndBuild();
+
+        return 0;
+    }
+
+    /**
+     * Install the Livewire stack into the application.
+     *
+     * @return void
+     */
+    protected function installLivewireStack()
+    {
+        // Directories...
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
         // Auth views...
         copy(__DIR__.'/../../stubs/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
@@ -153,33 +155,8 @@ class InstallCommand extends Command
         // Directories...
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Auth'));
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
-
-        // Service Providers...
-        copy(__DIR__.'/../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
-        $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
-
-        // Models...
-        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
-
-        // Policies
-        (new Filesystem)->ensureDirectoryExists(app_path('Policies'));
-        copy(__DIR__.'/../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccountPolicy.php'));
-
-        // Jetstream Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
-
-        // Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
 
         // Auth views...
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
