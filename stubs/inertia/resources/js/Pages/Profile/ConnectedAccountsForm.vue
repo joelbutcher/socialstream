@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import ActionLink from '@/Components/ActionLink.vue';
 import ActionSection from '@/Components/ActionSection.vue';
 import ConnectedAccount from '@/Components/ConnectedAccount.vue';
