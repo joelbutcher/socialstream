@@ -10,7 +10,7 @@ import InputError from '@/Components/InputError.vue';
 import LinkedInIcon from '@/Components/SocialstreamIcons/LinkedInIcon.vue';
 import TwitterIcon from '@/Components/SocialstreamIcons/TwitterIcon.vue';
 
-const error = computed(() => usePage().props.value.errors.socialstream);
+const error = computed(() => usePage().props.errors.socialstream);
 </script>
 
 <template>
