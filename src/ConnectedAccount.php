@@ -24,7 +24,7 @@ abstract class ConnectedAccount extends Model
      */
     public function user()
     {
-        return $this->belongsTo(Jetstream::userModel(), 'user_id');
+        return $this->belongsTo(Jetstream::userModel(), 'user_id', (Jetstream::newUserModel())->getAuthIdentifierName());
     }
 
     /**
