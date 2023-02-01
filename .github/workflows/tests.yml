@@ -3,7 +3,7 @@ name: tests
 on:
   push:
     branches:
-      - master
+      - main
       - '*.x'
   pull_request:
   schedule:
@@ -17,13 +17,16 @@ jobs:
       fail-fast: true
       matrix:
         php: [ '8.0', 8.1, 8.2 ]
-        laravel: [ 9 ]
+        laravel: [ 9, 10 ]
+        exclude:
+          - php: '8.0'
+            laravel: 10
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -55,7 +58,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 8.2
           extensions: dom, curl, libxml, mbstring, zip
           ini-values: error_reporting=E_ALL
           tools: composer:v2
@@ -63,18 +66,25 @@ jobs:
 
       - name: Setup Laravel
         run: |
-          composer create-project laravel/laravel:^9 .
-          composer require joelbutcher/socialstream:^3
-          rm -rf vendor/joelbutcher/socialstream
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          path: 'vendor/joelbutcher/socialstream'
+          composer create-project laravel/laravel:10.x-dev .
+          composer require joelbutcher/socialstream:* --no-interaction --no-update
+          composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
 
-      - name: Install
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          path: 'socialstream'
+
+      - name: Install Socialstream
         run: |
-          composer dump
+          composer update "joelbutcher/jetstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification
+
+      - name: Install NPM dependencies
+        run: npm i
+
+      - name: Compile assets
+        run: npm run build
 
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
