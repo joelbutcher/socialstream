@@ -115,6 +115,6 @@ trait HasConnectedAccounts
      */
     public function connectedAccounts()
     {
-        return $this->hasMany(Socialstream::connectedAccountModel(), 'user_id');
+        return $this->hasMany(Socialstream::connectedAccountModel(), 'user_id', $this->getAuthIdentifierName());
     }
 }

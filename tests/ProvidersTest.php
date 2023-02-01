@@ -56,6 +56,20 @@ class ProvidersTest extends TestCase
         $this->assertTrue(Providers::hasTwitterSupport());
     }
 
+    public function test_it_supports_twitter_o_auth_1_provider()
+    {
+        Config::set('socialstream.providers', [Providers::twitterOAuth1()]);
+
+        $this->assertTrue(Providers::hasTwitterOAuth1Support());
+    }
+
+    public function test_it_supports_twitter_o_auth_2_provider()
+    {
+        Config::set('socialstream.providers', [Providers::twitterOAuth2()]);
+
+        $this->assertTrue(Providers::hasTwitterOAuth2Support());
+    }
+
     public function test_it_supports_custom_providers()
     {
         Config::set('socialstream.providers', ['my-custom-provider']);

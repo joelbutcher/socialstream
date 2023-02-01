@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -44,6 +45,48 @@ class SocialstreamServiceProvider extends ServiceProvider
         if (config('jetstream.stack') === 'inertia') {
             $this->bootInertia();
         }
+    }
+
+    /**
+     * Configure the Socialstream Blade components.
+     *
+     * @return void
+     */
+    protected function configureComponents()
+    {
+        $this->callAfterResolving(BladeCompiler::class, function () {
+            $this->registerComponent('socialstream');
+            $this->registerComponent('action-link');
+            $this->registerComponent('connected-account');
+            $this->registerIcon('bitbucket');
+            $this->registerIcon('facebook');
+            $this->registerIcon('github');
+            $this->registerIcon('gitlab');
+            $this->registerIcon('linkedin');
+            $this->registerIcon('twitter');
+        });
+    }
+
+    /**
+     * Register the given component.
+     *
+     * @param  string  $component
+     * @return void
+     */
+    protected function registerComponent(string $component)
+    {
+        Blade::component('socialstream::components.'.$component, $component);
+    }
+
+    /**
+     * Register the given component.
+     *
+     * @param  string  $icon
+     * @return void
+     */
+    protected function registerIcon(string $icon)
+    {
+        Blade::component('socialstream::components.socialstream-icons'.$icon, $icon.'-icon');
     }
 
     /**

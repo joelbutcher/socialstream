@@ -1,19 +1,19 @@
 <script setup>
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref } from 'vue';
-import JetActionSection from '@/Jetstream/ActionSection.vue';
-import JetButton from '@/Jetstream/Button.vue';
-import JetDangerButton from '@/Jetstream/DangerButton.vue';
-import JetDialogModal from '@/Jetstream/DialogModal.vue';
-import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue';
-import ConnectedAccount from '@/Socialstream/ConnectedAccount.vue';
-import ActionLink from '@/Socialstream/ActionLink.vue';
+import { ref, computed } from 'vue';
+import { useForm, usePage } from '@inertiajs/vue3'
+import ActionLink from '@/Components/ActionLink.vue';
+import ActionSection from '@/Components/ActionSection.vue';
+import ConnectedAccount from '@/Components/ConnectedAccount.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import DialogModal from '@/Components/DialogModal.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 
 const confirmingRemove = ref(false);
 
 const accountId = ref(null);
 
-const inertiaProps = usePage().props;
+const inertiaProps = computed(() => usePage().props);
 
 const form = useForm({
     _method: 'DELETE',
@@ -63,7 +63,7 @@ function removeConnectedAccount(id) {
 </script>
 
 <template>
-    <JetActionSection>
+    <ActionSection>
         <template #title>
             Connected Accounts
         </template>
@@ -101,10 +101,10 @@ function removeConnectedAccount(id) {
                                         Use Avatar as Profile Photo
                                     </button>
 
-                                    <JetDangerButton @click="confirmRemove(getAccountForProvider(provider).id)"
+                                    <DangerButton @click="confirmRemove(getAccountForProvider(provider).id)"
                                         v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword">
                                         Remove
-                                    </JetDangerButton>
+                                    </DangerButton>
                                 </div>
                             </template>
 
@@ -119,7 +119,7 @@ function removeConnectedAccount(id) {
             </div>
 
             <!-- Confirmation Modal -->
-            <JetDialogModal :show="confirmingRemove" @close="confirmingRemove = false">
+            <DialogModal :show="confirmingRemove" @close="confirmingRemove = false">
                 <template #title>
                     Remove Connected Account
                 </template>
@@ -129,16 +129,16 @@ function removeConnectedAccount(id) {
                 </template>
 
                 <template #footer>
-                    <JetSecondaryButton @click="confirmingRemove = false">
+                    <SecondaryButton @click="confirmingRemove = false">
                         Nevermind
-                    </JetSecondaryButton>
+                    </SecondaryButton>
 
-                    <JetButton class="ml-2" @click="removeConnectedAccount(accountId)"
+                    <PrimaryButton class="ml-2" @click="removeConnectedAccount(accountId)"
                         :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                         Remove Connected Account
-                    </JetButton>
+                    </PrimaryButton>
                 </template>
-            </JetDialogModal>
+            </DialogModal>
         </template>
-    </JetActionSection>
+    </ActionSection>
 </template>

@@ -1,12 +1,12 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue';
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue';
-import JetSectionBorder from '@/Jetstream/SectionBorder.vue';
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue';
+import SectionBorder from '@/Components/SectionBorder.vue';
+import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm.vue';
 import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue';
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
-import SetPasswordForm from '@/Pages/Profile/Partials/SetPasswordForm.vue';
-import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue';
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
 
 defineProps({
@@ -28,26 +28,26 @@ defineProps({
                 <div v-if="$page.props.jetstream.canUpdateProfileInformation">
                     <UpdateProfileInformationForm :user="$page.props.user" />
 
-                    <JetSectionBorder />
+                    <SectionBorder />
                 </div>
 
                 <div v-if="$page.props.jetstream.canUpdatePassword && $page.props.socialstream.hasPassword">
                     <UpdatePasswordForm class="mt-10 sm:mt-0" />
 
-                    <JetSectionBorder />
+                    <SectionBorder />
                 </div>
 
                 <div v-else>
                     <SetPasswordForm class="mt-10 sm:mt-0" />
 
-                    <JetSectionBorder />
+                    <SectionBorder />
                 </div>
 
                 <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication">
                     <TwoFactorAuthenticationForm :requires-confirmation="confirmsTwoFactorAuthentication"
                         class="mt-10 sm:mt-0" />
 
-                    <JetSectionBorder />
+                    <SectionBorder />
                 </div>
 
                 <div v-if="$page.props.socialstream.show">
@@ -55,13 +55,13 @@ defineProps({
                 </div>
 
                 <div v-if="$page.props.socialstream.hasPassword">
-                    <JetSectionBorder />
+                    <SectionBorder />
 
                     <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
                 </div>
 
                 <template v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword">
-                    <JetSectionBorder />
+                    <SectionBorder />
 
                     <DeleteUserForm class="mt-10 sm:mt-0" />
                 </template>

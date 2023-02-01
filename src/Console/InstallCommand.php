@@ -15,7 +15,14 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'socialstream:install';
+    protected $signature = 'socialstream:install 
+                            {--stack= : Indicates the desired stack to be installed (Livewire, Inertia)}
+                            {--teams : Indicates if team support should be installed}
+                            {--api : Indicates if API support should be installed}
+                            {--verification : Indicates if email verification support should be installed}
+                            {--pest : Indicates if Pest should be installed}
+                            {--ssr : Indicates if Inertia SSR support should be installed}
+                            {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     /**
      * The console command description.
@@ -27,27 +34,33 @@ class InstallCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return int|null
      */
     public function handle()
     {
         // Check if Jetstream has been installed.
         if (! file_exists(config_path('jetstream.php'))) {
-            $this->components->warn('Jetstream hasn\'t been installed. This package requires Jetstream to be installed.');
+            $this->components->warn('Jetstream hasn\'t been installed. Installing now...');
 
-            if ($this->ask('Do you want to install Jetstream? (yes/no)', 'no') !== 'yes') {
-                return 0;
+            $stack = $this->option('stack') ?: $this->components->choice('Which stack would you like to use [inertia] or [livewire]?', ['inertia', 'livewire']);
+
+            if (! in_array($stack, ['inertia', 'livewire'])) {
+                $this->components->error('Invalid stack. Supported stacks are [inertia] and [livewire].');
+
+                return 1;
             }
 
-            $stack = $this->components->choice('Which Jetstream stack do you prefer', ['livewire', 'inertia']);
-
-            $useTeams = $this->ask('Will your application use teams? (yes/no)', 'no') === 'yes';
-
-            $this->callSilent('jetstream:install', ['stack' => $stack, '--teams' => $useTeams]);
+            $this->callSilent('jetstream:install', [
+                'stack' => $stack,
+                '--teams' => $this->option('teams'),
+                '--api' => $this->option('api'),
+                '--verification' => $this->option('verification'),
+                '--pest' => $this->option('pest'),
+                '--ssr' => $this->option('ssr'),
+                '--composer' => $this->option('composer'),
+            ]);
         } else {
             $stack = config('jetstream.stack');
-
-            $useTeams = Jetstream::hasTeamFeatures();
         }
 
         // Publish...
@@ -60,9 +73,13 @@ class InstallCommand extends Command
             $this->installInertiaStack();
         }
 
-        if ($useTeams) {
+        if ($this->option('teams')) {
             $this->ensureTeamsCompatibility();
         }
+
+        // Tests...
+        $stubs = $this->getTestStubsPath();
+        copy($stubs.'/SocialstreamRegistrationTest.php', base_path('tests/Feature/SocialstreamRegistrationTest.php'));
 
         $this->line('');
         $this->components->info('Socialstream installed successfully.');
@@ -115,7 +132,7 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
         copy(__DIR__.'/../../stubs/livewire/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
 
-        // Requuired components...
+        // Custom components...
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/components', resource_path('views/components'));
 
         // Profile views...
@@ -145,8 +162,6 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
         $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
 
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Socialstream', resource_path('js/Socialstream'));
-
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
@@ -174,6 +189,12 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/Partials/ConnectedAccountsForm.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/Partials/SetPasswordForm.vue'));
         copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
+
+        // Socialstream components
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ConnectedAccount.vue', resource_path('js/Components/ConnectedAccount.vue'));
+        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
 
         $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
     }
@@ -214,6 +235,44 @@ class InstallCommand extends Command
                 $appConfig
             ));
         }
+    }
+
+    /**
+     * Returns the path to the correct test stubs.
+     *
+     * @return string
+     */
+    protected function getTestStubsPath()
+    {
+        return $this->option('pest')
+            ? __DIR__.'/../../stubs/pest-tests'
+            : __DIR__.'/../../stubs/tests';
+    }
+
+    /**
+     * Install the given Composer Packages as "dev" dependencies.
+     *
+     * @param  mixed  $packages
+     * @return void
+     */
+    protected function requireComposerDevPackages($packages)
+    {
+        $composer = $this->option('composer');
+
+        if ($composer !== 'global') {
+            $command = [$this->phpBinary(), $composer, 'require', '--dev'];
+        }
+
+        $command = array_merge(
+            $command ?? ['composer', 'require', '--dev'],
+            is_array($packages) ? $packages : func_get_args()
+        );
+
+        (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
+            ->setTimeout(null)
+            ->run(function ($type, $output) {
+                $this->output->write($output);
+            });
     }
 
     /**

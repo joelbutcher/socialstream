@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Manage and remove your connect accounts.') }}
+        {{ __('Manage and remove your connected accounts.') }}
     </x-slot>
 
     <x-slot name="content">
