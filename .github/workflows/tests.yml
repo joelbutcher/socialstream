@@ -75,9 +75,9 @@ jobs:
         with:
           path: 'socialstream'
 
-      - name: Install
+      - name: Install Socialstream
         run: |
-          composer dump
+          composer update "joelbutcher/jetstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification
 
       - name: Install NPM dependencies
