@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useForm, usePage } from '@inertiajs/vue3'
 import ActionLink from '@/Components/ActionLink.vue';
 import ActionSection from '@/Components/ActionSection.vue';
@@ -13,7 +13,7 @@ const confirmingRemove = ref(false);
 
 const accountId = ref(null);
 
-const inertiaProps = usePage().props;
+const inertiaProps = computed(() => usePage().props);
 
 const form = useForm({
     _method: 'DELETE',
