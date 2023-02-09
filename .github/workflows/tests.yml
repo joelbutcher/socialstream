@@ -42,7 +42,7 @@ jobs:
           composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
-        run: vendor/bin/phpunit --verbose
+        run: vendor/bin/phpunit
 
   stub-tests:
     runs-on: ubuntu-20.04
@@ -87,7 +87,7 @@ jobs:
         run: npm run build
 
       - name: Execute tests
-        run: vendor/bin/phpunit --verbose
+        run: vendor/bin/phpunit
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
