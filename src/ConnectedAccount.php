@@ -2,27 +2,33 @@
 
 namespace JoelButcher\Socialstream;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Jetstream\Jetstream;
 
+/**
+ * @property int $id
+ * @property string $provider_id
+ * @property string $token
+ * @property string|null $secret
+ * @property string|null $refresh_token
+ * @property DateTimeInterface|null $expires_at
+ */
 abstract class ConnectedAccount extends Model
 {
     /**
      * Get the credentials used for authenticating services.
-     *
-     * @return \JoelButcher\Socialstream\Credentials
      */
-    public function getCredentials()
+    public function getCredentials(): Credentials
     {
         return new Credentials($this);
     }
 
     /**
      * Get user of the connected account.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(Jetstream::userModel(), 'user_id', (Jetstream::newUserModel())->getAuthIdentifierName());
     }
@@ -30,9 +36,9 @@ abstract class ConnectedAccount extends Model
     /**
      * Get the data that should be shared with Inertia.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function getSharedInertiaData()
+    public function getSharedInertiaData(): array
     {
         return $this->getSharedData();
     }
@@ -40,9 +46,9 @@ abstract class ConnectedAccount extends Model
     /**
      * Get the data that should be shared.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function getSharedData()
+    public function getSharedData(): array
     {
         return [
             'id' => $this->id,

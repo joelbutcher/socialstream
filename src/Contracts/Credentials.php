@@ -11,33 +11,33 @@ interface Credentials
      *
      * @return string
      */
-    public function getId();
+    public function getId(): string;
 
     /**
      * Get token for the credentials.
      *
      * @return string
      */
-    public function getToken();
+    public function getToken(): string;
 
     /**
      * Get the token secret for the credentials.
      *
      * @return string|null
      */
-    public function getTokenSecret();
+    public function getTokenSecret(): ?string;
 
     /**
      * Get the refresh token for the credentials.
      *
      * @return string|null
      */
-    public function getRefreshToken();
+    public function getRefreshToken(): ?string;
 
     /**
      * Get the expiry date for the credentials.
      *
      * @return DateTimeInterface|null
      */
-    public function getExpiry();
+    public function getExpiry(): ?DateTimeInterface;
 }
