@@ -4,6 +4,21 @@
 
 ### Changes
 
+#### Native Type declarations
+
+Version 4.x updates the interfaces and published `php` files to use native type declarations.
+Please ensure the following files have been updated to match their interface counterparts:
+
+```
+CreateConnectedAccount.php
+CreateUserFromProvider.php
+HandleInvalidState.php
+ResolveSocialiteUser.php
+SetUserPassword.php
+UpdateConnectedAccount.php
+```
+
+
 #### User Profile Photo
 
 If you have included the `HasProfilePhoto` trait in your user model, please update your model to the following 
