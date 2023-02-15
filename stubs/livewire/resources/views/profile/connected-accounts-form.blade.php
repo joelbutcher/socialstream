@@ -1,4 +1,4 @@
-<x-jet-action-section>
+<x-action-section>
     <x-slot name="title">
         {{ __('Connected Accounts') }}
     </x-slot>
@@ -38,9 +38,9 @@
                                 @endif
 
                                 @if (($this->accounts->count() > 1 || ! is_null($this->user->password)))
-                                    <x-jet-danger-button wire:click="confirmRemove({{ $account->id }})" wire:loading.attr="disabled">
+                                    <x-danger-button wire:click="confirmRemove({{ $account->id }})" wire:loading.attr="disabled">
                                         {{ __('Remove') }}
-                                    </x-jet-danger-button>
+                                    </x-danger-button>
                                 @endif
                             </div>
                         @else
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Logout Other Devices Confirmation Modal -->
-        <x-jet-dialog-modal wire:model="confirmingRemove">
+        <x-dialog-modal wire:model="confirmingRemove">
             <x-slot name="title">
                 {{ __('Remove Connected Account') }}
             </x-slot>
@@ -65,14 +65,14 @@
             </x-slot>
 
             <x-slot name="footer">
-                <x-jet-secondary-button wire:click="$toggle('confirmingRemove')" wire:loading.attr="disabled">
+                <x-secondary-button wire:click="$toggle('confirmingRemove')" wire:loading.attr="disabled">
                     {{ __('Nevermind') }}
-                </x-jet-secondary-button>
+                </x-secondary-button>
 
-                <x-jet-danger-button class="ml-2" wire:click="removeConnectedAccount({{ $this->selectedAccountId }})" wire:loading.attr="disabled">
+                <x-danger-button class="ml-2" wire:click="removeConnectedAccount({{ $this->selectedAccountId }})" wire:loading.attr="disabled">
                     {{ __('Remove Connected Account') }}
-                </x-jet-danger-button>
+                </x-danger-button>
             </x-slot>
-        </x-jet-dialog-modal>
+        </x-dialog-modal>
     </x-slot>
-</x-jet-action-section>
+</x-action-section>
