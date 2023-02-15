@@ -9,6 +9,7 @@ use Laravel\Jetstream\Jetstream;
 
 /**
  * @property int $id
+ * @property int $user_id
  * @property string $provider_id
  * @property string $token
  * @property string|null $secret
