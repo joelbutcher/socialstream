@@ -57,7 +57,7 @@ class SocialstreamRegistrationTest extends TestCase
     /**
      * @return array<int, array<int, string>>
      */
-    public function socialiteProvidersDataProvider(): array
+    public static function socialiteProvidersDataProvider(): array
     {
         return [
             [Providers::google()],
