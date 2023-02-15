@@ -71,7 +71,7 @@ jobs:
 
       - name: Setup Laravel
         run: |
-          composer create-project laravel/laravel:${{ matrix.laravel }} .
+          composer create-project laravel/laravel:^${{ matrix.laravel }} .
           composer require joelbutcher/socialstream:@dev --no-interaction --no-update
           composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
 
