@@ -100,7 +100,7 @@ jobs:
         run: npm run build
 
       - name: Execute tests
-        run: vendor/bin/pest
+        run: vendor/bin/${{ matrix.tester }}
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
