@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
@@ -14,7 +15,7 @@ class ShareInertiaData
     /**
      * Handle the incoming request.
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response|RedirectResponse
     {
         Inertia::share(array_filter([
             'socialstream' => function () use ($request) {
