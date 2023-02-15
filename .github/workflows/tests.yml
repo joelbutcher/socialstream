@@ -22,7 +22,7 @@ jobs:
           - php: '8.0'
             laravel: 10
 
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    name: Run Tests – PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
@@ -51,8 +51,13 @@ jobs:
       fail-fast: true
       matrix:
         stack: [ inertia, livewire ]
+        php: [ '8.0', 8.1, 8.2 ]
+        laravel: [ 9, 10 ],
+        exclude:
+          laravel: 10
+          php: '8.0'
 
-    name: Test Stubs (${{ matrix.stack }})
+    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }}
 
     steps:
       - name: Setup PHP
@@ -66,7 +71,7 @@ jobs:
 
       - name: Setup Laravel
         run: |
-          composer create-project laravel/laravel:10.x-dev .
+          composer create-project laravel/laravel:${{ matrix.laravel }} .
           composer require joelbutcher/socialstream:* --no-interaction --no-update
           composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
 
@@ -77,7 +82,7 @@ jobs:
 
       - name: Install Socialstream
         run: |
-          composer update "joelbutcher/jetstream" --prefer-dist --no-interaction --no-progress -W
+          composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification
 
       - name: Install NPM dependencies
