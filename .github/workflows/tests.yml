@@ -58,7 +58,7 @@ jobs:
           - php: '8.0'
             laravel: 10
 
-    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }}
+    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }} – ${{ matrix.tester }}
 
     steps:
       - name: Setup PHP
@@ -82,13 +82,13 @@ jobs:
           path: 'socialstream'
 
       - name: Install Socialstream
-        if: ${{ matrix.tester === 'pest' }}
+        if: ${{ matrix.tester == 'pest' }}
         run: |
           composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification --pest
 
       - name: Install Socialstream
-        if: ${{ matrix.tester === 'phpunit' }}
+        if: ${{ matrix.tester == 'phpunit' }}
         run: |
           composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification
@@ -100,7 +100,7 @@ jobs:
         run: npm run build
 
       - name: Execute tests
-        run: vendor/bin/pest
+        run: vendor/bin/${{ matrix.tester }}
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"

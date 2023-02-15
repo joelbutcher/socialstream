@@ -50,7 +50,7 @@ class InstallCommand extends Command
                 return 1;
             }
 
-            $this->callSilent('jetstream:install', [
+            $this->call('jetstream:install', [
                 'stack' => $stack,
                 '--teams' => $this->option('teams'),
                 '--api' => $this->option('api'),

@@ -10,11 +10,8 @@ trait SetsProfilePhotoFromUrl
 {
     /**
      * Sets the users profile photo from a URL.
-     *
-     * @param  string  $url
-     * @return void
      */
-    public function setProfilePhotoFromUrl(string $url)
+    public function setProfilePhotoFromUrl(string $url): void
     {
         $name = pathinfo($url)['basename'];
         $response = Http::get($url);

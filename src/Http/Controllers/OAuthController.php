@@ -2,11 +2,15 @@
 
 namespace JoelButcher\Socialstream\Http\Controllers;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
+use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
@@ -18,72 +22,29 @@ use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Jetstream\Jetstream;
+use Laravel\Socialite\Contracts\User as ProviderUser;
 use Laravel\Socialite\Two\InvalidStateException;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 class OAuthController extends Controller
 {
     /**
-     * The guard implementation.
-     *
-     * @var \Illuminate\Contracts\Auth\StatefulGuard
-     */
-    protected $guard;
-
-    /**
-     * The creates user implementation.
-     *
-     * @var \JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-     */
-    protected $createsUser;
-
-    /**
-     * The creates connected accounts implementation.
-     *
-     * @var \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-     */
-    protected $createsConnectedAccounts;
-
-    /**
-     * The updates connected accounts implementation.
-     *
-     * @var \JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
-     */
-    protected $updatesConnectedAccounts;
-
-    /**
-     * The handler for Socialite's InvalidStateException.
-     *
-     * @var \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-     */
-    protected $invalidStateHandler;
-
-    /**
      * Create a new controller instance.
-     *
-     * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
-     * @return void
      */
     public function __construct(
-        StatefulGuard $guard,
-        CreatesUserFromProvider $createsUser,
-        CreatesConnectedAccounts $createsConnectedAccounts,
-        UpdatesConnectedAccounts $updatesConnectedAccounts,
-        HandlesInvalidState $invalidStateHandler
+        protected StatefulGuard $guard,
+        protected CreatesUserFromProvider $createsUser,
+        protected CreatesConnectedAccounts $createsConnectedAccounts,
+        protected UpdatesConnectedAccounts $updatesConnectedAccounts,
+        protected HandlesInvalidState $invalidStateHandler
     ) {
-        $this->guard = $guard;
-        $this->createsUser = $createsUser;
-        $this->createsConnectedAccounts = $createsConnectedAccounts;
-        $this->updatesConnectedAccounts = $updatesConnectedAccounts;
-        $this->invalidStateHandler = $invalidStateHandler;
+        //
     }
 
     /**
      * Get the redirect for the given Socialite provider.
-     *
-     * @param  string  $provider
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function redirectToProvider(string $provider, GeneratesProviderRedirect $generator)
+    public function redirectToProvider(string $provider, GeneratesProviderRedirect $generator): SymfonyRedirectResponse
     {
         session()->put('socialstream.previous_url', back()->getTargetUrl());
 
@@ -92,12 +53,8 @@ class OAuthController extends Controller
 
     /**
      * Attempt to log the user in via the provider user returned from Socialite.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $provider
-     * @return mixed
      */
-    public function handleProviderCallback(Request $request, string $provider, ResolvesSocialiteUsers $resolver)
+    public function handleProviderCallback(Request $request, string $provider, ResolvesSocialiteUsers $resolver): Response|RedirectResponse|LoginResponse
     {
         if ($request->has('error')) {
             $messageBag = new MessageBag;
@@ -113,7 +70,7 @@ class OAuthController extends Controller
         try {
             $providerAccount = $resolver->resolve($provider);
         } catch (InvalidStateException $e) {
-            $this->invalidStateHandler->handle($e);
+            return $this->invalidStateHandler->handle($e);
         }
 
         $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
@@ -125,6 +82,7 @@ class OAuthController extends Controller
 
         // Registration...
         $previousUrl = session()->get('socialstream.previous_url');
+
         if (
             FortifyFeatures::enabled(FortifyFeatures::registration()) && ! $account &&
             (
@@ -138,7 +96,7 @@ class OAuthController extends Controller
                 return $this->handleUserAlreadyRegistered($user, $account, $provider, $providerAccount);
             }
 
-            return $this->register($account, $provider, $providerAccount);
+            return $this->register($provider, $providerAccount);
         }
 
         if (! Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
@@ -184,14 +142,8 @@ class OAuthController extends Controller
 
     /**
      * Handle connection of accounts for an already authenticated user.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $account
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\AbstractUser  $providerAccount
-     * @return mixed
      */
-    protected function alreadyAuthenticated($user, $account, $provider, $providerAccount)
+    protected function alreadyAuthenticated(Authenticatable $user, ?ConnectedAccount $account, string $provider, ProviderUser $providerAccount): RedirectResponse
     {
         if ($account && $account->user_id !== $user->id) {
             return redirect()->route('profile.show')->dangerBanner(
@@ -214,14 +166,8 @@ class OAuthController extends Controller
 
     /**
      * Handle when a user is already registered.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $account
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\AbstractUser  $providerAccount
-     * @return mixed
      */
-    protected function handleUserAlreadyRegistered($user, $account, $provider, $providerAccount)
+    protected function handleUserAlreadyRegistered(Authenticatable $user, ?ConnectedAccount $account, string $provider, ProviderUser $providerAccount): RedirectResponse|LoginResponse
     {
         if (Features::hasLoginOnRegistrationFeatures()) {
 
@@ -241,13 +187,8 @@ class OAuthController extends Controller
 
     /**
      * Handle the registration of a new user.
-     *
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $account
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\AbstractUser  $providerAccount
-     * @return mixed
      */
-    protected function register($account, $provider, $providerAccount)
+    protected function register(string $provider, ProviderUser $providerAccount): RedirectResponse|LoginResponse
     {
         if (! $providerAccount->getEmail()) {
             $messageBag = new MessageBag;
@@ -276,11 +217,8 @@ class OAuthController extends Controller
 
     /**
      * Authenticate the given user and return a login response.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|mixed  $user
-     * @return mixed
      */
-    protected function login($user)
+    protected function login(Authenticatable $user): LoginResponse
     {
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 

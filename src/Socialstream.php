@@ -17,29 +17,26 @@ class Socialstream
      *
      * @var bool
      */
-    public static $enabled = true;
+    public static bool $enabled = true;
 
     /**
      * Indicates if Socialstream routes will be registered.
      *
      * @var bool
      */
-    public static $registersRoutes = true;
+    public static bool $registersRoutes = true;
 
     /**
      * The user model that should be used by Jetstream.
      *
      * @var string
      */
-    public static $connectedAccountModel = 'App\\Models\\ConnectedAccount';
+    public static string $connectedAccountModel = 'App\\Models\\ConnectedAccount';
 
     /**
-     * Determine whether or not Socialstream is enabled in the application.
-     *
-     * @param  callable|bool  $callback
-     * @return bool
+     * Determine whether Socialstream is enabled in the application.
      */
-    public static function enabled($callback = null)
+    public static function enabled(callable|bool $callback = null): bool
     {
         if (is_callable($callback)) {
             static::$enabled = $callback();
@@ -53,33 +50,19 @@ class Socialstream
     }
 
     /**
-     * Determine whether or not to show Socialstream components on login or registration.
-     *
-     * @return bool
+     * Determine whether to show Socialstream components on login or registration.
      */
-    public static function show()
+    public static function show(): bool
     {
         return static::$enabled;
     }
 
     /**
      * Determine which providers the application supports.
-     *
-     * @return array
      */
-    public static function providers()
+    public static function providers(): array
     {
         return config('socialstream.providers');
-    }
-
-    /**
-     * Determine if Socialistream supports a specific Socialite provider.
-     *
-     * @return bool
-     */
-    public static function hasSupportFor(string $provider)
-    {
-        return Providers::enabled($provider);
     }
 
     /**
@@ -87,7 +70,7 @@ class Socialstream
      *
      * @return bool
      */
-    public static function hasBitbucketSupport()
+    public static function hasBitbucketSupport(): bool
     {
         return Providers::hasBitbucketSupport();
     }
@@ -97,129 +80,103 @@ class Socialstream
      *
      * @return bool
      */
-    public static function hasFacebookSupport()
+    public static function hasFacebookSupport(): bool
     {
         return Providers::hasFacebookSupport();
     }
 
     /**
      * Determine if the application has support for the Gitlab provider..
-     *
-     * @return bool
      */
-    public static function hasGitlabSupport()
+    public static function hasGitlabSupport(): bool
     {
         return Providers::hasGitlabSupport();
     }
 
     /**
      * Determine if the application has support for the Github provider..
-     *
-     * @return bool
      */
-    public static function hasGithubSupport()
+    public static function hasGithubSupport(): bool
     {
         return Providers::hasGithubSupport();
     }
 
     /**
      * Determine if the application has support for the Google provider..
-     *
-     * @return bool
      */
-    public static function hasGoogleSupport()
+    public static function hasGoogleSupport(): bool
     {
         return Providers::hasGoogleSupport();
     }
 
     /**
      * Determine if the application has support for the LinkedIn provider..
-     *
-     * @return bool
      */
-    public static function hasLinkedInSupport()
+    public static function hasLinkedInSupport(): bool
     {
         return Providers::hasLinkedInSupport();
     }
 
     /**
      * Determine if the application has support for the Twitter provider.
-     *
-     * @return bool
      */
-    public static function hasTwitterSupport()
+    public static function hasTwitterSupport(): bool
     {
         return Providers::hasTwitterSupport();
     }
 
     /**
      * Determine if the application has support for the Twitter OAuth 1.0 provider..
-     *
-     * @return bool
      */
-    public static function hasTwitterOAuth1Support()
+    public static function hasTwitterOAuth1Support(): bool
     {
         return Providers::hasTwitterOAuth1Support();
     }
 
     /**
      * Determine if the application has support for the Twitter OAuth 2.0 provider..
-     *
-     * @return bool
      */
-    public static function hasTwitterOAuth2Support()
+    public static function hasTwitterOAuth2Support(): bool
     {
         return Providers::hasTwitterOAuth2Support();
     }
 
     /**
      * Determine if the application has the generates missing emails feature enabled.
-     *
-     * @return bool
      */
-    public static function generatesMissingEmails()
+    public static function generatesMissingEmails(): bool
     {
         return Features::generatesMissingEmails();
     }
 
     /**
      * Determine if the application has the create account on first login feature.
-     *
-     * @return bool
      */
-    public static function hasCreateAccountOnFirstLoginFeatures()
+    public static function hasCreateAccountOnFirstLoginFeatures(): bool
     {
         return Features::hasCreateAccountOnFirstLoginFeatures();
     }
 
     /**
      * Determine if the application should use provider avatars when registering.
-     *
-     * @return bool
      */
-    public static function hasProviderAvatarsFeature()
+    public static function hasProviderAvatarsFeature(): bool
     {
         return Features::hasProviderAvatarsFeature();
     }
 
     /**
      * Determine if the application should remember the users session om login.
-     *
-     * @return bool
      */
-    public static function hasRememberSessionFeatures()
+    public static function hasRememberSessionFeatures(): bool
     {
         return Features::hasRememberSessionFeatures();
     }
 
     /**
      * Find a connected account instance fot a given provider and provider ID.
-     *
-     * @param  string  $provider
-     * @param  string  $providerId
-     * @return mixed
      */
-    public static function findConnectedAccountForProviderAndId(string $provider, string $providerId)
+    public static function findConnectedAccountForProviderAndId(string $provider, string $providerId): mixed
     {
         return static::newConnectedAccountModel()
             ->where('provider', $provider)
@@ -229,20 +186,16 @@ class Socialstream
 
     /**
      * Get the name of the connected account model used by the application.
-     *
-     * @return string
      */
-    public static function connectedAccountModel()
+    public static function connectedAccountModel(): string
     {
         return static::$connectedAccountModel;
     }
 
     /**
      * Get a new instance of the connected account model.
-     *
-     * @return mixed
      */
-    public static function newConnectedAccountModel()
+    public static function newConnectedAccountModel(): mixed
     {
         $model = static::connectedAccountModel();
 
@@ -251,91 +204,65 @@ class Socialstream
 
     /**
      * Specify the connected account model that should be used by Jetstream.
-     *
-     * @param  string  $model
-     * @return static
      */
-    public static function useConnectedAccountModel(string $model)
+    public static function useConnectedAccountModel(string $model): void
     {
         static::$connectedAccountModel = $model;
-
-        return new static;
     }
 
     /**
      * Register a class / callback that should be used to resolve the user for a Socialite Provider.
-     *
-     * @param  string  $c;ass
-     * @return void
      */
-    public static function resolvesSocialiteUsersUsing($class)
+    public static function resolvesSocialiteUsersUsing(string $class): void
     {
-        return app()->singleton(ResolvesSocialiteUsers::class, $class);
+        app()->singleton(ResolvesSocialiteUsers::class, $class);
     }
 
     /**
      * Register a class / callback that should be used to create users from social providers.
-     *
-     * @param  string  $class
-     * @return void
      */
-    public static function createUsersFromProviderUsing(string $class)
+    public static function createUsersFromProviderUsing(string $class): void
     {
-        return app()->singleton(CreatesUserFromProvider::class, $class);
+        app()->singleton(CreatesUserFromProvider::class, $class);
     }
 
     /**
      * Register a class / callback that should be used to create connected accounts.
-     *
-     * @param  string  $class
-     * @return void
      */
-    public static function createConnectedAccountsUsing(string $class)
+    public static function createConnectedAccountsUsing(string $class): void
     {
-        return app()->singleton(CreatesConnectedAccounts::class, $class);
+        app()->singleton(CreatesConnectedAccounts::class, $class);
     }
 
     /**
      * Register a class / callback that should be used to update connected accounts.
-     *
-     * @param  string  $class
-     * @return void
      */
-    public static function updateConnectedAccountsUsing(string $class)
+    public static function updateConnectedAccountsUsing(string $class): void
     {
-        return app()->singleton(UpdatesConnectedAccounts::class, $class);
+        app()->singleton(UpdatesConnectedAccounts::class, $class);
     }
 
     /**
      * Register a class / callback that should be used to set user passwords.
-     *
-     * @param  string  $callback
-     * @return void
      */
-    public static function setUserPasswordsUsing(string $callback)
+    public static function setUserPasswordsUsing(callable|string $callback): void
     {
-        return app()->singleton(SetsUserPasswords::class, $callback);
+        app()->singleton(SetsUserPasswords::class, $callback);
     }
 
     /**
      * Register a class / callback that should be used to set user passwords.
-     *
-     * @param  string  $callback
-     * @return void
      */
-    public static function handlesInvalidStateUsing(string $callback)
+    public static function handlesInvalidStateUsing(callable|string $callback): void
     {
-        return app()->singleton(HandlesInvalidState::class, $callback);
+        app()->singleton(HandlesInvalidState::class, $callback);
     }
 
     /**
      * Register a class / callback that should be used for generating provider redirects.
-     *
-     * @param  string  $callback
-     * @return void
      */
-    public static function generatesProvidersRedirectsUsing(string $callback)
+    public static function generatesProvidersRedirectsUsing(callable|string $callback): void
     {
-        return app()->singleton(GeneratesProviderRedirect::class, $callback);
+        app()->singleton(GeneratesProviderRedirect::class, $callback);
     }
 }

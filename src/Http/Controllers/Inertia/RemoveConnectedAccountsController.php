@@ -2,6 +2,7 @@
 
 namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -10,12 +11,8 @@ class RemoveConnectedAccountsController extends Controller
 {
     /**
      * Delete a connected account.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $connectedAccountId
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Request $request, $connectedAccountId)
+    public function destroy(Request $request, string|int $connectedAccountId): RedirectResponse
     {
         $this->removeConnectedAccount($request, $connectedAccountId);
 
@@ -24,12 +21,8 @@ class RemoveConnectedAccountsController extends Controller
 
     /**
      * Remove a connected account.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $id
-     * @return void
      */
-    public function removeConnectedAccount(Request $request, $id)
+    public function removeConnectedAccount(Request $request, string|int $id): void
     {
         DB::table('connected_accounts')
             ->where('user_id', $request->user()->getKey())

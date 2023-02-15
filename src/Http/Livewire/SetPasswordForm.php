@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream\Http\Livewire;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use Livewire\Component;
 
@@ -11,20 +12,17 @@ class SetPasswordForm extends Component
     /**
      * The component's state.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    public $state = [
+    public array $state = [
         'password' => '',
         'password_confirmation' => '',
     ];
 
     /**
      * Update the user's password.
-     *
-     * @param  \JoelButcher\Socialstream\Contracts\SetsUserPasswords  $setter
-     * @return void
      */
-    public function setPassword(SetsUserPasswords $setter)
+    public function setPassword(SetsUserPasswords $setter): void
     {
         $this->resetErrorBag();
 
@@ -40,20 +38,16 @@ class SetPasswordForm extends Component
 
     /**
      * Get the current user of the application.
-     *
-     * @return mixed
      */
-    public function getUserProperty()
+    public function getUserProperty(): mixed
     {
         return Auth::user();
     }
 
     /**
      * Render the component.
-     *
-     * @return \Illuminate\View\View
      */
-    public function render()
+    public function render(): View
     {
         return view('profile.set-password-form');
     }

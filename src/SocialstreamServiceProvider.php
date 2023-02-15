@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream;
 
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -16,8 +15,6 @@ class SocialstreamServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -33,10 +30,8 @@ class SocialstreamServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->configurePublishing();
         $this->configureRoutes();
@@ -48,53 +43,9 @@ class SocialstreamServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the Socialstream Blade components.
-     *
-     * @return void
-     */
-    protected function configureComponents()
-    {
-        $this->callAfterResolving(BladeCompiler::class, function () {
-            $this->registerComponent('socialstream');
-            $this->registerComponent('action-link');
-            $this->registerComponent('connected-account');
-            $this->registerIcon('bitbucket');
-            $this->registerIcon('facebook');
-            $this->registerIcon('github');
-            $this->registerIcon('gitlab');
-            $this->registerIcon('linkedin');
-            $this->registerIcon('twitter');
-        });
-    }
-
-    /**
-     * Register the given component.
-     *
-     * @param  string  $component
-     * @return void
-     */
-    protected function registerComponent(string $component)
-    {
-        Blade::component('socialstream::components.'.$component, $component);
-    }
-
-    /**
-     * Register the given component.
-     *
-     * @param  string  $icon
-     * @return void
-     */
-    protected function registerIcon(string $icon)
-    {
-        Blade::component('socialstream::components.socialstream-icons'.$icon, $icon.'-icon');
-    }
-
-    /**
      * Configure publishing for the package.
-     *
-     * @return void
      */
-    protected function configurePublishing()
+    protected function configurePublishing(): void
     {
         if (! $this->app->runningInConsole()) {
             return;
@@ -116,10 +67,8 @@ class SocialstreamServiceProvider extends ServiceProvider
 
     /**
      * Configure the routes offered by the application.
-     *
-     * @return void
      */
-    protected function configureRoutes()
+    protected function configureRoutes(): void
     {
         if (Socialstream::$registersRoutes) {
             Route::group([
@@ -134,10 +83,8 @@ class SocialstreamServiceProvider extends ServiceProvider
 
     /**
      * Configure the commands offered by the application.
-     *
-     * @return void
      */
-    protected function configureCommands()
+    protected function configureCommands(): void
     {
         if (! $this->app->runningInConsole()) {
             return;
@@ -150,10 +97,8 @@ class SocialstreamServiceProvider extends ServiceProvider
 
     /**
      * Boot any Inertia related services.
-     *
-     * @return void
      */
-    protected function bootInertia()
+    protected function bootInertia(): void
     {
         $kernel = $this->app->make(Kernel::class);
 
