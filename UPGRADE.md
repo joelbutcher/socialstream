@@ -10,7 +10,7 @@ If you have included the `HasProfilePhoto` trait in your user model, please upda
 
 ```diff
     use HasProfilePhoto {
--        getProfilePhotoUrlAttribute as getPhotoUrl;
+-       getProfilePhotoUrlAttribute as getPhotoUrl;
 +       profilePhotoUrl as getPhotoUrl;
     }
 ```
