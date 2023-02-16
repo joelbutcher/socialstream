@@ -294,12 +294,12 @@ class Socialstream
      * for the given account, based on its refresh token.
      *
      * @param  string  $provider
-     * @param  \Closure(\JoelButcher\Socialstream\ConnectedAccount $connectedAccount): (\JoelButcher\Socialstream\RefreshedCredentials)  $callback
+     * @param  string|\Closure(\JoelButcher\Socialstream\ConnectedAccount $connectedAccount): (\JoelButcher\Socialstream\RefreshedCredentials)  $callbackOrClass
      * @return void
      */
-    public static function refreshesProviderTokenWith(string $provider, $callback)
+    public static function refreshesProviderTokenWith(string $provider, $callbackOrClass)
     {
-        static::$refreshTokenResolvers[Str::lower($provider)] = $callback;
+        static::$refreshTokenResolvers[Str::lower($provider)] = $callbackOrClass;
     }
 
     /**
@@ -312,13 +312,15 @@ class Socialstream
     {
         $provider = Str::lower($connectedAccount->provider);
 
-        if (! $callback = static::$refreshTokenResolvers[$provider]) {
+        if (! $callbackOrClass = static::$refreshTokenResolvers[$provider]) {
             throw new Exception(sprintf(
                 'No refresh token resolver was set for the "%s" provider. You would want to register them with SocialStream::refreshesProviderTokenWith',
                 $provider
             ));
+        } else if (is_callable($callbackOrClass)) {
+            return $callbackOrClass($connectedAccount);
+        } else if (is_string($callbackOrClass)) {
+            return (new $callbackOrClass)->refreshToken($connectedAccount);
         }
-
-        return $callback($connectedAccount);
     }
 }

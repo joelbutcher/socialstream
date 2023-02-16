@@ -9,6 +9,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
+use JoelButcher\Socialstream\RefreshTokenServices\GoogleRefreshTokenProvider;
 use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
@@ -36,6 +37,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->configurePublishing();
         $this->configureRoutes();
         $this->configureCommands();
+        $this->configureRefreshTokenProviders();
 
         if (config('jetstream.stack') === 'inertia') {
             $this->bootInertia();
@@ -93,6 +95,20 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->commands([
             Console\InstallCommand::class,
         ]);
+    }
+
+    /**
+     * Configure the refresh token providers as defaults.
+     */
+    protected function configureRefreshTokenProviders(): void
+    {
+        Socialstream::refreshesProviderTokenWith(Providers::google(), GoogleRefreshTokenProvider::class);
+        // Socialstream::refreshesProviderTokenWith(Providers::facebook(), GoogleRefreshTokenProvider::class);
+        // Socialstream::refreshesProviderTokenWith(Providers::linkedin(), GoogleRefreshTokenProvider::class);
+        // Socialstream::refreshesProviderTokenWith(Providers::bitbucket(), GoogleRefreshTokenProvider::class);
+        // Socialstream::refreshesProviderTokenWith(Providers::github(), GoogleRefreshTokenProvider::class);
+        // Socialstream::refreshesProviderTokenWith(Providers::gitlab(), GoogleRefreshTokenProvider::class);
+        // Socialstream::refreshesProviderTokenWith(Providers::twitter(), GoogleRefreshTokenProvider::class);
     }
 
     /**
