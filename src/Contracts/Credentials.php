@@ -11,5 +11,5 @@ interface Credentials extends RefreshedCredentials
      *
      * @return string
      */
-    public function getId();
+    public function getId(): string;
 }

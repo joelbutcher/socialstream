@@ -10,7 +10,7 @@
             @if (Laravel\Fortify\Features::canUpdateProfileInformation())
                 @livewire('profile.update-profile-information-form')
 
-                <x-jet-section-border />
+                <x-section-border />
             @endif
 
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()) && ! is_null($user->password))
@@ -18,13 +18,13 @@
                     @livewire('profile.update-password-form')
                 </div>
 
-                <x-jet-section-border />
+                <x-section-border />
             @else
                 <div class="mt-10 sm:mt-0">
                     @livewire('profile.set-password-form')
                 </div>
 
-                <x-jet-section-border />
+                <x-section-border />
             @endif
 
             @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication() && ! is_null($user->password))
@@ -32,7 +32,7 @@
                     @livewire('profile.two-factor-authentication-form')
                 </div>
 
-                <x-jet-section-border />
+                <x-section-border />
             @endif
 
             @if (JoelButcher\Socialstream\Socialstream::show())
@@ -43,7 +43,7 @@
 
 
             @if ( ! is_null($user->password))
-                <x-jet-section-border />
+                <x-section-border />
 
                 <div class="mt-10 sm:mt-0">
                     @livewire('profile.logout-other-browser-sessions-form')
@@ -51,7 +51,7 @@
             @endif
 
             @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures() && ! is_null($user->password))
-                <x-jet-section-border />
+                <x-section-border />
 
                 <div class="mt-10 sm:mt-0">
                     @livewire('profile.delete-user-form')

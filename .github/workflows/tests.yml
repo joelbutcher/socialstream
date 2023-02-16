@@ -22,7 +22,7 @@ jobs:
           - php: '8.0'
             laravel: 10
 
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    name: Run Tests – PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
       - name: Checkout code
@@ -50,15 +50,21 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
+        php: [ '8.0', 8.1, 8.2 ]
+        laravel: [ 9, 10 ]
         stack: [ inertia, livewire ]
+        tester: [ phpunit, pest ]
+        exclude:
+          - php: '8.0'
+            laravel: 10
 
-    name: Test Stubs (${{ matrix.stack }})
+    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }} – ${{ matrix.tester }}
 
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip
           ini-values: error_reporting=E_ALL
           tools: composer:v2
@@ -66,8 +72,8 @@ jobs:
 
       - name: Setup Laravel
         run: |
-          composer create-project laravel/laravel:10.x-dev .
-          composer require joelbutcher/socialstream:* --no-interaction --no-update
+          composer create-project laravel/laravel:^${{ matrix.laravel }} .
+          composer require joelbutcher/socialstream:@dev --no-interaction --no-update
           composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
 
       - name: Checkout code
@@ -76,8 +82,15 @@ jobs:
           path: 'socialstream'
 
       - name: Install Socialstream
+        if: ${{ matrix.tester == 'pest' }}
         run: |
-          composer update "joelbutcher/jetstream" --prefer-dist --no-interaction --no-progress -W
+          composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
+          php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification --pest
+
+      - name: Install Socialstream
+        if: ${{ matrix.tester == 'phpunit' }}
+        run: |
+          composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification
 
       - name: Install NPM dependencies
@@ -87,7 +100,7 @@ jobs:
         run: npm run build
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/${{ matrix.tester }}
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"

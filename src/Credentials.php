@@ -14,12 +14,10 @@ class Credentials extends RefreshedCredentials implements CredentialsContract, A
      *
      * @var string
      */
-    protected $id;
+    protected string $id;
 
     /**
      * Create a new credentials instance.
-     *
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
      */
     public function __construct(ConnectedAccount $connectedAccount)
     {
@@ -35,7 +33,7 @@ class Credentials extends RefreshedCredentials implements CredentialsContract, A
      *
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -43,9 +41,9 @@ class Credentials extends RefreshedCredentials implements CredentialsContract, A
     /**
      * Get the instance as an array.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray()
+    public function toArray(): array
     {
         return array_merge(parent::toArray(), [
             'id' => $this->getId(),

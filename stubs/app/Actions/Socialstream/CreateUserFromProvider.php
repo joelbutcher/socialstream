@@ -14,15 +14,11 @@ class CreateUserFromProvider implements CreatesUserFromProvider
 {
     /**
      * The creates connected accounts instance.
-     *
-     * @var \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts
      */
-    public $createsConnectedAccounts;
+    public CreatesConnectedAccounts $createsConnectedAccounts;
 
     /**
      * Create a new action instance.
-     *
-     * @param  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts  $createsConnectedAccounts
      */
     public function __construct(CreatesConnectedAccounts $createsConnectedAccounts)
     {
@@ -31,12 +27,8 @@ class CreateUserFromProvider implements CreatesUserFromProvider
 
     /**
      * Create a new user from a social provider user.
-     *
-     * @param  string  $provider
-     * @param  \Laravel\Socialite\Contracts\User  $providerUser
-     * @return \App\Models\User
      */
-    public function create(string $provider, ProviderUser $providerUser)
+    public function create(string $provider, ProviderUser $providerUser): User
     {
         return DB::transaction(function () use ($provider, $providerUser) {
             return tap(User::create([

@@ -6,10 +6,6 @@ interface SetsUserPasswords
 {
     /**
      * Validate and sets the user's password.
-     *
-     * @param  mixed  $user
-     * @param  array  $input
-     * @return void
      */
-    public function set($user, array $input);
+    public function set(mixed $user, array $input): void;
 }

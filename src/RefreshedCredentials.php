@@ -16,28 +16,28 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
      *
      * @var string
      */
-    protected $token;
+    protected string $token;
 
     /**
      * The credentials token secret.
      *
      * @var string|null
      */
-    protected $tokenSecret;
+    protected string|null $tokenSecret;
 
     /**
      * The credentials refresh token.
      *
      * @var string|null
      */
-    protected $refreshToken;
+    protected string|null $refreshToken;
 
     /**
      * The credentials expiry.
      *
      * @var DateTimeInterface|null
      */
-    protected $expiry;
+    protected DateTimeInterface|null $expiry;
 
     /**
      * Create a new credentials instance.
@@ -64,7 +64,7 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
      *
      * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -74,7 +74,7 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
      *
      * @return string|null
      */
-    public function getTokenSecret()
+    public function getTokenSecret(): ?string
     {
         return $this->tokenSecret;
     }
@@ -84,7 +84,7 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
      *
      * @return string|null
      */
-    public function getRefreshToken()
+    public function getRefreshToken(): ?string
     {
         return $this->refreshToken;
     }
@@ -93,8 +93,9 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
      * Get the expiry date for the credentials.
      *
      * @return DateTimeInterface|null
+     * @throws Exception
      */
-    public function getExpiry()
+    public function getExpiry(): ?DateTimeInterface
     {
         if (is_null($this->expiry)) {
             return null;

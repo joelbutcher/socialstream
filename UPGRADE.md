@@ -1,5 +1,44 @@
 # Upgrade Guide
 
+## Upgrading to Socialstream 4.x
+
+### Changes
+
+#### Native Type declarations
+
+Version 4.x updates the interfaces and published `php` files to use native type declarations.
+Please ensure the following files have been updated to match their interface counterparts:
+
+```
+CreateConnectedAccount.php
+CreateUserFromProvider.php
+HandleInvalidState.php
+ResolveSocialiteUser.php
+SetUserPassword.php
+UpdateConnectedAccount.php
+```
+
+
+#### User Profile Photo
+
+If you have included the `HasProfilePhoto` trait in your user model, please update your model to the following 
+
+```diff
+    use HasProfilePhoto {
+-       getProfilePhotoUrlAttribute as getPhotoUrl;
++       profilePhotoUrl as getPhotoUrl;
+    }
+```
+
+#### Changes to jetstream props in inertia
+
+If you're using Inertia, please update your `Profile/Show.vue` file to the following:
+
+```diff
+-29:                    <UpdateProfileInformationForm :user="$page.props.user" />
++29:                    <UpdateProfileInformationForm :user="$page.props.auth.user" />
+```
+
 ## Upgrading From Socialstream 2.x To Socialstream 3.x
 
 ### Changes

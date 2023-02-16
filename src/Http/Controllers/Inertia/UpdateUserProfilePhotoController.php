@@ -2,6 +2,7 @@
 
 namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -9,11 +10,8 @@ class UpdateUserProfilePhotoController extends Controller
 {
     /**
      * Update the users profile picture from the connected account's avatar.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): RedirectResponse
     {
         $account = ($user = $request->user())->connectedAccounts
             ->where('user_id', $user->getAuthIdentifier())
