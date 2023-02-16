@@ -12,46 +12,18 @@ use JsonSerializable;
 class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, Jsonable, JsonSerializable
 {
     /**
-     * The credentials token.
-     *
-     * @var string
-     */
-    protected string $token;
-
-    /**
-     * The credentials token secret.
-     *
-     * @var string|null
-     */
-    protected string|null $tokenSecret;
-
-    /**
-     * The credentials refresh token.
-     *
-     * @var string|null
-     */
-    protected string|null $refreshToken;
-
-    /**
-     * The credentials expiry.
-     *
-     * @var DateTimeInterface|null
-     */
-    protected DateTimeInterface|null $expiry;
-
-    /**
      * Create a new credentials instance.
      *
      * @param string|null $token
      * @param string|null $tokenSecret
      * @param string|null $refreshToken
-     * @param string|null $expiry
+     * @param DateTimeInterface|null $expiry
      */
     public function __construct(
-        ?string $token = null,
-        ?string $tokenSecret = null,
-        ?string $refreshToken = null,
-        ?string $expiry = null,
+        protected ?string $token = null,
+        protected ?string $tokenSecret = null,
+        protected ?string $refreshToken = null,
+        protected ?DateTimeInterface $expiry = null,
     ) {
         $this->token = $token;
         $this->tokenSecret = $tokenSecret;
