@@ -69,6 +69,16 @@ class Features
     }
 
     /**
+     * Determine if the application should refresh the tokens on retreival.
+     *
+     * @return bool
+     */
+    public static function refreshesTokensOnRetrieveFeature()
+    {
+        return static::enabled(static::refreshTokensOnRetrieve());
+    }
+
+    /**
      * Enabled the generate missing emails feature.
      *
      * @return string
@@ -116,5 +126,15 @@ class Features
     public static function rememberSession()
     {
         return 'remember-session';
+    }
+
+    /**
+     * Enable the automatic refresh token update on token retrieval.
+     *
+     * @return string
+     */
+    public static function refreshTokensOnRetrieve()
+    {
+        return 'refresh-tokens-on-retrieve';
     }
 }

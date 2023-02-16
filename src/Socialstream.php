@@ -2,13 +2,15 @@
 
 namespace JoelButcher\Socialstream;
 
-use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
+use Exception;
+use Illuminate\Support\Str;
+use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
-use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
+use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 
 class Socialstream
 {
@@ -32,6 +34,14 @@ class Socialstream
      * @var string
      */
     public static $connectedAccountModel = 'App\\Models\\ConnectedAccount';
+
+    /**
+     * The list of resolvers for the refresh tokens,
+     * keyed by the provider name.
+     *
+     * @var array<string, \Closure(\JoelButcher\Socialstream\ConnectedAccount $connectedAccount): (\JoelButcher\Socialstream\RefreshedCredentials)>
+     */
+    public static $refreshTokenResolvers = [];
 
     /**
      * Determine whether or not Socialstream is enabled in the application.
@@ -213,6 +223,16 @@ class Socialstream
     }
 
     /**
+     * Determine if the application should refresh the tokens on retreival.
+     *
+     * @return bool
+     */
+    public static function refreshesTokensOnRetrieveFeature()
+    {
+        return Features::refreshesTokensOnRetrieveFeature();
+    }
+
+    /**
      * Find a connected account instance fot a given provider and provider ID.
      *
      * @param  string  $provider
@@ -337,5 +357,38 @@ class Socialstream
     public static function generatesProvidersRedirectsUsing(string $callback)
     {
         return app()->singleton(GeneratesProviderRedirect::class, $callback);
+    }
+
+    /**
+     * Register the callable function to use to retrieve the new token
+     * for the given account, based on its refresh token.
+     *
+     * @param  string  $provider
+     * @param  \Closure(\JoelButcher\Socialstream\ConnectedAccount $connectedAccount): (\JoelButcher\Socialstream\RefreshedCredentials)  $callback
+     * @return void
+     */
+    public static function refreshesProviderTokenWith(string $provider, $callback)
+    {
+        static::$refreshTokenResolvers[Str::lower($provider)] = $callback;
+    }
+
+    /**
+     * Refresh the given connected account token.
+     *
+     * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
+     * @return \JoelButcher\Socialstream\RefreshedCredentials
+     */
+    public static function refreshConnectedAccountToken(ConnectedAccount $connectedAccount)
+    {
+        $provider = Str::lower($connectedAccount->provider);
+
+        if (! $callback = static::$refreshTokenResolvers[$provider]) {
+            throw new Exception(sprintf(
+                'No refresh token resolver was set for the "%s" provider. You would want to register them with SocialStream::refreshesProviderTokenWith',
+                $provider
+            ));
+        }
+
+        return $callback($connectedAccount);
     }
 }
