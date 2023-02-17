@@ -9,7 +9,13 @@ use Illuminate\View\Compilers\BladeCompiler;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
+use JoelButcher\Socialstream\RefreshTokenServices\BitbucketRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenServices\FacebookRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenServices\GithubRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenServices\GitlabRefreshTokenProvider;
 use JoelButcher\Socialstream\RefreshTokenServices\GoogleRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenServices\LinkedInRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenServices\TwitterRefreshTokenProvider;
 use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
@@ -103,12 +109,12 @@ class SocialstreamServiceProvider extends ServiceProvider
     protected function configureRefreshTokenProviders(): void
     {
         Socialstream::refreshesProviderTokenWith(Providers::google(), GoogleRefreshTokenProvider::class);
-        // Socialstream::refreshesProviderTokenWith(Providers::facebook(), GoogleRefreshTokenProvider::class);
-        // Socialstream::refreshesProviderTokenWith(Providers::linkedin(), GoogleRefreshTokenProvider::class);
-        // Socialstream::refreshesProviderTokenWith(Providers::bitbucket(), GoogleRefreshTokenProvider::class);
-        // Socialstream::refreshesProviderTokenWith(Providers::github(), GoogleRefreshTokenProvider::class);
-        // Socialstream::refreshesProviderTokenWith(Providers::gitlab(), GoogleRefreshTokenProvider::class);
-        // Socialstream::refreshesProviderTokenWith(Providers::twitter(), GoogleRefreshTokenProvider::class);
+        Socialstream::refreshesProviderTokenWith(Providers::facebook(), FacebookRefreshTokenProvider::class);
+        Socialstream::refreshesProviderTokenWith(Providers::linkedin(), LinkedInRefreshTokenProvider::class);
+        Socialstream::refreshesProviderTokenWith(Providers::bitbucket(), BitbucketRefreshTokenProvider::class);
+        Socialstream::refreshesProviderTokenWith(Providers::github(), GithubRefreshTokenProvider::class);
+        Socialstream::refreshesProviderTokenWith(Providers::gitlab(), GitlabRefreshTokenProvider::class);
+        Socialstream::refreshesProviderTokenWith(Providers::twitter(), TwitterRefreshTokenProvider::class);
     }
 
     /**

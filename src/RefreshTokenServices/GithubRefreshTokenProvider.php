@@ -4,9 +4,9 @@ namespace JoelButcher\Socialstream\RefreshTokenServices;
 
 use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
 use JoelButcher\Socialstream\Contracts\RefreshTokenProvider;
-use Laravel\Socialite\Two\GoogleProvider;
+use Laravel\Socialite\Two\GithubProvider;
 
-class GoogleRefreshTokenProvider extends GoogleProvider implements RefreshTokenProvider
+class GithubRefreshTokenProvider extends GithubProvider implements RefreshTokenProvider
 {
     use RefreshesOauth2Tokens;
 
@@ -19,8 +19,8 @@ class GoogleRefreshTokenProvider extends GoogleProvider implements RefreshTokenP
     {
         parent::__construct(
             request: request(),
-            clientId: config('services.google.client_id'),
-            clientSecret: config('services.google.client_secret'),
+            clientId: config('services.github.client_id'),
+            clientSecret: config('services.github.client_secret'),
             redirectUrl: '',
         );
     }
