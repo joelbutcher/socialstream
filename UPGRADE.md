@@ -245,7 +245,7 @@ Socialstream 2.x includes a new action to generate the redirects URI's used to a
 You should then register this action with Socialstream by placing the following code into the `boot` method of your application's `SocialstreamServiceProvider`:
 
 ```php
-use JoelButcher\Socialstream\Actions\GenerateRedirectForProvider;
+use App\Actions\Socialstream\GenerateRedirectForProvider;
 
 Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
 ```
