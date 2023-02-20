@@ -16,7 +16,7 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto {
-        getProfilePhotoUrlAttribute as getPhotoUrl;
+        profilePhotoUrl as getPhotoUrl;
     }
     use HasConnectedAccounts;
     use Notifiable;
@@ -67,12 +67,10 @@ class User extends Authenticatable
      *
      * @return string
      */
-    public function getProfilePhotoUrlAttribute()
+    public function profilePhotoUrl()
     {
-        if (filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)) {
-            return $this->profile_photo_path;
-        }
-
-        return $this->getPhotoUrl();
+        return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
+            ? $this->profile_photo_path
+            : ($this->getPhotoUrl()->get)();
     }
 }
