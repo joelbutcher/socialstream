@@ -4,10 +4,10 @@ namespace App\Providers;
 
 use App\Actions\Socialstream\CreateConnectedAccount;
 use App\Actions\Socialstream\CreateUserFromProvider;
+use App\Actions\Socialstream\GenerateRedirectForProvider;
 use App\Actions\Socialstream\HandleInvalidState;
 use App\Actions\Socialstream\SetUserPassword;
 use Illuminate\Support\ServiceProvider;
-use JoelButcher\Socialstream\Actions\GenerateRedirectForProvider;
 use JoelButcher\Socialstream\Socialstream;
 
 class SocialstreamServiceProvider extends ServiceProvider
