@@ -1,12 +1,12 @@
 <?php
 
-namespace JoelButcher\Socialstream\RefreshTokenServices;
+namespace JoelButcher\Socialstream\RefreshTokenProviders;
 
 use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
 use JoelButcher\Socialstream\Contracts\RefreshTokenProvider;
-use Laravel\Socialite\Two\LinkedInProvider;
+use Laravel\Socialite\Two\GoogleProvider;
 
-class LinkedInRefreshTokenProvider extends LinkedInProvider implements RefreshTokenProvider
+class GoogleRefreshTokenProvider extends GoogleProvider implements RefreshTokenProvider
 {
     use RefreshesOauth2Tokens;
 
@@ -19,8 +19,8 @@ class LinkedInRefreshTokenProvider extends LinkedInProvider implements RefreshTo
     {
         parent::__construct(
             request: request(),
-            clientId: config('services.linkedin.client_id'),
-            clientSecret: config('services.linkedin.client_secret'),
+            clientId: config('services.google.client_id'),
+            clientSecret: config('services.google.client_secret'),
             redirectUrl: '',
         );
     }

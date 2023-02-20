@@ -1,12 +1,12 @@
 <?php
 
-namespace JoelButcher\Socialstream\RefreshTokenServices;
+namespace JoelButcher\Socialstream\RefreshTokenProviders;
 
 use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
 use JoelButcher\Socialstream\Contracts\RefreshTokenProvider;
-use Laravel\Socialite\Two\GitlabProvider;
+use Laravel\Socialite\Two\GithubProvider;
 
-class GitlabRefreshTokenProvider extends GitlabProvider implements RefreshTokenProvider
+class GithubRefreshTokenProvider extends GithubProvider implements RefreshTokenProvider
 {
     use RefreshesOauth2Tokens;
 
@@ -19,8 +19,8 @@ class GitlabRefreshTokenProvider extends GitlabProvider implements RefreshTokenP
     {
         parent::__construct(
             request: request(),
-            clientId: config('services.gitlab.client_id'),
-            clientSecret: config('services.gitlab.client_secret'),
+            clientId: config('services.github.client_id'),
+            clientSecret: config('services.github.client_secret'),
             redirectUrl: '',
         );
     }

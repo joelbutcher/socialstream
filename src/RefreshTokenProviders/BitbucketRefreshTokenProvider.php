@@ -1,12 +1,12 @@
 <?php
 
-namespace JoelButcher\Socialstream\RefreshTokenServices;
+namespace JoelButcher\Socialstream\RefreshTokenProviders;
 
 use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
 use JoelButcher\Socialstream\Contracts\RefreshTokenProvider;
-use Laravel\Socialite\Two\FacebookProvider;
+use Laravel\Socialite\Two\BitbucketProvider;
 
-class FacebookRefreshTokenProvider extends FacebookProvider implements RefreshTokenProvider
+class BitbucketRefreshTokenProvider extends BitbucketProvider implements RefreshTokenProvider
 {
     use RefreshesOauth2Tokens;
 
@@ -19,8 +19,8 @@ class FacebookRefreshTokenProvider extends FacebookProvider implements RefreshTo
     {
         parent::__construct(
             request: request(),
-            clientId: config('services.facebook.client_id'),
-            clientSecret: config('services.facebook.client_secret'),
+            clientId: config('services.bitbucket.client_id'),
+            clientSecret: config('services.bitbucket.client_secret'),
             redirectUrl: '',
         );
     }

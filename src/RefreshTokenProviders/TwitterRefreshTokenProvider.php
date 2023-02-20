@@ -1,12 +1,12 @@
 <?php
 
-namespace JoelButcher\Socialstream\RefreshTokenServices;
+namespace JoelButcher\Socialstream\RefreshTokenProviders;
 
 use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
 use JoelButcher\Socialstream\Contracts\RefreshTokenProvider;
-use Laravel\Socialite\Two\GithubProvider;
+use Laravel\Socialite\Two\TwitterProvider;
 
-class GithubRefreshTokenProvider extends GithubProvider implements RefreshTokenProvider
+class TwitterRefreshTokenProvider extends TwitterProvider implements RefreshTokenProvider
 {
     use RefreshesOauth2Tokens;
 
@@ -19,8 +19,8 @@ class GithubRefreshTokenProvider extends GithubProvider implements RefreshTokenP
     {
         parent::__construct(
             request: request(),
-            clientId: config('services.github.client_id'),
-            clientSecret: config('services.github.client_secret'),
+            clientId: config('services.twitter.client_id'),
+            clientSecret: config('services.twitter.client_secret'),
             redirectUrl: '',
         );
     }

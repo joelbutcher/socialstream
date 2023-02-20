@@ -9,13 +9,13 @@ use Illuminate\View\Compilers\BladeCompiler;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
-use JoelButcher\Socialstream\RefreshTokenServices\BitbucketRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenServices\FacebookRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenServices\GithubRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenServices\GitlabRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenServices\GoogleRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenServices\LinkedInRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenServices\TwitterRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenProviders\BitbucketRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenProviders\FacebookRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenProviders\GithubRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenProviders\GitlabRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenProviders\GoogleRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenProviders\LinkedInRefreshTokenProvider;
+use JoelButcher\Socialstream\RefreshTokenProviders\TwitterRefreshTokenProvider;
 use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
