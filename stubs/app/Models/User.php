@@ -70,6 +70,6 @@ class User extends Authenticatable
     {
         return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
             ? Attribute::get(fn () => $this->profile_photo_path)
-            : ($this->getPhotoUrl()->get)();
+            : $this->getPhotoUrl();
     }
 }
