@@ -1,6 +1,6 @@
 <?php
 
-namespace JoelButcher\Socialstream\Actions;
+namespace App\Actions\Socialstream;
 
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use Laravel\Socialite\Facades\Socialite;
