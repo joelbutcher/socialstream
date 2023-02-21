@@ -2,7 +2,7 @@
 
 namespace JoelButcher\Socialstream;
 
-use Exception;
+use Closure;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
@@ -11,27 +11,22 @@ use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
+use RuntimeException;
 
 class Socialstream
 {
     /**
      * Determines if the application is using Socialstream.
-     *
-     * @var bool
      */
     public static bool $enabled = true;
 
     /**
      * Indicates if Socialstream routes will be registered.
-     *
-     * @var bool
      */
     public static bool $registersRoutes = true;
 
     /**
      * The user model that should be used by Jetstream.
-     *
-     * @var string
      */
     public static string $connectedAccountModel = 'App\\Models\\ConnectedAccount';
 
@@ -39,15 +34,12 @@ class Socialstream
      * The list of resolvers for the refresh tokens,
      * keyed by the provider name.
      *
-     * @var array<string, \Closure(\JoelButcher\Socialstream\ConnectedAccount $connectedAccount): (\JoelButcher\Socialstream\RefreshedCredentials)>
+     * @var array<string, Closure|string>
      */
-    public static $refreshTokenResolvers = [];
+    public static array $refreshTokenResolvers = [];
 
     /**
-     * Determine whether or not Socialstream is enabled in the application.
-     *
-     * @param  callable|bool  $callback
-     * @return bool
+     * Determine whether Socialstream is enabled in the application.
      */
     public static function enabled(callable|bool $callback = null): bool
     {
@@ -80,8 +72,6 @@ class Socialstream
 
     /**
      * Determine if the application has support for the Bitbucket provider..
-     *
-     * @return bool
      */
     public static function hasBitbucketSupport(): bool
     {
@@ -90,8 +80,6 @@ class Socialstream
 
     /**
      * Determine if the application has support for the Facebook provider..
-     *
-     * @return bool
      */
     public static function hasFacebookSupport(): bool
     {
@@ -187,11 +175,9 @@ class Socialstream
     }
 
     /**
-     * Determine if the application should refresh the tokens on retreival.
-     *
-     * @return bool
+     * Determine if the application should refresh the tokens on retrieval.
      */
-    public static function refreshesTokensOnRetrieveFeature()
+    public static function refreshesTokensOnRetrieveFeature(): bool
     {
         return Features::refreshesTokensOnRetrieveFeature();
     }
@@ -290,37 +276,30 @@ class Socialstream
     }
 
     /**
-     * Register the callable function to use to retrieve the new token
-     * for the given account, based on its refresh token.
-     *
-     * @param  string  $provider
-     * @param  string|\Closure(\JoelButcher\Socialstream\ConnectedAccount $connectedAccount): (\JoelButcher\Socialstream\RefreshedCredentials)  $callbackOrClass
-     * @return void
+     * Register a class / callback that should be used for refreshing tokens for the given OAuth 2.0 provider.
      */
-    public static function refreshesProviderTokenWith(string $provider, $callbackOrClass)
+    public static function refreshesTokensForProviderUsing(string $provider, callable|string $callback): void
     {
-        static::$refreshTokenResolvers[Str::lower($provider)] = $callbackOrClass;
+        static::$refreshTokenResolvers[Str::lower($provider)] = $callback;
     }
 
     /**
      * Refresh the given connected account token.
-     *
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
-     * @return \JoelButcher\Socialstream\RefreshedCredentials
      */
-    public static function refreshConnectedAccountToken(ConnectedAccount $connectedAccount)
+    public static function refreshConnectedAccountToken(ConnectedAccount $connectedAccount): RefreshedCredentials
     {
         $provider = Str::lower($connectedAccount->provider);
 
-        if (! $callbackOrClass = static::$refreshTokenResolvers[$provider]) {
-            throw new Exception(sprintf(
-                'No refresh token resolver was set for the "%s" provider. You would want to register them with SocialStream::refreshesProviderTokenWith',
-                $provider
-            ));
-        } else if (is_callable($callbackOrClass)) {
-            return $callbackOrClass($connectedAccount);
-        } else if (is_string($callbackOrClass)) {
-            return (new $callbackOrClass)->refreshToken($connectedAccount);
+        $callback = static::$refreshTokenResolvers[$provider];
+
+        if (! $callback) {
+            throw new RuntimeException("Failed to refresh token. Could not find the associated resolver for the '$provider' provider.");
         }
+
+        if (is_callable($callback)) {
+            return $callback($connectedAccount);
+        }
+
+        return (new $callback)->refreshToken($connectedAccount);
     }
 }

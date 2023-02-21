@@ -5,13 +5,10 @@ namespace JoelButcher\Socialstream\Contracts;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\RefreshedCredentials;
 
-interface RefreshTokenProvider
+interface Oauth2RefreshResolver
 {
     /**
-     * Refresh the token for the current provider.
-     *
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
-     * @return \JoelButcher\Socialstream\RefreshedCredentials
+     * Refreshes the token for the current provider.
      */
     public function refreshToken(ConnectedAccount $connectedAccount): RefreshedCredentials;
 }

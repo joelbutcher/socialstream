@@ -35,11 +35,8 @@ class UpdateConnectedAccount implements UpdatesConnectedAccounts
 
     /**
      * Update the refresh token for the given account.
-     *
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
-     * @return \JoelButcher\Socialstream\ConnectedAccount
      */
-    public function updateRefreshToken(ConnectedAccount &$connectedAccount)
+    public function updateRefreshToken(ConnectedAccount $connectedAccount): ConnectedAccount
     {
         $refreshedCredentials = Socialstream::refreshConnectedAccountToken(
             $connectedAccount,

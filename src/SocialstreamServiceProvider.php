@@ -9,13 +9,13 @@ use Illuminate\View\Compilers\BladeCompiler;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
-use JoelButcher\Socialstream\RefreshTokenProviders\BitbucketRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenProviders\FacebookRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenProviders\GithubRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenProviders\GitlabRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenProviders\GoogleRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenProviders\LinkedInRefreshTokenProvider;
-use JoelButcher\Socialstream\RefreshTokenProviders\TwitterRefreshTokenProvider;
+use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GithubOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GitlabOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOauth2RefreshResolver;
 use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
@@ -43,7 +43,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->configurePublishing();
         $this->configureRoutes();
         $this->configureCommands();
-        $this->configureRefreshTokenProviders();
+        $this->configureRefreshTokenResolvers();
 
         if (config('jetstream.stack') === 'inertia') {
             $this->bootInertia();
@@ -104,17 +104,17 @@ class SocialstreamServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the refresh token providers as defaults.
+     * Configure the refresh token resolvers as defaults.
      */
-    protected function configureRefreshTokenProviders(): void
+    protected function configureRefreshTokenResolvers(): void
     {
-        Socialstream::refreshesProviderTokenWith(Providers::google(), GoogleRefreshTokenProvider::class);
-        Socialstream::refreshesProviderTokenWith(Providers::facebook(), FacebookRefreshTokenProvider::class);
-        Socialstream::refreshesProviderTokenWith(Providers::linkedin(), LinkedInRefreshTokenProvider::class);
-        Socialstream::refreshesProviderTokenWith(Providers::bitbucket(), BitbucketRefreshTokenProvider::class);
-        Socialstream::refreshesProviderTokenWith(Providers::github(), GithubRefreshTokenProvider::class);
-        Socialstream::refreshesProviderTokenWith(Providers::gitlab(), GitlabRefreshTokenProvider::class);
-        Socialstream::refreshesProviderTokenWith(Providers::twitter(), TwitterRefreshTokenProvider::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::bitbucket(), BitbucketOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::github(), GithubOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitter(), TwitterOauth2RefreshResolver::class);
     }
 
     /**

@@ -82,14 +82,12 @@ class CreateUserFromProviderTest extends TestCase
             Features::refreshTokensOnRetrieve(),
         ]);
 
-        $newTime = now()->addSeconds(3600);
-
-        Socialstream::refreshesProviderTokenWith('github', function (ConnectedAccount $account) use ($newTime) {
+        Socialstream::refreshesTokensForProviderUsing('github', function () {
             return new RefreshedCredentials(
                 'new-token',
                 null,
                 'new-refresh-token',
-                $newTime,
+                now()->addSeconds(3600),
             );
         });
 
@@ -120,14 +118,12 @@ class CreateUserFromProviderTest extends TestCase
             Features::refreshTokensOnRetrieve(),
         ]);
 
-        $newTime = now()->addSeconds(3600);
-
-        Socialstream::refreshesProviderTokenWith('github', function (ConnectedAccount $account) use ($newTime) {
+        Socialstream::refreshesTokensForProviderUsing('github', function () {
             return new RefreshedCredentials(
                 'new-token',
                 null,
                 'new-refresh-token',
-                $newTime,
+                now()->addSeconds(3600),
             );
         });
 
@@ -143,6 +139,8 @@ class CreateUserFromProviderTest extends TestCase
 
         $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
         $user = $createAction->create('github', $providerUser);
+
+        /** @var ConnectedAccount $connectedAccount */
         $connectedAccount = $user->currentConnectedAccount;
 
         $this->assertNotEquals('new-token', $connectedAccount->token);
@@ -156,7 +154,7 @@ class CreateUserFromProviderTest extends TestCase
 
         $newTime = now()->addSeconds(3600);
 
-        Socialstream::refreshesProviderTokenWith('github', function (ConnectedAccount $account) use ($newTime) {
+        Socialstream::refreshesTokensForProviderUsing('github', function (ConnectedAccount $account) use ($newTime) {
             return new RefreshedCredentials(
                 'new-token',
                 null,

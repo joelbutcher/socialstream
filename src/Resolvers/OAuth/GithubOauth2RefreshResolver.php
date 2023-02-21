@@ -1,19 +1,17 @@
 <?php
 
-namespace JoelButcher\Socialstream\RefreshTokenProviders;
+namespace JoelButcher\Socialstream\Resolvers\OAuth;
 
 use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
-use JoelButcher\Socialstream\Contracts\RefreshTokenProvider;
+use JoelButcher\Socialstream\Contracts\Oauth2RefreshResolver;
 use Laravel\Socialite\Two\GithubProvider;
 
-class GithubRefreshTokenProvider extends GithubProvider implements RefreshTokenProvider
+class GithubOauth2RefreshResolver extends GithubProvider implements Oauth2RefreshResolver
 {
     use RefreshesOauth2Tokens;
 
     /**
      * Create a new provider instance.
-     *
-     * @return void
      */
     public function __construct()
     {

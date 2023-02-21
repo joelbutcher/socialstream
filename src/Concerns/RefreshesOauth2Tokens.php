@@ -2,25 +2,31 @@
 
 namespace JoelButcher\Socialstream\Concerns;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\RefreshedCredentials;
 use Laravel\Socialite\Two\AbstractProvider;
 
+/**
+ * @mixin AbstractProvider&RefreshesOauth2Tokens
+ */
 trait RefreshesOauth2Tokens
 {
     /**
      * Refresh the token for the current provider.
      *
-     * @param  \JoelButcher\Socialstream\ConnectedAccount  $connectedAccount
-     * @return \JoelButcher\Socialstream\RefreshedCredentials
+     * @throws GuzzleException
      */
     public function refreshToken(ConnectedAccount $connectedAccount): RefreshedCredentials
     {
-        /** @var AbstractProvider&RefreshesOauth2Tokens $this */
+        if (is_null($connectedAccount->refresh_token)) {
+            throw new \RuntimeException('A valid refresh token is required.');
+        }
+
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            RequestOptions::HEADERS => $this->getRefreshTokenHeaders($connectedAccount->refresh_token),
+            RequestOptions::HEADERS => $this->getRefreshTokenHeaders(),
             RequestOptions::FORM_PARAMS => $this->getRefreshTokenFields($connectedAccount->refresh_token),
         ]);
 
@@ -36,10 +42,9 @@ trait RefreshesOauth2Tokens
     /**
      * Get the headers for the refresh token request.
      *
-     * @param  string  $refreshToken
-     * @return array
+     * @return array<string, string>
      */
-    protected function getRefreshTokenHeaders($refreshToken)
+    protected function getRefreshTokenHeaders(): array
     {
         return ['Accept' => 'application/json'];
     }
@@ -47,10 +52,9 @@ trait RefreshesOauth2Tokens
     /**
      * Get the POST fields for the refresh token request.
      *
-     * @param  string  $refreshToken
-     * @return array
+     * @return array<string, string>
      */
-    protected function getRefreshTokenFields($refreshToken)
+    protected function getRefreshTokenFields(string $refreshToken): array
     {
         return [
             'grant_type' => 'refresh_token',
