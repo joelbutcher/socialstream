@@ -21,13 +21,27 @@ UpdateConnectedAccount.php
 
 #### User Profile Photo
 
-If you have included the `HasProfilePhoto` trait in your user model, please update your model to the following 
+If you have included the `HasProfilePhoto` trait in your user model, please update your model to the following:
 
 ```diff
     use HasProfilePhoto {
 -       getProfilePhotoUrlAttribute as getPhotoUrl;
 +       profilePhotoUrl as getPhotoUrl;
     }
+```
+
+And replace the `getProfilePhotoUrlAttribute` method in the model with:
+
+```php
+/**
+ * Get the URL to the user's profile photo.
+ */
+public function profilePhotoUrl(): Attribute
+{
+    return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
+        ? Attribute::get(fn () => $this->profile_photo_path)
+        : $this->getPhotoUrl();
+}
 ```
 
 #### Changes to jetstream props in inertia
