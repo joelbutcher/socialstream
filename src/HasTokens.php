@@ -22,7 +22,7 @@ trait HasTokens
     {
         return Attribute::make(
             get: function ($token) {
-                if (! Socialstream::refreshesTokensOnRetrieveFeature()) {
+                if (! Socialstream::refresesOauthTokens()) {
                     return $token;
                 }
 

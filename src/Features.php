@@ -56,13 +56,11 @@ class Features
     }
 
     /**
-     * Determine if the application should refresh the tokens on retreival.
-     *
-     * @return bool
+     * Determine if the application should refresh the tokens on retrieval.
      */
-    public static function refreshesTokensOnRetrieveFeature()
+    public static function refreshesOauthTokens(): bool
     {
-        return static::enabled(static::refreshTokensOnRetrieve());
+        return static::enabled(static::refreshOauthTokens());
     }
 
     /**
@@ -107,11 +105,9 @@ class Features
 
     /**
      * Enable the automatic refresh token update on token retrieval.
-     *
-     * @return string
      */
-    public static function refreshTokensOnRetrieve()
+    public static function refreshOauthTokens(): string
     {
-        return 'refresh-tokens-on-retrieve';
+        return 'refresh-oauth-tokens';
     }
 }

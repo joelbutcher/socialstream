@@ -79,7 +79,7 @@ class CreateUserFromProviderTest extends TestCase
         $this->migrate();
 
         Config::set('socialstream.features', [
-            Features::refreshTokensOnRetrieve(),
+            Features::refreshOauthTokens(),
         ]);
 
         Socialstream::refreshesTokensForProviderUsing('github', function () {
@@ -115,7 +115,7 @@ class CreateUserFromProviderTest extends TestCase
         $this->migrate();
 
         Config::set('socialstream.features', [
-            Features::refreshTokensOnRetrieve(),
+            Features::refreshOauthTokens(),
         ]);
 
         Socialstream::refreshesTokensForProviderUsing('github', function () {

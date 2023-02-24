@@ -179,9 +179,9 @@ class Socialstream
     /**
      * Determine if the application should refresh the tokens on retrieval.
      */
-    public static function refreshesTokensOnRetrieveFeature(): bool
+    public static function refresesOauthTokens(): bool
     {
-        return Features::refreshesTokensOnRetrieveFeature();
+        return Features::refreshesOauthTokens();
     }
 
     /**
