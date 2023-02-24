@@ -37,4 +37,9 @@ abstract class TestCase extends BaseTestCase
             'prefix'   => '',
         ]);
     }
+
+    protected function migrate()
+    {
+        $this->artisan('migrate', ['--database' => 'testbench'])->run();
+    }
 }
