@@ -56,7 +56,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
             $user = Jetstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
             if ($user) {
-                return $this->handleUserAlreadyRegistered($user, $account, $provider, $providerAccount);
+                return $this->alreadyRegistered($user, $account, $provider, $providerAccount);
             }
 
             return $this->register($provider, $providerAccount);
@@ -130,7 +130,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
     /**
      * Handle when a user is already registered.
      */
-    protected function handleUserAlreadyRegistered(Authenticatable $user, ?ConnectedAccount $account, string $provider, ProviderUser $providerAccount): RedirectResponse|LoginResponse
+    protected function alreadyRegistered(Authenticatable $user, ?ConnectedAccount $account, string $provider, ProviderUser $providerAccount): RedirectResponse|LoginResponse
     {
         if (Features::hasLoginOnRegistrationFeatures()) {
 
