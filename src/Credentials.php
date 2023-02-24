@@ -11,8 +11,6 @@ class Credentials extends RefreshedCredentials implements CredentialsContract, A
 {
     /**
      * The credentials user ID.
-     *
-     * @var string
      */
     protected string $id;
 
@@ -22,16 +20,16 @@ class Credentials extends RefreshedCredentials implements CredentialsContract, A
     public function __construct(ConnectedAccount $connectedAccount)
     {
         $this->id = $connectedAccount->provider_id;
-        $this->token = $connectedAccount->token;
-        $this->tokenSecret = $connectedAccount->secret;
-        $this->refreshToken = $connectedAccount->refresh_token;
-        $this->expiry = $connectedAccount->expires_at;
+        parent::__construct(
+            $connectedAccount->token,
+            $connectedAccount->secret,
+            $connectedAccount->refresh_token,
+            $connectedAccount->expires_at,
+        );
     }
 
     /**
      * Get the ID for the credentials.
-     *
-     * @return string
      */
     public function getId(): string
     {

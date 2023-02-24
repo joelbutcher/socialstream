@@ -13,28 +13,17 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
 {
     /**
      * Create a new credentials instance.
-     *
-     * @param string|null $token
-     * @param string|null $tokenSecret
-     * @param string|null $refreshToken
-     * @param DateTimeInterface|null $expiry
      */
     public function __construct(
-        protected ?string $token = null,
+        protected string $token,
         protected ?string $tokenSecret = null,
         protected ?string $refreshToken = null,
         protected ?DateTimeInterface $expiry = null,
     ) {
-        $this->token = $token;
-        $this->tokenSecret = $tokenSecret;
-        $this->refreshToken = $refreshToken;
-        $this->expiry = $expiry;
     }
 
     /**
      * Get token for the credentials.
-     *
-     * @return string
      */
     public function getToken(): string
     {
@@ -43,8 +32,6 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
 
     /**
      * Get the token secret for the credentials.
-     *
-     * @return string|null
      */
     public function getTokenSecret(): ?string
     {
@@ -53,8 +40,6 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
 
     /**
      * Get the refresh token for the credentials.
-     *
-     * @return string|null
      */
     public function getRefreshToken(): ?string
     {
@@ -63,9 +48,6 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
 
     /**
      * Get the expiry date for the credentials.
-     *
-     * @return DateTimeInterface|null
-     * @throws Exception
      */
     public function getExpiry(): ?DateTimeInterface
     {
@@ -83,9 +65,9 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
     /**
      * Get the instance as an array.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'token' => $this->getToken(),
@@ -97,21 +79,18 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
 
     /**
      * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
      */
-    public function toJson($options = 0)
+    public function toJson($options = 0): string
     {
-        return $this->toArray();
+        return json_encode($this, $options);
     }
 
     /**
      * Specify data which should be serialized to JSON.
      *
-     * @return mixed
+     * @return array<string, string|DateTimeInterface>
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
@@ -123,6 +102,6 @@ class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, J
      */
     public function __toString()
     {
-        return json_encode($this->toJson());
+        return json_encode($this);
     }
 }
