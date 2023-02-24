@@ -1,9 +1,10 @@
 <?php
 
-namespace JoelButcher\Socialstream\Tests;
+namespace JoelButcher\Socialstream\Tests\Unit;
 
 use Illuminate\Support\Facades\Config;
 use JoelButcher\Socialstream\Providers;
+use JoelButcher\Socialstream\Tests\TestCase;
 
 class ProvidersTest extends TestCase
 {
