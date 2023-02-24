@@ -55,9 +55,9 @@ class RefreshedCredentialsTest extends TestCase
     public function test_expiry_can_be_nullable(): void
     {
         $credentials = new RefreshedCredentials(
-            'token',
-            'token-secret',
-            'refresh-token',
+            'some-token',
+            'some-token-secret',
+            'some-refresh-token',
             Carbon::now()->addHour(),
         );
 
@@ -78,16 +78,16 @@ class RefreshedCredentialsTest extends TestCase
         Carbon::setTestNow(DateTime::createFromFormat('Y-m-d H:i:s', '2023-04-13 00:00:00'));
 
         $credentials = new RefreshedCredentials(
-            'token',
-            'token-secret',
-            'refresh-token',
+            'some-token',
+            'some-token-secret',
+            'some-refresh-token',
             Carbon::now()->addHour(),
         );
 
         $this->assertEquals([
-            'token' => 'token',
-            'token_secret' => 'token-secret',
-            'refresh_token' => 'refresh-token',
+            'token' => 'some-token',
+            'token_secret' => 'some-token-secret',
+            'refresh_token' => 'some-refresh-token',
             'expiry' => Carbon::createFromFormat('Y-m-d H:i:s', '2023-04-13 01:00:00'),
         ], $credentials->toArray());
     }
@@ -97,13 +97,13 @@ class RefreshedCredentialsTest extends TestCase
         Carbon::setTestNow(DateTime::createFromFormat('Y-m-d H:i:s', '2023-04-13 00:00:00'));
 
         $credentials = new RefreshedCredentials(
-            'token',
-            'token-secret',
-            'refresh-token',
+            'some-token',
+            'some-token-secret',
+            'some-refresh-token',
             Carbon::now()->addHour(),
         );
 
-        $expected = '{"token":"token","token_secret":"token-secret","refresh_token":"refresh-token","expiry":"2023-04-13T01:00:00.000000Z"}';
+        $expected = '{"token":"some-token","token_secret":"some-token-secret","refresh_token":"some-refresh-token","expiry":"2023-04-13T01:00:00.000000Z"}';
 
         $this->assertEquals($expected, json_encode($credentials));
     }

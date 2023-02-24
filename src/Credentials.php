@@ -20,6 +20,7 @@ class Credentials extends RefreshedCredentials implements CredentialsContract, A
     public function __construct(ConnectedAccount $connectedAccount)
     {
         $this->id = $connectedAccount->provider_id;
+
         parent::__construct(
             $connectedAccount->token,
             $connectedAccount->secret,
@@ -43,8 +44,8 @@ class Credentials extends RefreshedCredentials implements CredentialsContract, A
      */
     public function toArray(): array
     {
-        return array_merge(parent::toArray(), [
+        return array_merge([
             'id' => $this->getId(),
-        ]);
+        ], parent::toArray());
     }
 }
