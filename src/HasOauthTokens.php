@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property string|null $refresh_token
  * @property DateTimeInterface|null $expires_at
  */
-trait HasTokens
+trait HasOauthTokens
 {
     /**
      * Intercepts and refreshes the "token" attribute if it has expired.

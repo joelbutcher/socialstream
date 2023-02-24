@@ -14,7 +14,7 @@ use Laravel\Jetstream\Jetstream;
  */
 abstract class ConnectedAccount extends Model
 {
-    use HasTokens;
+    use HasOauthTokens;
 
     /**
      * Get the credentials used for authenticating services.
