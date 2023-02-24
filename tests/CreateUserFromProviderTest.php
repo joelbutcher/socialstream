@@ -69,9 +69,4 @@ class CreateUserFromProviderTest extends TestCase
         $this->assertNull($credentials->getTokenSecret());
         $this->assertInstanceOf(DateTimeInterface::class, $credentials->getExpiry());
     }
-
-    protected function migrate()
-    {
-        $this->artisan('migrate', ['--database' => 'testbench'])->run();
-    }
 }
