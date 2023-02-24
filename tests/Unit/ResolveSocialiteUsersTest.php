@@ -1,10 +1,11 @@
 <?php
 
-namespace JoelButcher\Socialstream\Tests;
+namespace JoelButcher\Socialstream\Tests\Unit;
 
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;
 use JoelButcher\Socialstream\Tests\Fixtures\ResolveUser;
+use JoelButcher\Socialstream\Tests\TestCase;
 
 class ResolveSocialiteUsersTest extends TestCase
 {
@@ -15,7 +16,7 @@ class ResolveSocialiteUsersTest extends TestCase
         Socialstream::resolvesSocialiteUsersUsing(ResolveUser::class);
     }
 
-    public function test_action_can_be_overridden()
+    public function test_action_can_be_overridden(): void
     {
         $action = app(ResolvesSocialiteUsers::class);
 

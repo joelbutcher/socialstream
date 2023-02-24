@@ -1,14 +1,15 @@
 <?php
 
-namespace JoelButcher\Socialstream\Tests;
+namespace JoelButcher\Socialstream\Tests\Unit;
 
 use App\Actions\Socialstream\SetUserPassword;
 use Illuminate\Support\Facades\Hash;
 use JoelButcher\Socialstream\Tests\Fixtures\User;
+use JoelButcher\Socialstream\Tests\TestCase;
 
 class SetPasswordTest extends TestCase
 {
-    public function test_users_password_can_be_set()
+    public function test_users_password_can_be_set(): void
     {
         $this->migrate();
 
