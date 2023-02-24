@@ -6,16 +6,13 @@ use Closure;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
-use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
-use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
-use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
-use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
+use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
+use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
+use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use RuntimeException;
 
 class Socialstream
