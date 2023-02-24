@@ -6,6 +6,8 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
+use JoelButcher\Socialstream\Actions\Auth\AuthenticateOauthCallback;
+use JoelButcher\Socialstream\Actions\Auth\HandleOauthCallbackErrors;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
@@ -48,6 +50,9 @@ class SocialstreamServiceProvider extends ServiceProvider
         if (config('jetstream.stack') === 'inertia') {
             $this->bootInertia();
         }
+
+        Socialstream::authenticatesOauthCallbackUsing(AuthenticateOauthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(HandleOauthCallbackErrors::class);
     }
 
     /**

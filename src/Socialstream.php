@@ -5,7 +5,12 @@ namespace JoelButcher\Socialstream;
 use Closure;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
+use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
+use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
+use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
+use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
@@ -265,6 +270,16 @@ class Socialstream
     public static function handlesInvalidStateUsing(callable|string $callback): void
     {
         app()->singleton(HandlesInvalidState::class, $callback);
+    }
+
+    public static function authenticatesOauthCallbackUsing(callable|string $callback): void
+    {
+        app()->singleton(AuthenticatesOauthCallback::class, $callback);
+    }
+
+    public static function handlesOAuthCallbackErrorsUsing(callable|string $callback): void
+    {
+        app()->singleton(HandlesOauthCallbackErrors::class, $callback);
     }
 
     /**
