@@ -14,7 +14,7 @@ use Laravel\Socialite\Two\User as OAuth2User;
 
 class CreateUserFromProviderTest extends TestCase
 {
-    public function test_user_can_be_created_from_o_auth_1_provider()
+     public function test_user_can_be_created_from_o_auth_1_provider(): void
     {
         $this->migrate();
 
@@ -42,7 +42,7 @@ class CreateUserFromProviderTest extends TestCase
         $this->assertNull($credentials->getExpiry());
     }
 
-    public function test_user_can_be_created_from_o_auth_2_provider()
+    public function test_user_can_be_created_from_o_auth_2_provider(): void
     {
         $this->migrate();
 

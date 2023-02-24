@@ -59,7 +59,7 @@ class SocialstreamTest extends TestCase
         ]);
     }
 
-    public function test_redirect()
+    public function test_redirect(): void
     {
         $response = $this->get(route('oauth.redirect', 'github'));
 
@@ -67,7 +67,7 @@ class SocialstreamTest extends TestCase
             ->assertRedirectContains('github.com');
     }
 
-    public function test_users_can_register()
+    public function test_users_can_register(): void
     {
         $user = (new SocialiteUser())
             ->map([
@@ -101,7 +101,7 @@ class SocialstreamTest extends TestCase
         ]);
     }
 
-    public function test_existing_users_can_login()
+    public function test_existing_users_can_login(): void
     {
         $user = User::create([
             'name' => 'Joel Butcher',
@@ -147,7 +147,7 @@ class SocialstreamTest extends TestCase
         $this->assertAuthenticated();
     }
 
-    public function test_authenticated_users_can_link_to_provider()
+    public function test_authenticated_users_can_link_to_provider(): void
     {
         $this->actingAs(User::create([
             'name' => 'Joel Butcher',
@@ -187,7 +187,7 @@ class SocialstreamTest extends TestCase
         ]);
     }
 
-    public function test_new_users_can_register_from_login_page()
+    public function test_new_users_can_register_from_login_page(): void
     {
         Config::set('socialstream.features', [
             Features::createAccountOnFirstLogin(),
@@ -225,7 +225,7 @@ class SocialstreamTest extends TestCase
         ]);
     }
 
-    public function test_users_can_login_on_registration()
+    public function test_users_can_login_on_registration(): void
     {
         Config::set('socialstream.features', [
             Features::loginOnRegistration(),
@@ -271,7 +271,7 @@ class SocialstreamTest extends TestCase
         ]);
     }
 
-    public function test_it_generates_missing_emails()
+    public function test_it_generates_missing_emails(): void
     {
         Config::set('socialstream.features', [
             Features::generateMissingEmails(),

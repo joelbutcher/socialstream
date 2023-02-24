@@ -9,7 +9,7 @@ use JoelButcher\Socialstream\Tests\TestCase;
 
 class SetPasswordTest extends TestCase
 {
-    public function test_users_password_can_be_set()
+    public function test_users_password_can_be_set(): void
     {
         $this->migrate();
 

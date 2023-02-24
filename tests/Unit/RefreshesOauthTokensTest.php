@@ -7,7 +7,6 @@ use App\Actions\Socialstream\CreateUserFromProvider;
 use App\Models\ConnectedAccount;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\RefreshedCredentials;
 use JoelButcher\Socialstream\Socialstream;
 use JoelButcher\Socialstream\Tests\TestCase;
@@ -15,7 +14,7 @@ use Laravel\Socialite\Two\User as OAuth2User;
 
 class RefreshesOauthTokensTest extends TestCase
 {
-    public function test_it_can_refresh_expired_tokens()
+    public function test_it_can_refresh_expired_tokens(): void
     {
         $this->migrate();
 
@@ -47,7 +46,7 @@ class RefreshesOauthTokensTest extends TestCase
         $this->assertEquals(null, $connectedAccount->secret);
     }
 
-    public function test_it_does_not_refresh_active_tokens()
+    public function test_it_does_not_refresh_active_tokens(): void
     {
         $this->migrate();
 
@@ -81,7 +80,7 @@ class RefreshesOauthTokensTest extends TestCase
         $this->assertEquals(null, $connectedAccount->secret);
     }
 
-    public function test_it_does_not_refresh_tokens_if_the_feature_is_disabled()
+    public function test_it_does_not_refresh_tokens_if_the_feature_is_disabled(): void
     {
         $this->migrate();
 

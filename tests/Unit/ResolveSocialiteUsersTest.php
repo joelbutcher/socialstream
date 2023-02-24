@@ -16,7 +16,7 @@ class ResolveSocialiteUsersTest extends TestCase
         Socialstream::resolvesSocialiteUsersUsing(ResolveUser::class);
     }
 
-    public function test_action_can_be_overridden()
+    public function test_action_can_be_overridden(): void
     {
         $action = app(ResolvesSocialiteUsers::class);
 
