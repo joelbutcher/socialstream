@@ -21,13 +21,27 @@ UpdateConnectedAccount.php
 
 #### User Profile Photo
 
-If you have included the `HasProfilePhoto` trait in your user model, please update your model to the following 
+If you have included the `HasProfilePhoto` trait in your user model, please update your model to the following:
 
 ```diff
     use HasProfilePhoto {
 -       getProfilePhotoUrlAttribute as getPhotoUrl;
 +       profilePhotoUrl as getPhotoUrl;
     }
+```
+
+And replace the `getProfilePhotoUrlAttribute` method in the model with:
+
+```php
+/**
+ * Get the URL to the user's profile photo.
+ */
+public function profilePhotoUrl(): Attribute
+{
+    return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
+        ? Attribute::get(fn () => $this->profile_photo_path)
+        : $this->getPhotoUrl();
+}
 ```
 
 #### Changes to jetstream props in inertia
@@ -283,7 +297,7 @@ Socialstream 2.x includes a new action to generate the redirects URI's used to a
 You should then register this action with Socialstream by placing the following code into the `boot` method of your application's `SocialstreamServiceProvider`:
 
 ```php
-use JoelButcher\Socialstream\Actions\GenerateRedirectForProvider;
+use App\Actions\Socialstream\GenerateRedirectForProvider;
 
 Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
 ```
