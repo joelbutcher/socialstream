@@ -74,7 +74,7 @@ The function accepts a callback so if you wanted to implement more complex logic
 V3 introduces a new `Providers` class, for defining what Socialite providers you have enabled in your config. This class is also used in the socialstream.blade.php stub and the connected-account.blade.php component stub. Please update any Socialite providers you have in your `socialstream.php` config file to use this class, e.g:
 
 ```php
-use \JoelButcher\Socialstream\Resolvers;
+use \JoelButcher\Socialstream\Providers;
 
 return [
     // ...
