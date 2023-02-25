@@ -12,107 +12,104 @@ use JoelButcher\Socialstream\Socialstream;
 use JoelButcher\Socialstream\Tests\TestCase;
 use Laravel\Socialite\Two\User as OAuth2User;
 
-class RefreshesOauthTokensTest extends TestCase
+it('can refresh expired tokens', function (): void
 {
-    public function test_it_can_refresh_expired_tokens(): void
-    {
-        $this->migrate();
+    $this->migrate();
 
-        Socialstream::refreshesTokensForProviderUsing('github', function () {
-            return new RefreshedCredentials(
-                'new-token',
-                null,
-                'new-refresh-token',
-                now()->addSeconds(3600),
-            );
-        });
+    Socialstream::refreshesTokensForProviderUsing('github', function () {
+        return new RefreshedCredentials(
+            'new-token',
+            null,
+            'new-refresh-token',
+            now()->addSeconds(3600),
+        );
+    });
 
-        $providerUser = new OAuth2User;
-        $providerUser->id = '1234567890';
-        $providerUser->name = 'Joel Butcher';
-        $providerUser->email = 'joel@socialstream.com';
-        $providerUser->token = Str::random(64);
-        $providerUser->refreshToken = Str::random(64);
-        $providerUser->expiresIn = 0;
+    $providerUser = new OAuth2User;
+    $providerUser->id = '1234567890';
+    $providerUser->name = 'Joel Butcher';
+    $providerUser->email = 'joel@socialstream.com';
+    $providerUser->token = Str::random(64);
+    $providerUser->refreshToken = Str::random(64);
+    $providerUser->expiresIn = 0;
 
-        sleep(1);
+    sleep(1);
 
-        $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
-        $user = $createAction->create('github', $providerUser);
-        $connectedAccount = $user->currentConnectedAccount;
+    $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
+    $user = $createAction->create('github', $providerUser);
+    $connectedAccount = $user->currentConnectedAccount;
 
-        $this->assertEquals('new-token', $connectedAccount->token);
-        $this->assertEquals('new-refresh-token', $connectedAccount->refresh_token);
-        $this->assertEquals(null, $connectedAccount->secret);
-    }
+    $this->assertEquals('new-token', $connectedAccount->token);
+    $this->assertEquals('new-refresh-token', $connectedAccount->refresh_token);
+    $this->assertEquals(null, $connectedAccount->secret);
+});
 
-    public function test_it_does_not_refresh_active_tokens(): void
-    {
-        $this->migrate();
+it('does not refresh active tokens', function (): void
+{
+    $this->migrate();
 
-        Socialstream::refreshesTokensForProviderUsing('github', function () {
-            return new RefreshedCredentials(
-                'new-token',
-                null,
-                'new-refresh-token',
-                now()->addSeconds(3600),
-            );
-        });
+    Socialstream::refreshesTokensForProviderUsing('github', function () {
+        return new RefreshedCredentials(
+            'new-token',
+            null,
+            'new-refresh-token',
+            now()->addSeconds(3600),
+        );
+    });
 
-        $providerUser = new OAuth2User;
-        $providerUser->id = '1234567890';
-        $providerUser->name = 'Joel Butcher';
-        $providerUser->email = 'joel@socialstream.com';
-        $providerUser->token = Str::random(64);
-        $providerUser->refreshToken = Str::random(64);
-        $providerUser->expiresIn = 3600;
+    $providerUser = new OAuth2User;
+    $providerUser->id = '1234567890';
+    $providerUser->name = 'Joel Butcher';
+    $providerUser->email = 'joel@socialstream.com';
+    $providerUser->token = Str::random(64);
+    $providerUser->refreshToken = Str::random(64);
+    $providerUser->expiresIn = 3600;
 
-        sleep(1);
+    sleep(1);
 
-        $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
-        $user = $createAction->create('github', $providerUser);
+    $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
+    $user = $createAction->create('github', $providerUser);
 
-        /** @var ConnectedAccount $connectedAccount */
-        $connectedAccount = $user->currentConnectedAccount;
+    /** @var ConnectedAccount $connectedAccount */
+    $connectedAccount = $user->currentConnectedAccount;
 
-        $this->assertNotEquals('new-token', $connectedAccount->token);
-        $this->assertNotEquals('new-refresh-token', $connectedAccount->refresh_token);
-        $this->assertEquals(null, $connectedAccount->secret);
-    }
+    $this->assertNotEquals('new-token', $connectedAccount->token);
+    $this->assertNotEquals('new-refresh-token', $connectedAccount->refresh_token);
+    $this->assertEquals(null, $connectedAccount->secret);
+});
 
-    public function test_it_does_not_refresh_tokens_if_the_feature_is_disabled(): void
-    {
-        $this->migrate();
+it('does not refresh tokens if the feature is disabled', function (): void
+{
+    $this->migrate();
 
-        Config::set('socialstream.features', []);
+    Config::set('socialstream.features', []);
 
-        $newTime = now()->addSeconds(3600);
+    $newTime = now()->addSeconds(3600);
 
-        Socialstream::refreshesTokensForProviderUsing('github', function (ConnectedAccount $account) use ($newTime) {
-            return new RefreshedCredentials(
-                'new-token',
-                null,
-                'new-refresh-token',
-                $newTime,
-            );
-        });
+    Socialstream::refreshesTokensForProviderUsing('github', function (ConnectedAccount $account) use ($newTime) {
+        return new RefreshedCredentials(
+            'new-token',
+            null,
+            'new-refresh-token',
+            $newTime,
+        );
+    });
 
-        $providerUser = new OAuth2User;
-        $providerUser->id = '1234567890';
-        $providerUser->name = 'Joel Butcher';
-        $providerUser->email = 'joel@socialstream.com';
-        $providerUser->token = Str::random(64);
-        $providerUser->refreshToken = Str::random(64);
-        $providerUser->expiresIn = 0;
+    $providerUser = new OAuth2User;
+    $providerUser->id = '1234567890';
+    $providerUser->name = 'Joel Butcher';
+    $providerUser->email = 'joel@socialstream.com';
+    $providerUser->token = Str::random(64);
+    $providerUser->refreshToken = Str::random(64);
+    $providerUser->expiresIn = 0;
 
-        sleep(1);
+    sleep(1);
 
-        $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
-        $user = $createAction->create('github', $providerUser);
-        $connectedAccount = $user->currentConnectedAccount;
+    $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
+    $user = $createAction->create('github', $providerUser);
+    $connectedAccount = $user->currentConnectedAccount;
 
-        $this->assertNotEquals('new-token', $connectedAccount->token);
-        $this->assertNotEquals('new-refresh-token', $connectedAccount->refresh_token);
-        $this->assertEquals(null, $connectedAccount->secret);
-    }
-}
+    $this->assertNotEquals('new-token', $connectedAccount->token);
+    $this->assertNotEquals('new-refresh-token', $connectedAccount->refresh_token);
+    $this->assertEquals(null, $connectedAccount->secret);
+});

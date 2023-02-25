@@ -5,27 +5,23 @@ namespace JoelButcher\Socialstream\Tests;
 use JoelButcher\Socialstream\SocialstreamServiceProvider;
 use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\JetstreamServiceProvider;
+use Laravel\Socialite\SocialiteServiceProvider;
 use Mockery;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         Mockery::close();
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
-        return [SocialstreamServiceProvider::class, JetstreamServiceProvider::class, FortifyServiceProvider::class];
+        return [SocialstreamServiceProvider::class, JetstreamServiceProvider::class, FortifyServiceProvider::class, SocialiteServiceProvider::class];
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
         $app['migrator']->path(__DIR__.'/../database/migrations');
 
@@ -38,7 +34,7 @@ abstract class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function migrate()
+    protected function migrate(): void
     {
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
     }
