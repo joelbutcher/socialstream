@@ -7,35 +7,21 @@ use Illuminate\Support\Facades\Hash;
 use JoelButcher\Socialstream\Tests\Fixtures\User;
 use JoelButcher\Socialstream\Tests\TestCase;
 
-class SetPasswordTest extends TestCase
-{
-    public function test_users_password_can_be_set(): void
-    {
-        $this->migrate();
+test('users password can be set', function (): void {
+    $this->migrate();
 
-        $user = $this->createUser();
+    $user = User::forceCreate([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.com',
+        'password' => 'secret',
+    ]);
 
-        $action = new SetUserPassword;
+    $action = new SetUserPassword;
 
-        $action->set($user, [
-            'password' => 'new-password',
-            'password_confirmation' => 'new-password',
-        ]);
+    $action->set($user, [
+        'password' => 'new-password',
+        'password_confirmation' => 'new-password',
+    ]);
 
-        $this->assertTrue(Hash::check('new-password', $user->password));
-    }
-
-    public function createUser()
-    {
-        return User::forceCreate([
-            'name' => 'Joel Butcher',
-            'email' => 'joel@socialstream.com',
-            'password' => 'secret',
-        ]);
-    }
-
-    protected function migrate()
-    {
-        $this->artisan('migrate', ['--database' => 'testbench'])->run();
-    }
-}
+    $this->assertTrue(Hash::check('new-password', $user->password));
+});
