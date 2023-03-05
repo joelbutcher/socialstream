@@ -56,6 +56,14 @@ class Features
     }
 
     /**
+     * Determine if the application should refresh the tokens on retrieval.
+     */
+    public static function refreshesOauthTokens(): bool
+    {
+        return static::enabled(static::refreshOauthTokens());
+    }
+
+    /**
      * Enabled the generate missing emails feature.
      */
     public static function generateMissingEmails(): string
@@ -93,5 +101,13 @@ class Features
     public static function rememberSession(): string
     {
         return 'remember-session';
+    }
+
+    /**
+     * Enable the automatic refresh token update on token retrieval.
+     */
+    public static function refreshOauthTokens(): string
+    {
+        return 'refresh-oauth-tokens';
     }
 }

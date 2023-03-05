@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream;
 
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Jetstream\Jetstream;
@@ -10,14 +9,13 @@ use Laravel\Jetstream\Jetstream;
 /**
  * @property int $id
  * @property int $user_id
+ * @property string $provider
  * @property string $provider_id
- * @property string $token
- * @property string|null $secret
- * @property string|null $refresh_token
- * @property DateTimeInterface|null $expires_at
  */
 abstract class ConnectedAccount extends Model
 {
+    use HasOauth2Tokens;
+
     /**
      * Get the credentials used for authenticating services.
      */

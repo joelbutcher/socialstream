@@ -6,9 +6,18 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
+use JoelButcher\Socialstream\Actions\Auth\AuthenticateOauthCallback;
+use JoelButcher\Socialstream\Actions\Auth\HandleOauthCallbackErrors;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
+use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GithubOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GitlabOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOauth2RefreshResolver;
 use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
@@ -36,10 +45,14 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->configurePublishing();
         $this->configureRoutes();
         $this->configureCommands();
+        $this->configureRefreshTokenResolvers();
 
         if (config('jetstream.stack') === 'inertia') {
             $this->bootInertia();
         }
+
+        Socialstream::authenticatesOauthCallbackUsing(AuthenticateOauthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(HandleOauthCallbackErrors::class);
     }
 
     /**
@@ -93,6 +106,20 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->commands([
             Console\InstallCommand::class,
         ]);
+    }
+
+    /**
+     * Configure the refresh token resolvers as defaults.
+     */
+    protected function configureRefreshTokenResolvers(): void
+    {
+        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::bitbucket(), BitbucketOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::github(), GithubOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitter(), TwitterOauth2RefreshResolver::class);
     }
 
     /**
