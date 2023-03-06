@@ -12,7 +12,7 @@ use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as ProviderUserContract;
 
-class CreateUserFromProvider implements CreatesUserFromProvider
+class CreateUserWithTeamsFromProvider implements CreatesUserFromProvider
 {
     /**
      * The creates connected accounts instance.
