@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Socialstream;
-use Symfony\Component\HttpFoundation\Response
+use Symfony\Component\HttpFoundation\Response;
 
 class ShareInertiaData
 {
