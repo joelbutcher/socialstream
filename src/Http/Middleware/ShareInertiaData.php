@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Socialstream;
+use Symfony\Component\HttpFoundation\Response
 
 class ShareInertiaData
 {
     /**
      * Handle the incoming request.
      */
-    public function handle(Request $request, Closure $next): \Symfony\Component\HttpFoundation\Response
+    public function handle(Request $request, Closure $next): Response
     {
         Inertia::share(array_filter([
             'socialstream' => function () use ($request) {
