@@ -1,10 +1,12 @@
 ## Summary <!-- tl;dr one line summary of this PR -->
 
-copilot:summary
+[//]: # (copilot:summary)
+This pull request...
 
 ## Explanation  <!-- A more in depth explanation of the approach, reasoning, questions etc... -->
 
-copilot:walkthrough
+[//]: # (copilot:walkthrough)
+<!-- List the changes and why they were made -->
 
 ## Checklist <!-- Put an `x` in all the boxes that apply. -->
 
