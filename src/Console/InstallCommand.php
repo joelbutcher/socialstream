@@ -5,7 +5,7 @@ namespace JoelButcher\Socialstream\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Laravel\Jetstream\Jetstream;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
@@ -33,10 +33,8 @@ class InstallCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int|null
      */
-    public function handle()
+    public function handle(): ?int
     {
         // Check if Jetstream has been installed.
         if (! file_exists(config_path('jetstream.php'))) {
@@ -92,10 +90,8 @@ class InstallCommand extends Command
 
     /**
      * Install the Livewire stack into the application.
-     *
-     * @return void
      */
-    protected function installLivewireStack()
+    protected function installLivewireStack(): void
     {
         // Directories...
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
@@ -146,10 +142,8 @@ class InstallCommand extends Command
 
     /**
      * Install the Inertia stack into the application.
-     *
-     * @return void
      */
-    protected function installInertiaStack()
+    protected function installInertiaStack(): void
     {
         // Directories...
         (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
@@ -203,10 +197,8 @@ class InstallCommand extends Command
 
     /**
      * Ensure the application is ready for Jetstream's "teams" feature.
-     *
-     * @return void
      */
-    protected function ensureTeamsCompatibility()
+    protected function ensureTeamsCompatibility(): void
     {
         // Service Provider...
         copy(__DIR__.'/../../stubs/app/Providers/TeamsAuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
@@ -223,12 +215,8 @@ class InstallCommand extends Command
 
     /**
      * Install the Jetstream service providers in the application configuration file.
-     *
-     * @param  string  $after
-     * @param  string  $name
-     * @return void
      */
-    protected function installServiceProviderAfter($after, $name)
+    protected function installServiceProviderAfter(string $after, string $name): void
     {
         if (! Str::contains($appConfig = file_get_contents(config_path('app.php')), 'App\\Providers\\'.$name.'::class')) {
             file_put_contents(config_path('app.php'), str_replace(
@@ -241,10 +229,8 @@ class InstallCommand extends Command
 
     /**
      * Returns the path to the correct test stubs.
-     *
-     * @return string
      */
-    protected function getTestStubsPath()
+    protected function getTestStubsPath(): string
     {
         return $this->option('pest')
             ? __DIR__.'/../../stubs/pest-tests'
@@ -253,11 +239,8 @@ class InstallCommand extends Command
 
     /**
      * Install the given Composer Packages as "dev" dependencies.
-     *
-     * @param  mixed  $packages
-     * @return void
      */
-    protected function requireComposerDevPackages($packages)
+    protected function requireComposerDevPackages(array|string $packages): void
     {
         $composer = $this->option('composer');
 
@@ -278,9 +261,9 @@ class InstallCommand extends Command
     }
 
     /**
-     * @return void
+     * Install the required node dependencies and build everything.
      */
-    protected function installNodeDependenciesAndBuild()
+    protected function installNodeDependenciesAndBuild(): void
     {
         $commands = ['npm install', 'npm run build'];
 
@@ -288,11 +271,17 @@ class InstallCommand extends Command
     }
 
     /**
-     * @param  array  $commands
-     * @param  array  $env
-     * @return Process
+     * Get the path to the appropriate PHP binary.
      */
-    protected function runCommands(array $commands, array $env = [])
+    protected function phpBinary(): string
+    {
+        return (new PhpExecutableFinder())->find(false) ?: 'php';
+    }
+
+    /**
+     * Execute the given commands using the given environment.
+     */
+    protected function runCommands(array $commands, array $env = []): Process
     {
         $process = Process::fromShellCommandline(implode(' && ', $commands), null, $env, null, null);
 
@@ -305,13 +294,8 @@ class InstallCommand extends Command
 
     /**
      * Replace a given string within a given file.
-     *
-     * @param  string  $search
-     * @param  string  $replace
-     * @param  string  $path
-     * @return void
      */
-    protected function replaceInFile($search, $replace, $path)
+    protected function replaceInFile(string $search, string $replace, string $path): void
     {
         file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
     }
