@@ -31,7 +31,7 @@
             @endswitch
 
             <div>
-                <div class="text-sm font-semibold text-gray-600">
+                <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
                     {{ __(ucfirst($provider)) }}
                 </div>
 

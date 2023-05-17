@@ -15,7 +15,7 @@ const error = computed(() => usePage().props.errors.socialstream);
 
 <template>
   <div>
-    <div class="flex flex-row items-center justify-between py-4 text-gray-500">
+    <div class="flex flex-row items-center justify-between py-4 text-gray-600 dark:text-gray-400">
       <hr class="w-full mr-2">
       Or
       <hr class="w-full ml-2">

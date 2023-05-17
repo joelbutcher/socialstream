@@ -30,7 +30,7 @@ defineProps({
                 <BitbucketIcon class="h-6 w-6 mr-2" v-if="provider === 'bitbucket'" />
 
                 <div>
-                    <div class="text-sm font-semibold text-gray-600">
+                    <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
                         {{ provider === 'twitter-oauth-2' ? 'Twitter' : provider.charAt(0).toUpperCase() + provider.slice(1) }}
                     </div>
 

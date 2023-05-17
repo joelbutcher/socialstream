@@ -81,7 +81,7 @@ function removeConnectedAccount(id) {
                 Your connected accounts.
             </h3>
 
-            <div class="mt-3 ax-w-xl text-sm text-gray-600">
+            <div class="mt-3 ax-w-xl text-sm text-gray-600 dark:text-gray-400">
                 You are free to connect any social accounts to your profile and may remove any connected accounts at any
                 time. If you feel any of your connected accounts have been compromised, you should disconnect them
                 immediately and change your password.
@@ -97,7 +97,7 @@ function removeConnectedAccount(id) {
                                     <button
                                         v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
                                         @click="setProfilePhoto(getAccountForProvider(provider).id)"
-                                        class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none">
+                                        class="cursor-pointer ml-6 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
                                         Use Avatar as Profile Photo
                                     </button>
 

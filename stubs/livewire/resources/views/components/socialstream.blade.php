@@ -1,4 +1,4 @@
-<div class="flex flex-row items-center justify-between py-4 text-gray-500">
+<div class="flex flex-row items-center justify-between py-4 text-gray-600 dark:text-gray-400">
     <hr class="w-full mr-2">
     {{ __('Or') }}
     <hr class="w-full ml-2">

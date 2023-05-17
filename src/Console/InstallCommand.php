@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -17,6 +18,7 @@ class InstallCommand extends Command
      */
     protected $signature = 'socialstream:install 
                             {--stack= : Indicates the desired stack to be installed (Livewire, Inertia)}
+                            {--dark : Indicate that dark mode support should be installed}
                             {--teams : Indicates if team support should be installed}
                             {--api : Indicates if API support should be installed}
                             {--verification : Indicates if email verification support should be installed}
@@ -50,6 +52,7 @@ class InstallCommand extends Command
 
             $this->call('jetstream:install', [
                 'stack' => $stack,
+                '--dark' => $this->option('dark'),
                 '--teams' => $this->option('teams'),
                 '--api' => $this->option('api'),
                 '--verification' => $this->option('verification'),
@@ -70,14 +73,6 @@ class InstallCommand extends Command
         } elseif ($stack === 'inertia') {
             $this->installInertiaStack();
         }
-
-        if ($this->option('teams')) {
-            $this->ensureTeamsCompatibility();
-        }
-
-        // Tests...
-        $stubs = $this->getTestStubsPath();
-        copy($stubs.'/SocialstreamRegistrationTest.php', base_path('tests/Feature/SocialstreamRegistrationTest.php'));
 
         $this->line('');
         $this->components->info('Socialstream installed successfully.');
@@ -138,6 +133,34 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/livewire/resources/views/profile/show.blade.php', resource_path('views/profile/show.blade.php'));
 
         $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
+
+        // Teams
+        if ($this->option('teams')) {
+            $this->ensureTeamsCompatibility();
+        }
+
+        // Tests...
+        $stubs = $this->getTestStubsPath();
+        copy($stubs.'/SocialstreamRegistrationTest.php', base_path('tests/Feature/SocialstreamRegistrationTest.php'));
+
+        if (! $this->option('dark')) {
+            $this->removeDarkClasses((new Finder)
+                ->in(resource_path('views'))
+                ->name('*.blade.php')
+                ->filter(fn ($file) => $file->getPathname() !== resource_path('views/welcome.blade.php'))
+            );
+        }
+
+        if (file_exists(base_path('pnpm-lock.yaml'))) {
+            $this->runCommands(['pnpm install', 'pnpm run build']);
+        } elseif (file_exists(base_path('yarn.lock'))) {
+            $this->runCommands(['yarn install', 'yarn run build']);
+        } else {
+            $this->runCommands(['npm install', 'npm run build']);
+        }
+
+        $this->line('');
+        $this->components->info('Livewire scaffolding installed successfully.');
     }
 
     /**
@@ -193,6 +216,37 @@ class InstallCommand extends Command
         copy(__DIR__.'/../../stubs/inertia/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
 
         $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
+
+        // Teams
+        if ($this->option('teams')) {
+            $this->ensureTeamsCompatibility();
+        }
+
+        // Tests...
+        $stubs = $this->getTestStubsPath();
+        copy($stubs.'/SocialstreamRegistrationTest.php', base_path('tests/Feature/SocialstreamRegistrationTest.php'));
+
+        if (! $this->option('dark')) {
+            $this->removeDarkClasses((new Finder)
+                ->in(resource_path('js'))
+                ->name('*.vue')
+                ->notPath('Pages/Welcome.vue')
+            );
+        }
+
+        if (file_exists(base_path('pnpm-lock.yaml'))) {
+            $this->runCommands(['pnpm install', 'pnpm run build']);
+        } elseif (file_exists(base_path('yarn.lock'))) {
+            $this->runCommands(['yarn install', 'yarn run build']);
+        } else {
+            $this->runCommands(['npm install', 'npm run build']);
+        }
+
+        $this->line('');
+        $this->components->info('Inertia scaffolding installed successfully.');
+
+        $this->line('');
+        $this->components->info('Inertia scaffolding installed successfully.');
     }
 
     /**
@@ -268,6 +322,19 @@ class InstallCommand extends Command
         $commands = ['npm install', 'npm run build'];
 
         $this->runCommands($commands);
+    }
+
+    /**
+     * Remove Tailwind dark classes from the given files.
+     *
+     * @param  \Symfony\Component\Finder\Finder  $finder
+     * @return void
+     */
+    protected function removeDarkClasses(Finder $finder)
+    {
+        foreach ($finder as $file) {
+            file_put_contents($file->getPathname(), preg_replace('/\sdark:[^\s"\']+/', '', $file->getContents()));
+        }
     }
 
     /**
