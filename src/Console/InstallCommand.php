@@ -292,29 +292,6 @@ class InstallCommand extends Command
     }
 
     /**
-     * Install the given Composer Packages as "dev" dependencies.
-     */
-    protected function requireComposerDevPackages(array|string $packages): void
-    {
-        $composer = $this->option('composer');
-
-        if ($composer !== 'global') {
-            $command = [$this->phpBinary(), $composer, 'require', '--dev'];
-        }
-
-        $command = array_merge(
-            $command ?? ['composer', 'require', '--dev'],
-            is_array($packages) ? $packages : func_get_args()
-        );
-
-        (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
-            ->setTimeout(null)
-            ->run(function ($type, $output) {
-                $this->output->write($output);
-            });
-    }
-
-    /**
      * Install the required node dependencies and build everything.
      */
     protected function installNodeDependenciesAndBuild(): void
@@ -326,23 +303,12 @@ class InstallCommand extends Command
 
     /**
      * Remove Tailwind dark classes from the given files.
-     *
-     * @param  \Symfony\Component\Finder\Finder  $finder
-     * @return void
      */
-    protected function removeDarkClasses(Finder $finder)
+    protected function removeDarkClasses(Finder $finder): void
     {
         foreach ($finder as $file) {
             file_put_contents($file->getPathname(), preg_replace('/\sdark:[^\s"\']+/', '', $file->getContents()));
         }
-    }
-
-    /**
-     * Get the path to the appropriate PHP binary.
-     */
-    protected function phpBinary(): string
-    {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
     }
 
     /**
