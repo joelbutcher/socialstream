@@ -69,14 +69,14 @@ it('supports the \'twitter\' OAuth 2.0 provider', function (): void
     $this->assertTrue(Providers::hasTwitterOAuth2Support());
 });
 
-it('supports the \custom providers', function (): void
+it('supports custom providers', function (): void
 {
     Config::set('socialstream.providers', ['my-custom-provider']);
 
     $this->assertTrue(Providers::enabled('my-custom-provider'));
 });
 
-it('supports_dynamic_calls_for_custom_providers', function (): void
+it('supports dynamic calls for custom providers', function (): void
 {
     Config::set('socialstream.providers', ['a-custom-provider', 'another-provider', 'and-another']);
 
