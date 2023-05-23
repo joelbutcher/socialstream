@@ -15,7 +15,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
 use JoelButcher\Socialstream\Tests\TestCase;
@@ -24,6 +26,7 @@ use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery as m;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 uses(WithFaker::class, RefreshDatabase::class);
 
@@ -53,6 +56,47 @@ it('redirects users', function (): void
     $response->assertRedirect()
         ->assertRedirectContains('github.com');
 });
+
+it('generates a redirect using an overriding closure', function (bool $manageRepos): void {
+    Config::set('services.github.manage_repos', $manageRepos);
+
+    Socialstream::generatesProvidersRedirectsUsing(
+        callback: fn () => new class() implements GeneratesProviderRedirect {
+            public function generate(string $provider): RedirectResponse
+            {
+                ['provider' => $provider] = Route::current()->parameters();
+
+                $scopes = ['*'];
+
+                $scopes = match($provider) {
+                    'github' => array_merge($scopes, [
+                        'repos.manage',
+                    ]),
+                    default => $scopes,
+                };
+
+                return Socialite::driver($provider)
+                    ->scopes($scopes)
+                    ->with(['response_type' => 'token', 'mobileminimal' => 1])
+                    ->redirect();
+            }
+        }
+    );
+
+    $response = $this->get(route('oauth.redirect', 'github'));
+
+    $response->assertRedirect()
+        ->assertRedirectContains('github.com')
+        ->assertRedirectContains('mobileminimal=1')
+        ->assertRedirectContains('response_type=token');
+
+    if ($manageRepos) {
+        $response->assertRedirectContains('repos.manage');
+    }
+})->with([
+    'manage repos' => [true],
+    'do not manage repos' => [false],
+]);
 
 test('users can register', function (): void
 {
@@ -258,7 +302,7 @@ test('users can login on registration', function (): void
     ]);
 });
 
-it('generates_missing_emails', function (): void
+it('generates missing emails', function (): void
 {
     Config::set('socialstream.features', [
         Features::generateMissingEmails(),
