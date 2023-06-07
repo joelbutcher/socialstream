@@ -37,7 +37,7 @@
 
                 @if (! empty($createdAt))
                     <div class="text-xs text-gray-500">
-                        Connected {{ $createdAt }}
+                        {{ __('Connected :createdAt', ['createdAt' => $createdAt]) }}
                     </div>
                 @else
                     <div class="text-xs text-gray-500">
