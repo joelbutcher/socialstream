@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Tests\Unit;
 use App\Actions\Socialstream\SetUserPassword;
 use Illuminate\Support\Facades\Hash;
 use JoelButcher\Socialstream\Tests\Fixtures\User;
-use JoelButcher\Socialstream\Tests\TestCase;
 
 test('users password can be set', function (): void {
     $this->migrate();

@@ -133,7 +133,6 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
     protected function alreadyRegistered(Authenticatable $user, ?ConnectedAccount $account, string $provider, ProviderUser $providerAccount): RedirectResponse|LoginResponse
     {
         if (Features::hasLoginOnRegistrationFeatures()) {
-
             // The user exists, but they're not registered with the given provider.
             if (! $account) {
                 $this->createsConnectedAccounts->create($user, $provider, $providerAccount);

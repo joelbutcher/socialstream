@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\RefreshedCredentials;
 use JoelButcher\Socialstream\Socialstream;
-use JoelButcher\Socialstream\Tests\TestCase;
 use Laravel\Socialite\Two\User as OAuth2User;
 
-it('can refresh expired tokens', function (): void
-{
+it('can refresh expired tokens', function (): void {
     $this->migrate();
 
     Socialstream::refreshesTokensForProviderUsing('github', function () {
@@ -44,8 +42,7 @@ it('can refresh expired tokens', function (): void
     $this->assertEquals(null, $connectedAccount->secret);
 });
 
-it('does not refresh active tokens', function (): void
-{
+it('does not refresh active tokens', function (): void {
     $this->migrate();
 
     Socialstream::refreshesTokensForProviderUsing('github', function () {
@@ -78,8 +75,7 @@ it('does not refresh active tokens', function (): void
     $this->assertEquals(null, $connectedAccount->secret);
 });
 
-it('does not refresh tokens if the feature is disabled', function (): void
-{
+it('does not refresh tokens if the feature is disabled', function (): void {
     $this->migrate();
 
     Config::set('socialstream.features', []);

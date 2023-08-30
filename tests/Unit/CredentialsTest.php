@@ -7,12 +7,10 @@ use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use JoelButcher\Socialstream\Credentials;
-use JoelButcher\Socialstream\Tests\TestCase;
 
 uses(RefreshDatabase::class);
 
-it('can be created from a connected account instance', function (): void
-{
+it('can be created from a connected account instance', function (): void {
     Carbon::setTestNow(DateTime::createFromFormat('Y-m-d H:i:s', '2023-04-13 00:00:00'));
 
     $credentials = new Credentials(
@@ -36,8 +34,7 @@ it('can be created from a connected account instance', function (): void
     $this->assertEquals('2023-04-13 01:00:00', $credentials->getExpiry());
 });
 
-it('can be cast to an array', function (): void
-{
+it('can be cast to an array', function (): void {
     Carbon::setTestNow(DateTime::createFromFormat('Y-m-d H:i:s', '2023-04-13 00:00:00'));
 
     $credentials = new Credentials(
@@ -63,8 +60,7 @@ it('can be cast to an array', function (): void
     ], $credentials->toArray());
 });
 
-it('can be json encoded', function (): void
-{
+it('can be json encoded', function (): void {
     Carbon::setTestNow(DateTime::createFromFormat('Y-m-d H:i:s', '2023-04-13 00:00:00'));
 
     $credentials = new Credentials(

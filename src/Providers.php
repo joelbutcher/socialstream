@@ -99,7 +99,7 @@ class Providers
     /**
      * Enable the Bitbucket provider.
      */
-    public static function bitbucket():string
+    public static function bitbucket(): string
     {
         return 'bitbucket';
     }
@@ -107,7 +107,7 @@ class Providers
     /**
      * Enable the Facebook provider.
      */
-    public static function facebook():string
+    public static function facebook(): string
     {
         return 'facebook';
     }
@@ -115,7 +115,7 @@ class Providers
     /**
      * Enable the GitHub provider.
      */
-    public static function github():string
+    public static function github(): string
     {
         return 'github';
     }
@@ -123,7 +123,7 @@ class Providers
     /**
      * Enable the GitLab provider.
      */
-    public static function gitlab():string
+    public static function gitlab(): string
     {
         return 'gitlab';
     }
@@ -131,7 +131,7 @@ class Providers
     /**
      * Enable the Google provider.
      */
-    public static function google():string
+    public static function google(): string
     {
         return 'google';
     }
@@ -139,7 +139,7 @@ class Providers
     /**
      * Enable the LinkedIn provider.
      */
-    public static function linkedin():string
+    public static function linkedin(): string
     {
         return 'linkedin';
     }
@@ -147,7 +147,7 @@ class Providers
     /**
      * Enable the Slack provider.
      */
-    public static function slack():string
+    public static function slack(): string
     {
         return 'slack';
     }
@@ -155,7 +155,7 @@ class Providers
     /**
      * Enable the Twitter provider.
      */
-    public static function twitter():string
+    public static function twitter(): string
     {
         return 'twitter';
     }
@@ -163,7 +163,7 @@ class Providers
     /**
      * Enable the Twitter OAuth 1.0 provider.
      */
-    public static function twitterOAuth1():string
+    public static function twitterOAuth1(): string
     {
         return 'twitter';
     }
@@ -171,7 +171,7 @@ class Providers
     /**
      * Enable the Twitter OAuth 2.0 provider.
      */
-    public static function twitterOAuth2():string
+    public static function twitterOAuth2(): string
     {
         return 'twitter-oauth-2';
     }
@@ -179,8 +179,8 @@ class Providers
     /**
      * Dynamically handle static calls.
      *
-     * @param $name
-     * @param $arguments
+     * @param  $name
+     * @param  $arguments
      * @return mixed
      */
     public static function __callStatic($name, $arguments)

@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Tests\Unit;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;
 use JoelButcher\Socialstream\Tests\Fixtures\ResolveUser;
-use JoelButcher\Socialstream\Tests\TestCase;
 
 beforeEach(fn () => Socialstream::resolvesSocialiteUsersUsing(ResolveUser::class));
 
