@@ -5,6 +5,7 @@ import GithubIcon from '@/Components/SocialstreamIcons/GithubIcon.vue';
 import GitLabIcon from '@/Components/SocialstreamIcons/GitLabIcon.vue';
 import GoogleIcon from '@/Components/SocialstreamIcons/GoogleIcon.vue';
 import LinkedInIcon from '@/Components/SocialstreamIcons/LinkedInIcon.vue';
+import SlackIcon from '@/Components/SocialstreamIcons/SlackIcon.vue';
 import TwitterIcon from '@/Components/SocialstreamIcons/TwitterIcon.vue';
 
 defineProps({
@@ -21,13 +22,14 @@ defineProps({
         <div class="px-3 flex items-center justify-between">
             <div class="flex items-center">
 
+                <BitbucketIcon class="h-6 w-6 mr-2" v-if="provider === 'bitbucket'" />
                 <FacebookIcon class="h-6 w-6 mr-2" v-if="provider === 'facebook'" />
-                <GoogleIcon class="h-6 w-6 mr-2" v-if="provider === 'google'" />
-                <TwitterIcon class="h-6 w-6 mr-2" v-if="['twitter', 'twitter-oauth-2'].includes(provider)" />
-                <LinkedInIcon class="h-6 w-6 mr-2" v-if="provider === 'linkedin'" />
                 <GithubIcon class="h-6 w-6 mr-2" v-if="provider === 'github'" />
                 <GitLabIcon class="h-6 w-6 mr-2" v-if="provider === 'gitlab'" />
-                <BitbucketIcon class="h-6 w-6 mr-2" v-if="provider === 'bitbucket'" />
+                <GoogleIcon class="h-6 w-6 mr-2" v-if="provider === 'google'" />
+                <LinkedInIcon class="h-6 w-6 mr-2" v-if="provider === 'linkedin'" />
+                <SlackIcon class="h-6 w-6 mr-2" v-if="provider === 'slack'" />
+                <TwitterIcon class="h-6 w-6 mr-2" v-if="['twitter', 'twitter-oauth-2'].includes(provider)" />
 
                 <div>
                     <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">

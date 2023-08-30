@@ -4,15 +4,15 @@ namespace JoelButcher\Socialstream;
 
 use Closure;
 use Illuminate\Support\Str;
-use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
-use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
+use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
+use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use RuntimeException;
 
 class Socialstream
@@ -113,11 +113,19 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the LinkedIn provider..
+     * Determine if the application has support for the LinkedIn provider.
      */
     public static function hasLinkedInSupport(): bool
     {
         return Providers::hasLinkedInSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Slack provider.
+     */
+    public static function hasSlackSupport(): bool
+    {
+        return Providers::hasSlackSupport();
     }
 
     /**

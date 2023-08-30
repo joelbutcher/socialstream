@@ -30,11 +30,12 @@
     "require": {
         "php": "^8.1",
         "laravel/jetstream": "^3.0|^4.0",
-        "laravel/socialite": "^5.6"
+        "laravel/socialite": "^5.8.1"
     },
     "require-dev": {
         "inertiajs/inertia-laravel": "^0.6.4",
         "laravel/sanctum": "^3.2",
+        "livewire/livewire": "^3.0",
         "mockery/mockery": "^1.0",
         "orchestra/testbench": "^8.0",
         "pestphp/pest": "^2.0",

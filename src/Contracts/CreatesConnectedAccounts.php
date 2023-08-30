@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream\Contracts;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use JoelButcher\Socialstream\ConnectedAccount;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
 interface CreatesConnectedAccounts

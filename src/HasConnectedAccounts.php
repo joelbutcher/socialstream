@@ -39,7 +39,7 @@ trait HasConnectedAccounts
      */
     public function switchConnectedAccount(mixed $connectedAccount): bool
     {
-        if (!$this->ownsConnectedAccount($connectedAccount)) {
+        if (! $this->ownsConnectedAccount($connectedAccount)) {
             return false;
         }
 

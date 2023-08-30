@@ -46,8 +46,7 @@ beforeEach(function () {
     Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
 });
 
-it('redirects users', function (): void
-{
+it('redirects users', function (): void {
     $response = $this->get(route('oauth.redirect', 'github'));
 
     $response->assertRedirect()
@@ -58,14 +57,15 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
     Config::set('services.github.manage_repos', $manageRepos);
 
     Socialstream::generatesProvidersRedirectsUsing(
-        callback: fn () => new class() implements GeneratesProviderRedirect {
+        callback: fn () => new class() implements GeneratesProviderRedirect
+        {
             public function generate(string $provider): RedirectResponse
             {
                 ['provider' => $provider] = Route::current()->parameters();
 
                 $scopes = ['*'];
 
-                $scopes = match($provider) {
+                $scopes = match ($provider) {
                     'github' => array_merge($scopes, [
                         'repos.manage',
                     ]),
@@ -95,8 +95,7 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
     'do not manage repos' => [false],
 ]);
 
-test('users can register', function (): void
-{
+test('users can register', function (): void {
     $user = (new SocialiteUser())
         ->map([
             'id' => $githubId = $this->faker->numerify('########'),
@@ -129,8 +128,7 @@ test('users can register', function (): void
     ]);
 });
 
-test('existing users can login', function (): void
-{
+test('existing users can login', function (): void {
     $user = User::create([
         'name' => 'Joel Butcher',
         'email' => 'joel@socialstream.dev',
@@ -175,8 +173,7 @@ test('existing users can login', function (): void
     $this->assertAuthenticated();
 });
 
-test('authenticated users can link to provider', function (): void
-{
+test('authenticated users can link to provider', function (): void {
     $this->actingAs(User::create([
         'name' => 'Joel Butcher',
         'email' => 'joel@socialstream.dev',
@@ -215,8 +212,7 @@ test('authenticated users can link to provider', function (): void
     ]);
 });
 
-test('new users can register from login page', function (): void
-{
+test('new users can register from login page', function (): void {
     Config::set('socialstream.features', [
         Features::createAccountOnFirstLogin(),
     ]);
@@ -253,8 +249,7 @@ test('new users can register from login page', function (): void
     ]);
 });
 
-test('users can login on registration', function (): void
-{
+test('users can login on registration', function (): void {
     Config::set('socialstream.features', [
         Features::loginOnRegistration(),
     ]);
@@ -299,8 +294,7 @@ test('users can login on registration', function (): void
     ]);
 });
 
-it('generates missing emails', function (): void
-{
+it('generates missing emails', function (): void {
     Config::set('socialstream.features', [
         Features::generateMissingEmails(),
     ]);
