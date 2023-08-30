@@ -8,6 +8,7 @@ import GitLabIcon from '@/Components/SocialstreamIcons/GitLabIcon.vue';
 import GoogleIcon from '@/Components/SocialstreamIcons/GoogleIcon.vue';
 import InputError from '@/Components/InputError.vue';
 import LinkedInIcon from '@/Components/SocialstreamIcons/LinkedInIcon.vue';
+import SlackIcon from '@/Components/SocialstreamIcons/SlackIcon.vue';
 import TwitterIcon from '@/Components/SocialstreamIcons/TwitterIcon.vue';
 
 const error = computed(() => usePage().props.errors.socialstream);
@@ -22,32 +23,14 @@ const error = computed(() => usePage().props.errors.socialstream);
     </div>
 
     <div class="flex items-center justify-center">
+      <a v-if="$page.props.socialstream.providers.includes('bitbucket')" :href="route('oauth.redirect', 'bitbucket')">
+        <BitbucketIcon class="h-6 w-6 mx-2"/>
+        <span class="sr-only">BitBucket</span>
+      </a>
+
       <a v-if="$page.props.socialstream.providers.includes('facebook')" :href="route('oauth.redirect', 'facebook')">
         <FacebookIcon class="h-6 w-6 mx-2"/>
         <span class="sr-only">Facebook</span>
-      </a>
-
-      <a v-if="$page.props.socialstream.providers.includes('google')" :href="route('oauth.redirect', 'google')">
-        <GoogleIcon class="h-6 w-6 mx-2"/>
-        <span class="sr-only">Google</span>
-      </a>
-
-      <a
-          v-if="$page.props.socialstream.providers.includes('twitter')" :href="route('oauth.redirect', 'twitter')">
-        <TwitterIcon class="h-6 w-6 mx-2"/>
-        <span class="sr-only">Twitter</span>
-      </a>
-
-      <a
-          v-if="$page.props.socialstream.providers.includes('twitter-oauth-2')"
-          :href="route('oauth.redirect', 'twitter-oauth-2')">
-        <TwitterIcon class="h-6 w-6 mx-2"/>
-        <span class="sr-only">Twitter</span>
-      </a>
-
-      <a v-if="$page.props.socialstream.providers.includes('linkedin')" :href="route('oauth.redirect', 'linkedin')">
-        <LinkedInIcon class="h-6 w-6 mx-2"/>
-        <span class="sr-only">LinkedIn</span>
       </a>
 
       <a v-if="$page.props.socialstream.providers.includes('github')" :href="route('oauth.redirect', 'github')">
@@ -60,9 +43,29 @@ const error = computed(() => usePage().props.errors.socialstream);
         <span class="sr-only">GitLab</span>
       </a>
 
-      <a v-if="$page.props.socialstream.providers.includes('bitbucket')" :href="route('oauth.redirect', 'bitbucket')">
-        <BitbucketIcon class="h-6 w-6 mx-2"/>
-        <span class="sr-only">BitBucket</span>
+      <a v-if="$page.props.socialstream.providers.includes('google')" :href="route('oauth.redirect', 'google')">
+        <GoogleIcon class="h-6 w-6 mx-2"/>
+        <span class="sr-only">Google</span>
+      </a>
+
+      <a v-if="$page.props.socialstream.providers.includes('linkedin')" :href="route('oauth.redirect', 'linkedin')">
+        <LinkedInIcon class="h-6 w-6 mx-2"/>
+        <span class="sr-only">LinkedIn</span>
+      </a>
+
+      <a v-if="$page.props.socialstream.providers.includes('slack')" :href="route('oauth.redirect', 'slack')">
+        <SlackIcon class="h-6 w-6 mx-2"/>
+        <span class="sr-only">Slack</span>
+      </a>
+
+      <a v-if="$page.props.socialstream.providers.includes('twitter')" :href="route('oauth.redirect', 'twitter')">
+        <TwitterIcon class="h-6 w-6 mx-2"/>
+        <span class="sr-only">Twitter</span>
+      </a>
+
+      <a v-if="$page.props.socialstream.providers.includes('twitter-oauth-2')" :href="route('oauth.redirect', 'twitter-oauth-2')">
+        <TwitterIcon class="h-6 w-6 mx-2"/>
+        <span class="sr-only">Twitter</span>
       </a>
     </div>
 

@@ -17,6 +17,7 @@ use JoelButcher\Socialstream\Resolvers\OAuth\GithubOauth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\GitlabOauth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOauth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\SlackOauth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOauth2RefreshResolver;
 use Livewire\Livewire;
 
@@ -113,12 +114,13 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function configureRefreshTokenResolvers(): void
     {
-        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOauth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::bitbucket(), BitbucketOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOauth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::github(), GithubOauth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::slack(), SlackOauth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::twitter(), TwitterOauth2RefreshResolver::class);
     }
 

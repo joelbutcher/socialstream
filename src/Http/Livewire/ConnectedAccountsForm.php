@@ -2,7 +2,7 @@
 
 namespace JoelButcher\Socialstream\Http\Livewire;
 
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +11,6 @@ use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
-use Livewire\Redirector;
 
 class ConnectedAccountsForm extends Component
 {

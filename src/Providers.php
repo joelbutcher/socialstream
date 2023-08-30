@@ -64,6 +64,14 @@ class Providers
     }
 
     /**
+     * Determine if the application has support for the Slack provider.
+     */
+    public static function hasSlackSupport(): bool
+    {
+        return static::enabled(static::slack());
+    }
+
+    /**
      * Determine if the application has support for the Twitter provider.
      */
     public static function hasTwitterSupport(): bool
@@ -134,6 +142,14 @@ class Providers
     public static function linkedin():string
     {
         return 'linkedin';
+    }
+
+    /**
+     * Enable the Slack provider.
+     */
+    public static function slack():string
+    {
+        return 'slack';
     }
 
     /**

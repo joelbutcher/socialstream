@@ -113,11 +113,19 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the LinkedIn provider..
+     * Determine if the application has support for the LinkedIn provider.
      */
     public static function hasLinkedInSupport(): bool
     {
         return Providers::hasLinkedInSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Slack provider.
+     */
+    public static function hasSlackSupport(): bool
+    {
+        return Providers::hasSlackSupport();
     }
 
     /**
