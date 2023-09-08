@@ -15,6 +15,19 @@ defineProps({
         default: null,
     }
 });
+
+const providerName =  computed(() => {
+    switch(this.provider) {
+        case 'twitter':
+        case 'twitter-oauth-2':
+            return 'Twitter'
+        case 'linkedin':
+        case 'linkedin-openid':
+            return 'LinkedIn'
+        default:
+            return name.charAt(0).toUpperCase() + provider.slice(1);
+    };
+});
 </script>
 
 <template>
@@ -27,13 +40,13 @@ defineProps({
                 <GithubIcon class="h-6 w-6 mr-2" v-if="provider === 'github'" />
                 <GitLabIcon class="h-6 w-6 mr-2" v-if="provider === 'gitlab'" />
                 <GoogleIcon class="h-6 w-6 mr-2" v-if="provider === 'google'" />
-                <LinkedInIcon class="h-6 w-6 mr-2" v-if="provider === 'linkedin'" />
+                <LinkedInIcon class="h-6 w-6 mr-2" v-if="['linkedin', 'linkedin-openid'].includes(provider)" />
                 <SlackIcon class="h-6 w-6 mr-2" v-if="provider === 'slack'" />
                 <TwitterIcon class="h-6 w-6 mr-2" v-if="['twitter', 'twitter-oauth-2'].includes(provider)" />
 
                 <div>
                     <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                        {{ provider === 'twitter-oauth-2' ? 'Twitter' : provider.charAt(0).toUpperCase() + provider.slice(1) }}
+                        {{ providerName }}
                     </div>
 
                     <div v-if="createdAt !== null" class="text-xs text-gray-500">

@@ -121,6 +121,14 @@ class Socialstream
     }
 
     /**
+     * Determine if the application has support for the LinkedIn OpenID provider.
+     */
+    public static function hasLinkedInOpenIdSupport(): bool
+    {
+        return Providers::hasLinkedInOpenIdSupport();
+    }
+
+    /**
      * Determine if the application has support for the Slack provider.
      */
     public static function hasSlackSupport(): bool
