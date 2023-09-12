@@ -53,6 +53,11 @@ const error = computed(() => usePage().props.errors.socialstream);
         <span class="sr-only">LinkedIn</span>
       </a>
 
+      <a v-if="$page.props.socialstream.providers.includes('linkedin-openid')" :href="route('oauth.redirect', 'linkedin-openid')">
+        <LinkedInIcon class="h-6 w-6 mx-2"/>
+        <span class="sr-only">LinkedIn</span>
+      </a>
+
       <a v-if="$page.props.socialstream.providers.includes('slack')" :href="route('oauth.redirect', 'slack')">
         <SlackIcon class="h-6 w-6 mx-2"/>
         <span class="sr-only">Slack</span>

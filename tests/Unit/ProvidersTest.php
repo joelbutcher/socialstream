@@ -41,6 +41,12 @@ it('supports the \'linked\' in_provider', function (): void {
     $this->assertTrue(Providers::hasLinkedInSupport());
 });
 
+it('supports the \'linked-openid\' in_provider', function (): void {
+    Config::set('socialstream.providers', [Providers::linkedinOpenId()]);
+
+    $this->assertTrue(Providers::hasLinkedInOpenIdSupport());
+});
+
 it('supports the \'twitter\' provider', function (): void {
     Config::set('socialstream.providers', [Providers::twitter()]);
 

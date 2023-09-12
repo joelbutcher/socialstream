@@ -46,11 +46,14 @@ test('users can register using socialite providers', function (string $socialite
     $this->assertAuthenticated();
     $response->assertRedirect(RouteServiceProvider::HOME);
 })->with([
-    [Providers::google()],
-    [Providers::facebook()],
-    [Providers::linkedin()],
     [Providers::bitbucket()],
+    [Providers::facebook()],
     [Providers::github()],
     [Providers::gitlab()],
-    [Providers::twitter()],
+    [Providers::google()],
+    [Providers::linkedin()],
+    [Providers::linkedinOpenId()],
+    [Providers::slack()],
+    [Providers::twitterOAuth1()],
+    [Providers::twitterOAuth2()],
 ]);

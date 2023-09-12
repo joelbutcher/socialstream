@@ -16,6 +16,7 @@
                     <x-socialstream-icons.twitter class="h-6 w-6 mr-2" />
                     @break
                 @case(JoelButcher\Socialstream\Providers::linkedin())
+                @case(JoelButcher\Socialstream\Providers::linkedinOpenId())
                     <x-socialstream-icons.linkedin class="h-6 w-6 mr-2" />
                     @break
                 @case(JoelButcher\Socialstream\Providers::github())

@@ -47,6 +47,13 @@
         </a>
     @endif
 
+    @if (JoelButcher\Socialstream\Socialstream::hasLinkedInOpenIdSupport())
+        <a href="{{ route('oauth.redirect', ['provider' => JoelButcher\Socialstream\Providers::linkedinOpenId()]) }}">
+            <x-socialstream-icons.linkedin class="h-6 w-6 mx-2" />
+            <span class="sr-only">LinkedIn</span>
+        </a>
+    @endif
+
     @if (JoelButcher\Socialstream\Socialstream::hasSlackSupport())
         <a href="{{ route('oauth.redirect', ['provider' => JoelButcher\Socialstream\Providers::slack()]) }}">
             <x-socialstream-icons.slack class="h-6 w-6 mx-2" />

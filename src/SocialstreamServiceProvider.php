@@ -120,8 +120,10 @@ class SocialstreamServiceProvider extends ServiceProvider
         Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOauth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOauth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedinOpenId(), LinkedInOauth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::slack(), SlackOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::twitter(), TwitterOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth1(), TwitterOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth2(), TwitterOauth2RefreshResolver::class);
     }
 
     /**

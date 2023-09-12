@@ -64,6 +64,14 @@ class Providers
     }
 
     /**
+     * Determine if the application has support for the LinkedIn OpenID provider.
+     */
+    public static function hasLinkedInOpenIdSupport(): bool
+    {
+        return static::enabled(static::linkedinOpenId());
+    }
+
+    /**
      * Determine if the application has support for the Slack provider.
      */
     public static function hasSlackSupport(): bool
@@ -73,6 +81,8 @@ class Providers
 
     /**
      * Determine if the application has support for the Twitter provider.
+     *
+     * @deprecated use `hasTwitterOAuth1Support` instead
      */
     public static function hasTwitterSupport(): bool
     {
@@ -145,6 +155,14 @@ class Providers
     }
 
     /**
+     * Enable the LinkedIn OpenID provider.
+     */
+    public static function linkedinOpenId(): string
+    {
+        return 'linkedin-openid';
+    }
+
+    /**
      * Enable the Slack provider.
      */
     public static function slack(): string
@@ -154,6 +172,8 @@ class Providers
 
     /**
      * Enable the Twitter provider.
+     *
+     * @deprecated use `twitterOAuth1` instead.
      */
     public static function twitter(): string
     {

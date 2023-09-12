@@ -60,13 +60,16 @@ class SocialstreamRegistrationTest extends TestCase
     public static function socialiteProvidersDataProvider(): array
     {
         return [
-            [Providers::google()],
-            [Providers::facebook()],
-            [Providers::linkedin()],
             [Providers::bitbucket()],
+            [Providers::facebook()],
             [Providers::github()],
             [Providers::gitlab()],
-            [Providers::twitter()],
+            [Providers::google()],
+            [Providers::linkedin()],
+            [Providers::linkedinOpenId()],
+            [Providers::slack()],
+            [Providers::twitterOAuth1()],
+            [Providers::twitterOAuth2()],
         ];
     }
 }
