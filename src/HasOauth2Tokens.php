@@ -46,6 +46,12 @@ trait HasOauth2Tokens
      */
     public function canRefreshToken(): bool
     {
+        $provider = $this->getAttribute('provider');
+
+        if (! (Socialstream::$refreshTokenResolvers[$provider] ?? null)) {
+            return false;
+        }
+
         return $this->hasExpiredToken() && $this->hasRefreshToken();
     }
 

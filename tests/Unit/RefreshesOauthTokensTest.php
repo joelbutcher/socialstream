@@ -109,3 +109,23 @@ it('does not refresh tokens if the feature is disabled', function (): void {
     $this->assertNotEquals('new-refresh-token', $connectedAccount->refresh_token);
     $this->assertEquals(null, $connectedAccount->secret);
 });
+
+it('does not allow refreshing tokens if a callback does not exist', function () {
+    $this->migrate();
+
+    $providerUser = new OAuth2User;
+    $providerUser->id = '1234567890';
+    $providerUser->name = 'Joel Butcher';
+    $providerUser->email = 'joel@socialstream.com';
+    $providerUser->token = Str::random(64);
+    $providerUser->refreshToken = Str::random(64);
+    $providerUser->expiresIn = 0;
+
+    sleep(1);
+
+    $createAction = new CreateUserFromProvider(new CreateConnectedAccount);
+    $user = $createAction->create('custom-provider', $providerUser);
+    $connectedAccount = $user->currentConnectedAccount;
+
+    $this->assertFalse($connectedAccount->canRefreshToken());
+});
