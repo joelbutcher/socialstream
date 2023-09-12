@@ -11,6 +11,7 @@ use Laravel\Jetstream\Jetstream;
 Route::group(['middleware' => config('socialstream.middleware', ['web'])], function () {
     Route::get('/oauth/{provider}', [OAuthController::class, 'redirectToProvider'])->name('oauth.redirect');
     Route::get('/oauth/{provider}/callback', [OAuthController::class, 'handleProviderCallback'])->name('oauth.callback');
+    Route::post('/oauth/{provider}/callback', [OAuthController::class, 'handleProviderCallback'])->name('oauth.callback');
 
     if (config('jetstream.stack') === 'inertia') {
         Route::delete('/user/connected-account/{id}', [RemoveConnectedAccountsController::class, 'destroy'])
