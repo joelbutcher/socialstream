@@ -43,7 +43,7 @@ defineProps({
                     <SectionBorder />
                 </div>
 
-                <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication">
+                <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword">
                     <TwoFactorAuthenticationForm :requires-confirmation="confirmsTwoFactorAuthentication"
                         class="mt-10 sm:mt-0" />
 
