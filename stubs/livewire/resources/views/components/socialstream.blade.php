@@ -7,7 +7,7 @@
 <div class="flex items-center justify-center">
     @if (JoelButcher\Socialstream\Socialstream::hasBitbucketSupport())
         <a href="{{ route('oauth.redirect', ['provider' => JoelButcher\Socialstream\Providers::bitbucket()]) }}">
-            <x-socialstream-icons.bitbucket />
+            <x-socialstream-icons.bitbucket class="h-6 w-6 mx-2" />
             <span class="sr-only">BitBucket</span>
         </a>
     @endif
