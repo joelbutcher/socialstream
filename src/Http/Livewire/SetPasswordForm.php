@@ -33,7 +33,7 @@ class SetPasswordForm extends Component
             'password_confirmation' => '',
         ];
 
-        $this->emit('saved');
+        $this->dispatch('saved');
     }
 
     /**
