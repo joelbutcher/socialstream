@@ -22,12 +22,32 @@ class InstallManager extends Manager
 
     }
 
-    public function createInertiaJetstreamDriver(): InertiaDriver
+    public function createBreezeBladeDriver(): BladeDriver
+    {
+        return $this->container->make(BladeDriver::class);
+    }
+
+    public function createBreezeLivewireDriver(): BreezeLivewireDriver
+    {
+        return $this->container->make(BreezeLivewireDriver::class);
+    }
+
+    public function createBreezeReactDriver(): ReactInertiaDriver
+    {
+        return $this->container->make(ReactInertiaDriver::class);
+    }
+
+    public function createBreezeVueDriver(): VueInertiaDriver
+    {
+        return $this->container->make(VueInertiaDriver::class);
+    }
+
+    public function createJetstreamInertiaDriver(): InertiaDriver
     {
         return $this->container->make(InertiaDriver::class);
     }
 
-    public function createLivewireJetstreamDriver(): JetstreamLivewireDriver
+    public function createJetstreamLivewireDriver(): JetstreamLivewireDriver
     {
         return $this->container->make(JetstreamLivewireDriver::class);
     }
@@ -35,25 +55,5 @@ class InstallManager extends Manager
     public function createFilamentDriver(): FilamentDriver
     {
         return $this->container->make(FilamentDriver::class);
-    }
-
-    public function createBladeBreezeDriver(): BladeDriver
-    {
-        return $this->container->make(BladeDriver::class);
-    }
-
-    public function createLivewireBreezeDriver(): BreezeLivewireDriver
-    {
-        return $this->container->make(BreezeLivewireDriver::class);
-    }
-
-    public function createReactBreezeDriver(): ReactInertiaDriver
-    {
-        return $this->container->make(ReactInertiaDriver::class);
-    }
-
-    public function createVueBreezeDriver(): VueInertiaDriver
-    {
-        return $this->container->make(VueInertiaDriver::class);
     }
 }
