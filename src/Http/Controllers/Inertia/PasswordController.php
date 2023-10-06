@@ -16,6 +16,8 @@ class PasswordController extends Controller
     {
         $setter->set($request->user(), $request->only(['password', 'password_confirmation']));
 
+        session()->flash('flash.banner', __('Your password has been set.'));
+
         return back(303);
     }
 }

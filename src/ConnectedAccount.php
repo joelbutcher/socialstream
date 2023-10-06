@@ -4,14 +4,7 @@ namespace JoelButcher\Socialstream;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Laravel\Jetstream\Jetstream;
 
-/**
- * @property int $id
- * @property int $user_id
- * @property string $provider
- * @property string $provider_id
- */
 abstract class ConnectedAccount extends Model
 {
     use HasOauth2Tokens;
@@ -29,7 +22,7 @@ abstract class ConnectedAccount extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(Jetstream::userModel(), 'user_id', (Jetstream::newUserModel())->getAuthIdentifierName());
+        return $this->belongsTo(Socialstream::userModel(), 'user_id', Socialstream::newUserModel()->getAuthIdentifierName());
     }
 
     /**

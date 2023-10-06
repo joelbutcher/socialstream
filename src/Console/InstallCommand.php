@@ -3,25 +3,47 @@
 namespace JoelButcher\Socialstream\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
+use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
+use JoelButcher\Socialstream\Concerns\InteractsWithNode;
+use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
+use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
+use JoelButcher\Socialstream\Installer\Enums\InstallStarterKit;
+use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
+use JoelButcher\Socialstream\Installer\InstallManager;
+use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Jetstream\Jetstream;
-use Symfony\Component\Process\Process;
+use Pest\TestSuite;
+use RuntimeException;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
+use function Laravel\Prompts\alert;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\outro;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\warning;
 
-class InstallCommand extends Command
+class InstallCommand extends Command implements PromptsForMissingInput
 {
+    use InteractsWithNode;
+    use InteractsWithComposer;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'socialstream:install 
-                            {--stack= : Indicates the desired stack to be installed (Livewire, Inertia)}
+    protected $signature = 'socialstream:install {starter-kit : The development starter kit that should be installed (jetstream,breeze,filament)}
+                            {stack : The development stack that should be used for the chosen starter kit (e.g. blade,livewire,inertia,javascript)}
+                            {--dark : Indicate that dark mode support should be installed}
                             {--teams : Indicates if team support should be installed}
                             {--api : Indicates if API support should be installed}
                             {--verification : Indicates if email verification support should be installed}
-                            {--pest : Indicates if Pest should be installed}
                             {--ssr : Indicates if Inertia SSR support should be installed}
+                            {--typescript : Indicates if TypeScript is preferred for the Inertia stack (Experimental) when using Laravel Breeze}
+                            {--pest : Indicates if Pest should be installed}
                             {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     /**
@@ -33,286 +55,323 @@ class InstallCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int|null
      */
-    public function handle()
+    public function handle(InstallManager $installManager): ?int
     {
-        // Check if Jetstream has been installed.
-        if (! file_exists(config_path('jetstream.php'))) {
-            $this->components->warn('Jetstream hasn\'t been installed. Installing now...');
-
-            $stack = $this->option('stack') ?: $this->components->choice('Which stack would you like to use [inertia] or [livewire]?', ['inertia', 'livewire']);
-
-            if (! in_array($stack, ['inertia', 'livewire'])) {
-                $this->components->error('Invalid stack. Supported stacks are [inertia] and [livewire].');
-
-                return 1;
-            }
-
-            $this->call('jetstream:install', [
-                'stack' => $stack,
-                '--teams' => $this->option('teams'),
-                '--api' => $this->option('api'),
-                '--verification' => $this->option('verification'),
-                '--pest' => $this->option('pest'),
-                '--ssr' => $this->option('ssr'),
-                '--composer' => $this->option('composer'),
-            ]);
-        } else {
-            $stack = config('jetstream.stack');
-        }
-
-        // Publish...
-        $this->callSilent('vendor:publish', ['--tag' => 'socialstream-config', '--force' => true]);
-        $this->callSilent('vendor:publish', ['--tag' => 'socialstream-migrations', '--force' => true]);
-
-        if ($stack === 'livewire') {
-            $this->installLivewireStack();
-        } elseif ($stack === 'inertia') {
-            $this->installInertiaStack();
-        }
-
-        if ($this->option('teams')) {
-            $this->ensureTeamsCompatibility();
-        }
-
-        // Tests...
-        $stubs = $this->getTestStubsPath();
-        copy($stubs.'/SocialstreamRegistrationTest.php', base_path('tests/Feature/SocialstreamRegistrationTest.php'));
-
-        $this->line('');
-        $this->components->info('Socialstream installed successfully.');
-        $this->components->info('Running [npm install && npm run build]...');
-
-        $this->installNodeDependenciesAndBuild();
-
-        return 0;
-    }
-
-    /**
-     * Install the Livewire stack into the application.
-     *
-     * @return void
-     */
-    protected function installLivewireStack()
-    {
-        // Directories...
-        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
-        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/auth'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/profile'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
-
-        // Service Providers...
-        copy(__DIR__.'/../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
-        $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
-
-        // Models...
-        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
-
-        // Policies
-        (new Filesystem)->ensureDirectoryExists(app_path('Policies'));
-        copy(__DIR__.'/../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccountPolicy.php'));
-
-        // Jetstream Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
-
-        // Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php', app_path('Actions/Socialstream/GenerateRedirectForProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
-
-        // Auth views...
-        copy(__DIR__.'/../../stubs/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
-        copy(__DIR__.'/../../stubs/livewire/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
-
-        // Custom components...
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/components', resource_path('views/components'));
-
-        // Profile views...
-        copy(__DIR__.'/../../stubs/livewire/resources/views/profile/connected-accounts-form.blade.php', resource_path('views/profile/connected-accounts-form.blade.php'));
-        copy(__DIR__.'/../../stubs/livewire/resources/views/profile/set-password-form.blade.php', resource_path('views/profile/set-password-form.blade.php'));
-        copy(__DIR__.'/../../stubs/livewire/resources/views/profile/show.blade.php', resource_path('views/profile/show.blade.php'));
-
-        $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
-    }
-
-    /**
-     * Install the Inertia stack into the application.
-     *
-     * @return void
-     */
-    protected function installInertiaStack()
-    {
-        // Directories...
-        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Jetstream'));
-        (new Filesystem)->ensureDirectoryExists(app_path('Actions/Socialstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Socialstream'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Auth'));
-        (new Filesystem)->ensureDirectoryExists(resource_path('js/Pages/Profile'));
-
-        // Service Providers...
-        copy(__DIR__.'/../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
-        $this->installServiceProviderAfter('JetstreamServiceProvider', 'SocialstreamServiceProvider');
-
-        // Models...
-        copy(__DIR__.'/../../stubs/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__.'/../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
-
-        // Policies
-        (new Filesystem)->ensureDirectoryExists(app_path('Policies'));
-        copy(__DIR__.'/../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccountPolicy.php'));
-
-        // Jetstream Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
-
-        // Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php', app_path('Actions/Socialstream/GenerateRedirectForProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
-
-        // Auth views...
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Auth/Register.vue', resource_path('js/Pages/Auth/Register.vue'));
-
-        // Profile views...
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/Partials/ConnectedAccountsForm.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/SetPasswordForm.vue', resource_path('js/Pages/Profile/Partials/SetPasswordForm.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Pages/Profile/Show.vue', resource_path('js/Pages/Profile/Show.vue'));
-
-        // Socialstream components
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/ConnectedAccount.vue', resource_path('js/Components/ConnectedAccount.vue'));
-        copy(__DIR__.'/../../stubs/inertia/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
-
-        $this->replaceInFile('// Providers::github(),', 'Providers::github(),', config_path('socialstream.php'));
-    }
-
-    /**
-     * Ensure the application is ready for Jetstream's "teams" feature.
-     *
-     * @return void
-     */
-    protected function ensureTeamsCompatibility()
-    {
-        // Service Provider...
-        copy(__DIR__.'/../../stubs/app/Providers/TeamsAuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-
-        // User Model...
-        copy(__DIR__.'/../../stubs/app/Models/UserWithTeams.php', app_path('Models/User.php'));
-
-        // Jetstream Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', app_path('Actions/Jetstream/DeleteUser.php'));
-
-        // Actions...
-        copy(__DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-    }
-
-    /**
-     * Install the Jetstream service providers in the application configuration file.
-     *
-     * @param  string  $after
-     * @param  string  $name
-     * @return void
-     */
-    protected function installServiceProviderAfter($after, $name)
-    {
-        if (! Str::contains($appConfig = file_get_contents(config_path('app.php')), 'App\\Providers\\'.$name.'::class')) {
-            file_put_contents(config_path('app.php'), str_replace(
-                'App\\Providers\\'.$after.'::class,',
-                'App\\Providers\\'.$after.'::class,'.PHP_EOL.'        App\\Providers\\'.$name.'::class,',
-                $appConfig
-            ));
-        }
-    }
-
-    /**
-     * Returns the path to the correct test stubs.
-     *
-     * @return string
-     */
-    protected function getTestStubsPath()
-    {
-        return $this->option('pest')
-            ? __DIR__.'/../../stubs/pest-tests'
-            : __DIR__.'/../../stubs/tests';
-    }
-
-    /**
-     * Install the given Composer Packages as "dev" dependencies.
-     *
-     * @param  mixed  $packages
-     * @return void
-     */
-    protected function requireComposerDevPackages($packages)
-    {
-        $composer = $this->option('composer');
-
-        if ($composer !== 'global') {
-            $command = [$this->phpBinary(), $composer, 'require', '--dev'];
-        }
-
-        $command = array_merge(
-            $command ?? ['composer', 'require', '--dev'],
-            is_array($packages) ? $packages : func_get_args()
+        $installManager->driver(match (true) {
+            $this->getStarterKit() === InstallStarterKit::Filament => 'filament',
+            $this->getStarterKit() === InstallStarterKit::Breeze &&
+            $this->getStack() === BreezeInstallStack::Livewire => 'livewire-breeze',
+            default => $this->getStack()->value . '-' . $this->getStarterKit()->value,
+        })->install(
+            $this->option('composer'),
+            ...collect($this->options())
+                ->only(['teams', 'api', 'verification', 'ssr', 'typescript', 'dark', 'pest'])
+                ->filter()
+                ->keys()
+                ->map(
+                    fn (string $option) => InstallOptions::from($option),
+                ),
         );
 
-        (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
-            ->setTimeout(null)
-            ->run(function ($type, $output) {
-                $this->output->write($output);
-            });
-    }
-
-    /**
-     * @return void
-     */
-    protected function installNodeDependenciesAndBuild()
-    {
-        $commands = ['npm install', 'npm run build'];
-
-        $this->runCommands($commands);
-    }
-
-    /**
-     * @param  array  $commands
-     * @param  array  $env
-     * @return Process
-     */
-    protected function runCommands(array $commands, array $env = [])
-    {
-        $process = Process::fromShellCommandline(implode(' && ', $commands), null, $env, null, null);
-
-        $process->run(function ($type, $line) {
-            $this->output->write('    '.$line);
+        outro(match ($this->getStarterKit()) {
+            InstallStarterKit::Filament => 'Installed Socialstream for Filament.',
+            InstallStarterKit::Jetstream => "Installed Socialstream for Laravel Jetstream ({$this->getStack()->label()})",
+            InstallStarterKit::Breeze => "Installed Socialstream for Laravel Breeze ({$this->getStack()->label()})",
         });
 
-        return $process;
+        return self::SUCCESS;
     }
 
     /**
-     * Replace a given string within a given file.
-     *
-     * @param  string  $search
-     * @param  string  $replace
-     * @param  string  $path
-     * @return void
+     * Prompt for missing input arguments using the returned questions.
      */
-    protected function replaceInFile($search, $replace, $path)
+    protected function promptForMissingArgumentsUsing(): array
     {
-        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+        return [
+            'starter-kit' => function () {
+                $callback = match (true) {
+                    $this->isLaravelBreezeInstalled() => function () {
+                        alert('We\'ve detected that Laravel Breeze is installed.');
+
+                        return InstallStarterKit::Breeze;
+                    },
+                    $this->isLaravelJetstreamInstalled() => function () {
+                        alert('We\'ve detected that Laravel Jetstream is installed.');
+
+                        return InstallStarterKit::Jetstream;
+                    },
+                    default => function () {
+                        if ($this->isFilamentInstalled()) {
+                            alert('We\'ve detected that Filament is installed.');
+
+                            if (confirm(
+                                label: 'Would you like to install Socialstream for Filament?',
+                                default: 'no',
+                                hint: 'If you are also using Laravel Jetstream or Breeze, this will not affect those installations.'
+                            )) {
+                                return InstallStarterKit::Filament;
+                            }
+                        }
+
+                        \Laravel\Prompts\info('Socialstream supports Laravel Breeze, Laravel Jetstream, and Filament.');
+
+                        return InstallStarterKit::from(select(
+                            label: 'Which development starter kit would you like to use?',
+                            options: array_merge(
+                                [
+                                    'breeze' => 'Laravel Breeze',
+                                    'jetstream' => 'Laravel Jetstream',
+                                ],
+                                // If filament is installed, the user has already told us they don't want to install for that starter kit.
+                                $this->isFilamentInstalled() ? [] : ['filament' => 'Filament Admin Panel'],
+                            ),
+                            scroll: 10,
+                        ));
+                    }
+                };
+
+                return $callback();
+            },
+            'stack' => fn() => match ($this->getStarterKit()) {
+                InstallStarterKit::Filament => null,
+                InstallStarterKit::Breeze => $this->getBreezeStack(),
+                InstallStarterKit::Jetstream => $this->getJetstreamStack(),
+            },
+        ];
+    }
+
+    /**
+     * Interact further with the user if they were prompted for missing arguments.
+     */
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        if ($this->isUsingFilament()) {
+            return;
+        }
+
+        if ($this->isLaravelJetstreamInstalled()) {
+            \Laravel\Prompts\info('Laravel Jetstream is already installed, configuring Socialstream based on enabled features...');
+
+            $input->setOption('teams', Jetstream::hasTeamFeatures());
+            $input->setOption('api', Jetstream::hasApiFeatures());
+            $input->setOption('verification', FortifyFeatures::enabled(FortifyFeatures::emailVerification()));
+            $input->setOption('ssr', file_exists(resource_path('js/ssr.js')));
+            $input->setOption('pest', $this->isUsingPest());
+            $input->setOption('dark', $this->hasFilesWithDarkMode());
+        } elseif ($this->isLaravelBreezeInstalled()) {
+            \Laravel\Prompts\info('Laravel Breeze is already installed, configuring Socialstream based on enabled features...');
+
+            $input->setOption('ssr', file_exists(resource_path('js/ssr.js')));
+            $input->setOption('typescript', $this->hasNodePackage('typescript'));
+            $input->setOption('pest', $this->isUsingPest());
+            $input->setOption('dark', $this->hasFilesWithDarkMode());
+        } else {
+            if ($this->isUsingJetstream()) {
+                collect(multiselect(
+                    label: 'Would you like any optional features?',
+                    options: collect([
+                        'teams' => 'Team support',
+                        'api' => 'API support',
+                        'verification' => 'Email verification',
+                        'dark' => 'Dark mode',
+                    ])
+                        ->when(
+                            $this->getStack() === JetstreamInstallStack::Inertia,
+                            fn ($options) => $options->put('ssr', 'Inertia SSR')
+                        )->sort(),
+                ))->each(fn($option) => $input->setOption($option, true));
+            } elseif ($this->isUsingBreeze() && in_array($this->getStack(), [BreezeInstallStack::React, BreezeInstallStack::Vue])) {
+                collect(multiselect(
+                    label: 'Would you like any optional features?',
+                    options: [
+                        'dark' => 'Dark mode',
+                        'ssr' => 'Inertia SSR',
+                        'typescript' => 'TypeScript (experimental)',
+                    ]
+                ))->each(fn($option) => $input->setOption($option, true));
+            } else {
+                $input->setOption('dark', confirm(
+                    label: 'Would you like dark mode support?',
+                    default: false
+                ));
+            }
+
+            $input->setOption('pest', select(
+                    label: 'Which testing framework do you prefer?',
+                    options: ['PHPUnit', 'Pest'],
+                ) === 'Pest');
+        }
+    }
+
+    /**
+     * Determine the starter pack that should be used.
+     */
+    private function getStarterKit(): InstallStarterKit
+    {
+        /** @var InstallStarterKit $kit */
+        $kit = $this->argument('starter-kit');
+
+        return $kit;
+    }
+
+    /**
+     * Determine the stack that should be used for the selected starter pack.
+     */
+    private function getStack(): JetstreamInstallStack|BreezeInstallStack|null
+    {
+        if ($this->isUsingFilament()) {
+            return null;
+        }
+
+        /** @var JetstreamInstallStack|BreezeInstallStack $stack */
+        $stack = $this->argument('stack');
+
+        return $stack;
+    }
+
+    /**
+     * Determine what Laravel Breeze stack should be used.
+     */
+    private function getBreezeStack(): BreezeInstallStack
+    {
+        return match (true) {
+            class_exists('\App\Http\Middleware\HandleInertiaRequests') && $this->hasNodePackage('react') => BreezeInstallStack::React,
+            class_exists('\App\Http\Middleware\HandleInertiaRequests') && $this->hasNodePackage('vue') => BreezeInstallStack::Vue,
+            class_exists('\App\Providers\VoltServiceProvider') => BreezeInstallStack::Livewire,
+            class_exists('\App\Http\Controllers\ProfileController') => BreezeInstallStack::Blade,
+            default => BreezeInstallStack::from(select(
+                label: 'Which Breeze stack would you like to use?',
+                options: [
+                    BreezeInstallStack::Blade->value => BreezeInstallStack::Blade->label(),
+                    BreezeInstallStack::Livewire->value => BreezeInstallStack::Livewire->label(),
+                    BreezeInstallStack::React->value => BreezeInstallStack::React->label(),
+                    BreezeInstallStack::Vue->value => BreezeInstallStack::Vue->label(),
+                ]
+            ))
+        };
+    }
+
+    /**
+     * Determine what Laravel Jetstream stack should be used.
+     */
+    private function getJetstreamStack(): JetstreamInstallStack
+    {
+        if (file_exists(config_path('jetstream.php'))) {
+            $stack = config('jetstream.stack');
+
+            warning('Installing Socialstream will overwrite some key files already published by Laravel Jetstream.');
+
+            $decision = select(
+                label: "Proceed with the {$stack} stack?",
+                options: [
+                    'yes' => 'Yes',
+                    'no' => 'No (exit)',
+                ],
+                default: 'yes',
+            );
+
+            if ($decision === 'no') {
+                throw new RuntimeException(message: 'An error occurred installing Socialstream', code: self::INVALID);
+            }
+
+            return JetstreamInstallStack::from($stack);
+        }
+
+        return JetstreamInstallStack::from(select(
+            label: 'Which Jetstream stack would you like to use?',
+            options: [
+                JetstreamInstallStack::Inertia->value => JetstreamInstallStack::Inertia->label(),
+                JetstreamInstallStack::Livewire->value => JetstreamInstallStack::Livewire->label(),
+            ],
+            default: 'inertia',
+        ));
+    }
+
+    /**
+     * Determine if Laravel Breeze was selected as the starter pack.
+     */
+    private function isUsingBreeze(): bool
+    {
+        return $this->getStarterKit() === InstallStarterKit::Breeze;
+    }
+
+    /**
+     * Determine if Laravel Jetstream was selected as the starter pack.
+     */
+    private function isUsingJetstream(): bool
+    {
+        return $this->getStarterKit() === InstallStarterKit::Jetstream;
+    }
+
+    /**
+     * Determine if Filament was selected as the starter pack.
+     */
+    private function isUsingFilament(): bool
+    {
+        return $this->getStarterKit() === InstallStarterKit::Filament;
+    }
+
+    /**
+     * Determine if Laravel Breeze is installed.
+     */
+    private function isLaravelBreezeInstalled(): bool
+    {
+        return $this->hasComposerPackage('laravel/breeze') && (
+                class_exists('\App\Http\Middleware\HandleInertiaRequests') || // Vue / React with Inertia
+                class_exists('\App\Http\Controllers\ProfileController') || // Blade with Alpine
+                class_exists('\App\Providers\VoltServiceProvider') // Livewire / Volt with Alpine
+            );
+    }
+
+    /**
+     * Determine if Laravel Jetstream is installed.
+     */
+    private function isLaravelJetstreamInstalled(): bool
+    {
+        return $this->hasComposerPackage('laravel/jetstream') && class_exists(Jetstream::class) && file_exists(config_path('jetstream.php'));
+    }
+
+    /**
+     * Determine if Filament is installed.
+     */
+    private function isFilamentInstalled(): bool
+    {
+        return $this->hasComposerPackage('filament/filament') && class_exists('\App\Providers\Filament\AdminPanelProvider');
+    }
+
+    /**
+     * Determine whether the project is already using Pest.
+     */
+    protected function isUsingPest(): bool
+    {
+        return class_exists(TestSuite::class);
+    }
+
+    private function hasFilesWithDarkMode(): bool
+    {
+        // Find all the files published by the starter kit that have dark mode class utilities,
+        // ignoring any and all files that will have been overwritten by Socialstream
+        $files = (new Finder)
+            ->in([resource_path('views'), resource_path('js')])
+            ->name(['*.blade.php', '*.vue', '*.jsx', '*.tsx'])
+            ->notPath(['Pages/Welcome.vue', 'Pages/Welcome.vue', 'Pages/Welcome.jsx', 'Pages/Welcome.tsx',])
+            ->notPath(['Pages/Auth/Login.vue', 'Pages/Auth/Login.jsx', 'Pages/Auth/Login.tsx'])
+            ->notPath(['Pages/Auth/Register.vue', 'Pages/Auth/Register.jsx', 'Pages/Auth/Register.tsx'])
+            ->notPath(['Pages/Profile/Partials/ConnectedAccountsForm.vue', 'Pages/Profile/Partials/ConnectedAccountsForm.jsx', 'Pages/Profile/Partials/ConnectedAccountsForm.tsx'])
+            ->notPath(['Pages/Profile/Partials/SetPasswordForm.vue', 'Pages/Profile/Partials/SetPasswordForm.jsx', 'Pages/Profile/Partials/SetPasswordForm.tsx'])
+            ->notPath(['Pages/Profile/Edit.vue', 'Pages/Profile/Edit.jsx', 'Pages/Profile/Edit.tsx'])
+            ->notPath(['Components/ActionLink.vue', 'Components/ActionLink.jsx', 'Components/ActionLink.tsx'])
+            ->notPath(['Components/ConnectedAccount.vue', 'Components/ConnectedAccount.jsx', 'Components/ConnectedAccount.tsx'])
+            ->notPath(['Components/SocialstreamIcons/ProviderIcon.vue', 'Components/SocialstreamIcons/ProviderIcon.jsx', 'Components/SocialstreamIcons/ProviderIcon.tsx'])
+            ->notPath(['Components/Socialstream.vue', 'Components/Socialstream.jsx', 'Components/Socialstream.tsx'])
+            ->notPath(['components/socialstream.blade.php', 'components/socialstream-icons/provider-icon.blade.php'])
+            ->notPath(['livewire/pages/auth/login.blade.php', 'livewire/pages/auth/register.blade.php'])
+            ->notPath(['livewire/profile/connected-accounts-form.blade.php', 'livewire/profile/delete-user-form.blade.php', 'livewire/profile/set-password-form.blade.php'])
+            ->notPath(['auth/login.blade.php', 'auth/register.blade.php', 'profile/edit.blade.php'])
+            ->notName(['welcome.blade.php', 'profile.blade.php'])
+            ->contains('/\sdark:[^\s"\']+/');
+
+        return $files->count() > 0;
     }
 }

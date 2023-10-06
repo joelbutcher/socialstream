@@ -2,6 +2,7 @@
 
 namespace JoelButcher\Socialstream\Http\Livewire;
 
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
@@ -33,7 +34,9 @@ class SetPasswordForm extends Component
             'password_confirmation' => '',
         ];
 
-        $this->emit('saved');
+        session()->flash('flash.banner', __('Your password has been set.'));
+
+        redirect()->route('profile.show');
     }
 
     /**

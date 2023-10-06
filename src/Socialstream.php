@@ -4,15 +4,16 @@ namespace JoelButcher\Socialstream;
 
 use Closure;
 use Illuminate\Support\Str;
-use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
-use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
-use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
+use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
+use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+use Laravel\Jetstream\Jetstream;
 use RuntimeException;
 
 class Socialstream
@@ -30,6 +31,11 @@ class Socialstream
     /**
      * The user model that should be used by Jetstream.
      */
+    public static string $userModel = 'App\\Models\\User';
+
+    /**
+     * The user model that should be used by Jetstream.
+     */
     public static string $connectedAccountModel = 'App\\Models\\ConnectedAccount';
 
     /**
@@ -39,6 +45,34 @@ class Socialstream
      * @var array<string, Closure|string>
      */
     public static array $refreshTokenResolvers = [];
+
+    /**
+     * Get the name of the user model used by the application.
+     */
+    public static function userModel(): string
+    {
+        return static::$userModel;
+    }
+
+    /**
+     * Get a new instance of the user model.
+     */
+    public static function newUserModel(): mixed
+    {
+        $model = static::userModel();
+
+        return new $model;
+    }
+
+    /**
+     * Specify the user model that should be used by Jetstream.
+     */
+    public static function useUserModel(string $model): static
+    {
+        static::$userModel = $model;
+
+        return new static;
+    }
 
     /**
      * Determine whether Socialstream is enabled in the application.
@@ -113,11 +147,27 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the LinkedIn provider..
+     * Determine if the application has support for the LinkedIn provider.
      */
     public static function hasLinkedInSupport(): bool
     {
         return Providers::hasLinkedInSupport();
+    }
+
+    /**
+     * Determine if the application has support for the LinkedIn OpenID provider.
+     */
+    public static function hasLinkedInOpenIdSupport(): bool
+    {
+        return Providers::hasLinkedInOpenIdSupport();
+    }
+
+    /**
+     * Determine if the application has support for the Slack provider.
+     */
+    public static function hasSlackSupport(): bool
+    {
+        return Providers::hasSlackSupport();
     }
 
     /**
@@ -165,7 +215,11 @@ class Socialstream
      */
     public static function hasProviderAvatarsFeature(): bool
     {
-        return Features::hasProviderAvatarsFeature();
+        if (! class_exists(Jetstream::class) ) {
+            return false;
+        }
+
+        return Features::hasProviderAvatarsFeature() && Jetstream::managesProfilePhotos();
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace JoelButcher\Socialstream\Contracts;
 
-use DateTimeInterface;
-
 interface Credentials extends RefreshedCredentials
 {
     /**

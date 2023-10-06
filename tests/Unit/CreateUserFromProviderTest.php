@@ -26,7 +26,7 @@ test('user can be created from OAuth 1.0 provider', function (): void {
 
     $this->assertEquals($providerUser->email, $user->email);
 
-    $connectedAccount = $user->currentConnectedAccount;
+    $connectedAccount = $user->connectedAccounts->first();
     $this->assertInstanceOf(ConnectedAccount::class, $connectedAccount);
     $this->assertEquals($providerUser->id, $connectedAccount->provider_id);
 
@@ -54,7 +54,7 @@ test('user can be created from OAuth 2.0 provider', function (): void {
 
     $this->assertEquals($providerUser->email, $user->email);
 
-    $connectedAccount = $user->currentConnectedAccount;
+    $connectedAccount = $user->connectedAccounts->first();
     $this->assertInstanceOf(ConnectedAccount::class, $connectedAccount);
     $this->assertEquals($providerUser->id, $connectedAccount->provider_id);
 

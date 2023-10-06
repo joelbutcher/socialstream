@@ -3,8 +3,8 @@
 namespace JoelButcher\Socialstream;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 trait SetsProfilePhotoFromUrl
 {

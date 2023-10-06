@@ -3,13 +3,12 @@
 namespace App\Actions\Socialstream;
 
 use App\Models\Team;
-use App\Models\User;
+use app\Models\User;
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Features;
-use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as ProviderUserContract;
 
 class CreateUserFromProvider implements CreatesUserFromProvider
@@ -40,14 +39,12 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 $user->markEmailAsVerified();
 
                 if (Features::profilePhotos()) {
-                    if (Socialstream::hasProviderAvatarsFeature() && Jetstream::managesProfilePhotos() && $providerUser->getAvatar()) {
+                    if (Socialstream::hasProviderAvatarsFeature() && $providerUser->getAvatar()) {
                         $user->setProfilePhotoFromUrl($providerUser->getAvatar());
                     }
                 }
 
-                $user->switchConnectedAccount(
-                    $this->createsConnectedAccounts->create($user, $provider, $providerUser)
-                );
+                $this->createsConnectedAccounts->create($user, $provider, $providerUser);
 
                 $this->createTeam($user);
             });

@@ -32,7 +32,7 @@ class OAuthController extends Controller
     /**
      * Get the redirect for the given Socialite provider.
      */
-    public function redirectToProvider(string $provider, GeneratesProviderRedirect $generator): SymfonyRedirectResponse
+    public function redirect(string $provider, GeneratesProviderRedirect $generator): SymfonyRedirectResponse
     {
         session()->put('socialstream.previous_url', back()->getTargetUrl());
 
@@ -42,7 +42,7 @@ class OAuthController extends Controller
     /**
      * Attempt to log the user in via the provider user returned from Socialite.
      */
-    public function handleProviderCallback(Request $request, string $provider): Response|RedirectResponse|LoginResponse
+    public function callback(Request $request, string $provider): Response|RedirectResponse|LoginResponse
     {
         $redirect = $this->errorHandler->handle($request);
 

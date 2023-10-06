@@ -1,20 +1,11 @@
 {
     "name": "joelbutcher/socialstream",
-    "description": "A simple Socialite implementation for Laravel Jetstream.",
+    "description": "Get started with OAuth and Laravel",
     "keywords": [
         "socialstream",
         "laravel",
-        "jetstream",
-        "laravel jetstream",
         "laravel socialite",
-        "socialite",
-        "jetstream socialite",
-        "tailwind",
-        "oauth",
-        "laravel oauth",
-        "laravel livewire",
-        "inertia",
-        "vue"
+        "oauth"
     ],
     "license": "MIT",
     "support": {
@@ -28,19 +19,15 @@
         }
     ],
     "require": {
-        "php": "^8.0.2",
-        "doctrine/dbal": "^3.0",
-        "illuminate/support": "^9.21|^10.0",
-        "laravel/jetstream": "^2.16.2|^3.0",
-        "laravel/socialite": "^5.6"
+        "php": "^8.1",
+        "laravel/prompts": "^0.1.10",
+        "laravel/socialite": "^5.9"
     },
     "require-dev": {
-        "inertiajs/inertia-laravel": "^0.6.4",
-        "laravel/sanctum": "^2.7|^3.2",
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^7.0|^8.0",
-        "pestphp/pest": "^1.22",
-        "phpunit/phpunit": "^9.5"
+        "orchestra/testbench": "^8.0",
+        "pestphp/pest": "^2.0",
+        "phpunit/phpunit": "^10.0"
     },
     "autoload": {
         "psr-4": {
@@ -50,7 +37,19 @@
     "autoload-dev": {
         "psr-4": {
             "JoelButcher\\Socialstream\\Tests\\": "tests/",
-            "App\\": "stubs/app/"
+            "Database\\Factories\\": [
+                "stubs/database/factories",
+                "stubs/breeze/database/factories",
+                "stubs/jetstream/database/factories",
+                "stubs/filament/database/factories"
+            ],
+            "App\\": [
+                "stubs/app/",
+                "stubs/breeze/default/app/",
+                "stubs/breeze/inertia-common/app/",
+                "stubs/jetstream/app/",
+                "stubs/filament/app/"
+            ]
         }
     },
     "extra": {

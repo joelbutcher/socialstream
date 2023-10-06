@@ -20,6 +20,8 @@ class UpdateUserProfilePhotoController extends Controller
 
         if (is_callable([$user, 'setProfilePhotoFromUrl']) && isset($account->avatar_path)) {
             $user->setProfilePhotoFromUrl($account->avatar_path);
+
+            session()->flash('flash.banner', __('Profile photo updated'));
         }
 
         return back(303);

@@ -16,6 +16,25 @@ class Providers
     }
 
     /**
+     * Gets an array of all providers.
+     */
+    public static function all(): array
+    {
+        return [
+            self::bitbucket(),
+            self::facebook(),
+            self::github(),
+            self::gitlab(),
+            self::google(),
+            self::linkedin(),
+            self::linkedinOpenId(),
+            self::slack(),
+            self::twitterOAuth1(),
+            self::twitterOAuth2(),
+        ];
+    }
+
+    /**
      * Determine if the application has support for the Bitbucket provider.
      */
     public static function hasBitbucketSupport(): bool
@@ -64,7 +83,25 @@ class Providers
     }
 
     /**
+     * Determine if the application has support for the LinkedIn OpenID provider.
+     */
+    public static function hasLinkedInOpenIdSupport(): bool
+    {
+        return static::enabled(static::linkedinOpenId());
+    }
+
+    /**
+     * Determine if the application has support for the Slack provider.
+     */
+    public static function hasSlackSupport(): bool
+    {
+        return static::enabled(static::slack());
+    }
+
+    /**
      * Determine if the application has support for the Twitter provider.
+     *
+     * @deprecated use `hasTwitterOAuth1Support` instead
      */
     public static function hasTwitterSupport(): bool
     {
@@ -91,7 +128,7 @@ class Providers
     /**
      * Enable the Bitbucket provider.
      */
-    public static function bitbucket():string
+    public static function bitbucket(): string
     {
         return 'bitbucket';
     }
@@ -99,7 +136,7 @@ class Providers
     /**
      * Enable the Facebook provider.
      */
-    public static function facebook():string
+    public static function facebook(): string
     {
         return 'facebook';
     }
@@ -107,7 +144,7 @@ class Providers
     /**
      * Enable the GitHub provider.
      */
-    public static function github():string
+    public static function github(): string
     {
         return 'github';
     }
@@ -115,7 +152,7 @@ class Providers
     /**
      * Enable the GitLab provider.
      */
-    public static function gitlab():string
+    public static function gitlab(): string
     {
         return 'gitlab';
     }
@@ -123,7 +160,7 @@ class Providers
     /**
      * Enable the Google provider.
      */
-    public static function google():string
+    public static function google(): string
     {
         return 'google';
     }
@@ -131,15 +168,33 @@ class Providers
     /**
      * Enable the LinkedIn provider.
      */
-    public static function linkedin():string
+    public static function linkedin(): string
     {
         return 'linkedin';
     }
 
     /**
-     * Enable the Twitter provider.
+     * Enable the LinkedIn OpenID provider.
      */
-    public static function twitter():string
+    public static function linkedinOpenId(): string
+    {
+        return 'linkedin-openid';
+    }
+
+    /**
+     * Enable the Slack provider.
+     */
+    public static function slack(): string
+    {
+        return 'slack';
+    }
+
+    /**
+     * Enable the Twitter provider.
+     *
+     * @deprecated use `twitterOAuth1` instead.
+     */
+    public static function twitter(): string
     {
         return 'twitter';
     }
@@ -147,7 +202,7 @@ class Providers
     /**
      * Enable the Twitter OAuth 1.0 provider.
      */
-    public static function twitterOAuth1():string
+    public static function twitterOAuth1(): string
     {
         return 'twitter';
     }
@@ -155,7 +210,7 @@ class Providers
     /**
      * Enable the Twitter OAuth 2.0 provider.
      */
-    public static function twitterOAuth2():string
+    public static function twitterOAuth2(): string
     {
         return 'twitter-oauth-2';
     }
@@ -163,8 +218,8 @@ class Providers
     /**
      * Dynamically handle static calls.
      *
-     * @param $name
-     * @param $arguments
+     * @param  $name
+     * @param  $arguments
      * @return mixed
      */
     public static function __callStatic($name, $arguments)

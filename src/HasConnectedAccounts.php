@@ -8,50 +8,9 @@ use Illuminate\Support\Str;
 
 /**
  * @property Collection $connectedAccounts
- * @property int $current_connected_account_id
  */
 trait HasConnectedAccounts
 {
-    /**
-     * Determine if the given connected account is the current connected account.
-     */
-    public function isCurrentConnectedAccount(mixed $connectedAccount): bool
-    {
-        return $connectedAccount->id === $this->currentConnectedAccount->id;
-    }
-
-    /**
-     * Get the current connected account of the user's context.
-     */
-    public function currentConnectedAccount()
-    {
-        if (is_null($this->current_connected_account_id) && $this->id) {
-            $this->switchConnectedAccount(
-                $this->connectedAccounts()->orderBy('created_at')->first()
-            );
-        }
-
-        return $this->belongsTo(Socialstream::connectedAccountModel(), 'current_connected_account_id');
-    }
-
-    /**
-     * Switch the user's context to the given connected account.
-     */
-    public function switchConnectedAccount(mixed $connectedAccount): bool
-    {
-        if (!$this->ownsConnectedAccount($connectedAccount)) {
-            return false;
-        }
-
-        $this->forceFill([
-            'current_connected_account_id' => $connectedAccount->id,
-        ])->save();
-
-        $this->setRelation('currentConnectedAccount', $connectedAccount);
-
-        return true;
-    }
-
     /**
      * Determine if the user owns the given connected account.
      */

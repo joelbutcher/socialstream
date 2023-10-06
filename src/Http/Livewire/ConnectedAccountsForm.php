@@ -2,16 +2,14 @@
 
 namespace JoelButcher\Socialstream\Http\Livewire;
 
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
-use Livewire\Redirector;
 
 class ConnectedAccountsForm extends Component
 {
@@ -27,14 +25,19 @@ class ConnectedAccountsForm extends Component
     ];
 
     /**
-     * Indicates whether removal of a provider is being confirmed.
+     * Indicates if user deletion is being confirmed.
      */
-    public bool $confirmingRemove = false;
+    public bool $confirmingAccountRemoval = false;
 
     /**
-     * The ID of the currently selected account.
+     * The user's current password.
      */
-    public string|int $selectedAccountId = '';
+    public string $password = '';
+
+    /**
+     * The ID of the connected account to remove.
+     */
+    public string|int $id = '';
 
     /**
      * Return all socialite providers and whether the application supports them.
@@ -49,49 +52,61 @@ class ConnectedAccountsForm extends Component
      */
     public function getUserProperty(): mixed
     {
-        return Auth::user();
+        return auth()->user();
     }
 
     /**
      * Confirm that the user actually wants to remove the selected connected account.
      */
-    public function confirmRemove(string|int $accountId): void
+    public function confirmRemoveAccount(string|int $id): void
     {
-        $this->selectedAccountId = $accountId;
+        $this->id = $id;
 
-        $this->confirmingRemove = true;
+        $this->confirmingAccountRemoval = true;
     }
 
     /**
      * Set the providers avatar url as the users profile photo url.
      */
-    public function setAvatarAsProfilePhoto(string|int $accountId): Redirector
+    public function setAvatarAsProfilePhoto(string|int $id): void
     {
-        $account = Auth::user()->connectedAccounts
-            ->where('user_id', ($user = Auth::user())->getAuthIdentifier())
-            ->where('id', $accountId)
+        $user = auth()->user();
+
+        $account = $user->connectedAccounts
+            ->where('user_id', $user->getAuthIdentifier())
+            ->where('id', $id)
             ->first();
 
         if (is_callable([$user, 'setProfilePhotoFromUrl']) && ! is_null($account->avatar_path)) {
             $user->setProfilePhotoFromUrl($account->avatar_path);
         }
 
-        return redirect()->route('profile.show');
+        session()->flash('flash.banner', __('Profile photo updated'));
+
+        redirect()->route('profile.show');
     }
 
     /**
      * Remove an OAuth Provider.
      */
-    public function removeConnectedAccount(string|int $accountId): void
+    public function removeConnectedAccount(): void
     {
-        DB::table('connected_accounts')
-            ->where('user_id', Auth::user()->getAuthIdentifier())
-            ->where('id', $accountId)
+        $this->resetErrorBag();
+
+        if (! Hash::check($this->password, auth()->user()->getAuthPassword())) {
+            throw ValidationException::withMessages([
+                'password' => [__('This password does not match our records.')],
+            ]);
+        }
+
+        Socialstream::connectedAccountModel()::query()
+            ->where('id', $this->id)
+            ->where('user_id', auth()->user()->id)
             ->delete();
 
-        $this->confirmingRemove = false;
+        session()->flash('flash.banner', __('Account removed'));
 
-        $this->banner(__('Connected account removed.'));
+        redirect()->route('profile.show');
     }
 
     /**
@@ -101,7 +116,7 @@ class ConnectedAccountsForm extends Component
      */
     public function getAccountsProperty(): Collection
     {
-        return Auth::user()->connectedAccounts
+        return auth()->user()->connectedAccounts
             ->map(function (ConnectedAccount $account) {
                 return (object) $account->getSharedData();
             });

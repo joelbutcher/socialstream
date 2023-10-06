@@ -6,10 +6,8 @@ use ArgumentCountError;
 use DateTime;
 use Illuminate\Support\Carbon;
 use JoelButcher\Socialstream\RefreshedCredentials;
-use JoelButcher\Socialstream\Tests\TestCase;
 
-test('the \'$token\' property cannot be empty', function (): void
-{
+test('the \'$token\' property cannot be empty', function (): void {
     $credentials = new RefreshedCredentials('token');
     $this->assertEquals('token', $credentials->getToken());
 
@@ -17,8 +15,7 @@ test('the \'$token\' property cannot be empty', function (): void
     new RefreshedCredentials();
 });
 
-test('the \'$tokenSecret\' property can be nullable', function (): void
-{
+test('the \'$tokenSecret\' property can be nullable', function (): void {
     $credentials = new RefreshedCredentials(
         'token',
         'token-secret',
@@ -33,8 +30,7 @@ test('the \'$tokenSecret\' property can be nullable', function (): void
     $this->assertNull($credentials->getTokenSecret());
 });
 
-test('the \'$refreshToken\' property can be nullable', function (): void
-{
+test('the \'$refreshToken\' property can be nullable', function (): void {
     $credentials = new RefreshedCredentials(
         'token',
         'token-secret',
@@ -50,8 +46,7 @@ test('the \'$refreshToken\' property can be nullable', function (): void
     $this->assertNull($credentials->getRefreshToken());
 });
 
-test('the \'$expiry\' property can be nullable', function (): void
-{
+test('the \'$expiry\' property can be nullable', function (): void {
     $credentials = new RefreshedCredentials(
         'some-token',
         'some-token-secret',
@@ -71,8 +66,7 @@ test('the \'$expiry\' property can be nullable', function (): void
     $this->assertNull($credentials->getExpiry());
 });
 
-it('can be cast to an array', function (): void
-{
+it('can be cast to an array', function (): void {
     Carbon::setTestNow(DateTime::createFromFormat('Y-m-d H:i:s', '2023-04-13 00:00:00'));
 
     $credentials = new RefreshedCredentials(
@@ -90,8 +84,7 @@ it('can be cast to an array', function (): void
     ], $credentials->toArray());
 });
 
-it('can be json encoded', function (): void
-{
+it('can be json encoded', function (): void {
     Carbon::setTestNow(DateTime::createFromFormat('Y-m-d H:i:s', '2023-04-13 00:00:00'));
 
     $credentials = new RefreshedCredentials(
