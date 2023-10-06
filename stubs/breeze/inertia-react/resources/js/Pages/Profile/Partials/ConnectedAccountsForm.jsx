@@ -6,7 +6,7 @@ import ConnectedAccount from '@/Components/ConnectedAccount.jsx';
 import InputLabel from '@/Components/InputLabel.jsx';
 import TextInput from '@/Components/TextInput.jsx';
 import SecondaryButton from '@/Components/SecondaryButton.jsx';
-import {useForm} from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import ActionLink from '@/Components/ActionLink.jsx';
 
 export default function ConnectedAccountsForm({ className = '', hasPassword, providers, connectedAccounts }) {
@@ -51,26 +51,29 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Connected Accounts</h2>
 
                 <p className="max-w-xl mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    You are free to connect any social accounts to your profile and may remove any connected accounts at any
-                    time. If you feel any of your connected accounts have been compromised, you should disconnect them
-                    immediately and change your password.
+                    You are free to connect any social accounts to your profile and may remove any connected accounts at
+                    any time. If you feel any of your connected accounts have been compromised, you should disconnect
+                    them immediately and change your password.
                 </p>
             </header>
 
             <div className="mt-5 space-y-6">
-                {providers.map(provider => {
+                {providers.map((provider) => {
                     const connectedAccount = connectedAccounts
-                        .filter(account => account.provider === provider)
+                        .filter((account) => account.provider === provider)
                         .shift();
 
                     return (
                         <React.Fragment key={provider}>
                             <ConnectedAccount provider={provider} connectedAccount={connectedAccount}>
-                                {connectedAccount ?
-                                    (connectedAccounts.length > 1 || hasPassword && <DangerButton onClick={confirmAccountDeletion}>Remove</DangerButton>)
-                                    : (
-                                        <ActionLink href={route('oauth.redirect', { provider })}>Connect</ActionLink>
-                                    )}
+                                {connectedAccount ? (
+                                    connectedAccounts.length > 1 ||
+                                    (hasPassword && (
+                                        <DangerButton onClick={confirmAccountDeletion}>Remove</DangerButton>
+                                    ))
+                                ) : (
+                                    <ActionLink href={route('oauth.redirect', { provider })}>Connect</ActionLink>
+                                )}
                             </ConnectedAccount>
 
                             <Modal show={confirmingAccountDeletion} onClose={closeModal}>
@@ -111,7 +114,7 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
                                 </form>
                             </Modal>
                         </React.Fragment>
-                    )
+                    );
                 })}
             </div>
         </section>

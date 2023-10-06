@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Installer\Drivers\Breeze;
 use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
-use Symfony\Component\Finder\Finder;
 
 class BladeDriver extends BreezeDriver
 {
@@ -35,12 +34,12 @@ class BladeDriver extends BreezeDriver
      */
     protected function copyActions(): static
     {
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php', app_path('Actions/Socialstream/GenerateRedirectForProvider.php'));
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php', app_path('Actions/Socialstream/GenerateRedirectForProvider.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
 
         return $this;
     }
@@ -50,8 +49,8 @@ class BladeDriver extends BreezeDriver
      */
     protected function copyAuthViews(InstallOptions ...$options): static
     {
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
 
         return $this;
     }
@@ -61,9 +60,9 @@ class BladeDriver extends BreezeDriver
      */
     protected function copyProfileViews(InstallOptions ...$options): static
     {
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/profile/edit.blade.php', resource_path('views/profile/edit.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/profile/partials/set-password-form.blade.php', resource_path('views/profile/partials/set-password-form.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/profile/partials/connected-accounts-form.blade.php', resource_path('views/profile/partials/connected-accounts-form.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/profile/edit.blade.php', resource_path('views/profile/edit.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/profile/partials/set-password-form.blade.php', resource_path('views/profile/partials/set-password-form.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/profile/partials/connected-accounts-form.blade.php', resource_path('views/profile/partials/connected-accounts-form.blade.php'));
 
         return $this;
     }
@@ -73,11 +72,11 @@ class BladeDriver extends BreezeDriver
      */
     protected function copySocialstreamComponents(InstallOptions ...$options): static
     {
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../../../stubs/breeze/default/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/breeze/default/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/default/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
 
         return $this;
     }

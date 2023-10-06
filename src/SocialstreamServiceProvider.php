@@ -36,7 +36,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/socialstream.php', 'socialstream');
+        $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
 
         $this->app->afterResolving(BladeCompiler::class, function () {
             if (config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
@@ -68,7 +68,7 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/socialstream.php' => config_path('socialstream.php'),
+                __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
             ], 'socialstream-config');
         }
     }
@@ -81,7 +81,7 @@ class SocialstreamServiceProvider extends ServiceProvider
                 'domain' => config('socialstream.domain', null),
                 'prefix' => config('socialstream.prefix', config('socialstream.path')),
             ], function () {
-                $this->loadRoutesFrom(path: match(config('jetstream.stack')) {
+                $this->loadRoutesFrom(path: match (config('jetstream.stack')) {
                     'inertia' => __DIR__.'/../routes/socialstream-inertia.php',
                     default => __DIR__.'/../routes/socialstream.php'
                 });
@@ -90,10 +90,10 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         match (config('jetstream.stack')) {
             'inertia' => $this->publishes([
-                __DIR__ . '/../routes/socialstream-inertia.php' => base_path('routes/socialstream.php'),
+                __DIR__.'/../routes/socialstream-inertia.php' => base_path('routes/socialstream.php'),
             ], 'socialstream-routes'),
             default => $this->publishes([
-                __DIR__ . '/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+                __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
             ], 'socialstream-routes')
         };
     }
@@ -103,7 +103,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function configureCommands(): void
     {
-        if (!$this->app->runningInConsole()) {
+        if (! $this->app->runningInConsole()) {
             return;
         }
 
@@ -142,8 +142,8 @@ class SocialstreamServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
-            __DIR__ . '/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+            __DIR__.'/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
+            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
     }
 
@@ -163,8 +163,8 @@ class SocialstreamServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../database/migrations/2014_10_12_000000_create_breeze_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
-            __DIR__ . '/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+            __DIR__.'/../database/migrations/2014_10_12_000000_create_breeze_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
+            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
 
         // Breeze's Livewire stack uses Laravel Volt with PHP classes in the blade files...
@@ -172,15 +172,15 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         } elseif (class_exists('\App\Http\Middleware\HandleInertiaRequests')) {
             $this->publishes(paths: [
-                __DIR__ . '/../stubs/breeze/inertia-common/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__ . '/../stubs/breeze/inertia-common/routes/web.php' => base_path('routes/web.php'),
+                __DIR__.'/../stubs/breeze/inertia-common/routes/auth.php' => base_path('routes/auth.php'),
+                __DIR__.'/../stubs/breeze/inertia-common/routes/web.php' => base_path('routes/web.php'),
             ], groups: 'socialstream-routes');
         } elseif (class_exists('\App\Http\Controllers\ProfileController')) {
             $this->publishes(paths: [
-                __DIR__ . '/../stubs/breeze/default/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__ . '/../stubs/breeze/default/routes/web.php' => base_path('routes/web.php'),
+                __DIR__.'/../stubs/breeze/default/routes/auth.php' => base_path('routes/auth.php'),
+                __DIR__.'/../stubs/breeze/default/routes/web.php' => base_path('routes/web.php'),
             ], groups: 'socialstream-routes');
-        };
+        }
     }
 
     /**
@@ -191,17 +191,17 @@ class SocialstreamServiceProvider extends ServiceProvider
         Socialstream::authenticatesOauthCallbackUsing(FilamentAuthenticateOauthCallback::class);
         Socialstream::handlesOAuthCallbackErrorsUsing(FilamentHandleOauthCallbackErrors::class);
 
-        if (!$this->app->runningInConsole()) {
+        if (! $this->app->runningInConsole()) {
             return;
         }
 
         $this->publishes([
-            __DIR__ . '/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
-            __DIR__ . '/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+            __DIR__.'/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
+            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
 
         $this->publishes([
-            __DIR__ . '/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
         ], 'socialstream-routes');
     }
 

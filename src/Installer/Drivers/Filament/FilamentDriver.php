@@ -8,6 +8,7 @@ use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
+
 use function Laravel\Prompts\spin;
 use function Laravel\Prompts\warning;
 
@@ -17,7 +18,7 @@ class FilamentDriver extends Driver
     {
         $appConfig = file_get_contents(config_path('app.php'));
 
-        file_put_contents(config_path('app.php'), str_replace(<<<PHP
+        file_put_contents(config_path('app.php'), str_replace(<<<'PHP'
         /*
          * Package Service Providers...
          */
@@ -38,7 +39,7 @@ PHP.PHP_EOL, $appConfig));
 
         warning('Filament Admin Panel is not installed.');
 
-        spin(function () use ($options, $composerBinary) {
+        spin(function () use ($composerBinary) {
             if (! $this->hasComposerPackage('filament/filament')) {
                 $this->requireComposerPackages($composerBinary, ['filament/filament']);
             }
@@ -66,8 +67,8 @@ PHP.PHP_EOL, $appConfig));
     {
         parent::copyModelsAndFactories();
 
-        copy(__DIR__ . '/../../../../stubs/filament/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__ . '/../../../../stubs/filament/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
+        copy(__DIR__.'/../../../../stubs/filament/app/Models/User.php', app_path('Models/User.php'));
+        copy(__DIR__.'/../../../../stubs/filament/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
 
         return $this;
     }
@@ -87,11 +88,11 @@ PHP.PHP_EOL, $appConfig));
      */
     protected function copySocialstreamComponents(InstallOptions ...$options): static
     {
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../../../stubs/filament/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 
-        copy(__DIR__ . '/../../../../stubs/filament/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/filament/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/filament/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
+        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
+        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
+        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
 
         return $this;
     }

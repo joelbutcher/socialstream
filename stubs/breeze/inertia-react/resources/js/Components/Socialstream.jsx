@@ -1,19 +1,19 @@
 import InputError from '@/Components/InputError.jsx';
 import ProviderIcon from '@/Components/SocialstreamIcons/ProviderIcon.jsx';
 
-export default function Socialstream ({ providers, error }) {
+export default function Socialstream({ providers, error }) {
     const providerName = (provider) => {
-        switch(provider) {
+        switch (provider) {
             case 'twitter':
             case 'twitter-oauth-2':
-                return 'Twitter'
+                return 'Twitter';
             case 'linkedin':
             case 'linkedin-openid':
-                return 'LinkedIn'
+                return 'LinkedIn';
             default:
                 return provider.charAt(0).toUpperCase() + provider?.slice(1);
         }
-    }
+    };
 
     return (
         <div>
@@ -29,7 +29,7 @@ export default function Socialstream ({ providers, error }) {
                 {providers.map((provider, i) => {
                     return (
                         <a href={route('oauth.redirect', provider)} key={provider}>
-                            <ProviderIcon provider={provider} className="h-6 w-6"/>
+                            <ProviderIcon provider={provider} className="h-6 w-6" />
 
                             <span className="sr-only">{providerName(provider)}</span>
                         </a>

@@ -6,16 +6,13 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Console\Kernel;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
-use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 
 it('can build a composer require command for an array of packages', function () {
-    $driver = new class(
-        $this->app->make(Kernel::class),
-        $this->app->make(Repository::class),
-    ) extends Driver {
+    $driver = new class($this->app->make(Kernel::class), $this->app->make(Repository::class)) extends Driver
+    {
         protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
         {
-            return;
+
         }
     };
 
@@ -30,13 +27,11 @@ it('can build a composer require command for an array of packages', function () 
 });
 
 it('can build a composer require dev command for an array of packages', function () {
-    $driver = new class(
-        $this->app->make(Kernel::class),
-        $this->app->make(Repository::class),
-    ) extends Driver {
+    $driver = new class($this->app->make(Kernel::class), $this->app->make(Repository::class)) extends Driver
+    {
         protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
         {
-            return;
+
         }
     };
 
@@ -51,13 +46,11 @@ it('can build a composer require dev command for an array of packages', function
 });
 
 it('can build a composer remove dev command for an array of packages', function () {
-    $driver = new class(
-        $this->app->make(Kernel::class),
-        $this->app->make(Repository::class),
-    ) extends Driver {
+    $driver = new class($this->app->make(Kernel::class), $this->app->make(Repository::class)) extends Driver
+    {
         protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
         {
-            return;
+
         }
     };
 

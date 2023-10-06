@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Http\Livewire;
 
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;

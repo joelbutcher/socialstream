@@ -21,7 +21,7 @@ abstract class JetstreamDriver extends Driver
     abstract protected static function stack(): JetstreamInstallStack;
 
     /**
-     * Check for, and install Laravel Jetstream, if required,
+     * Check for, and install Laravel Jetstream, if required,.
      */
     protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
     {
@@ -53,7 +53,7 @@ abstract class JetstreamDriver extends Driver
                 ->run(function ($type, $output) {
                     (new BufferedOutput)->write($output);
                 });
-        }, message: 'Installing Laravel Jetstream: '. static::stack()->label().'...');
+        }, message: 'Installing Laravel Jetstream: '.static::stack()->label().'...');
 
         \Laravel\Prompts\info('Laravel Jetstream has been installed successfully!');
     }
@@ -65,8 +65,8 @@ abstract class JetstreamDriver extends Driver
     {
         parent::copyModelsAndFactories();
 
-        copy(__DIR__ . '/../../../../stubs/jetstream/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__ . '/../../../../stubs/jetstream/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
+        copy(__DIR__.'/../../../../stubs/jetstream/app/Models/User.php', app_path('Models/User.php'));
+        copy(__DIR__.'/../../../../stubs/jetstream/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
 
         return $this;
     }
@@ -78,7 +78,7 @@ abstract class JetstreamDriver extends Driver
     {
         parent::copyActions();
 
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
 
         return $this;
     }
@@ -89,8 +89,8 @@ abstract class JetstreamDriver extends Driver
     protected function copyTests(TestRunner $testRunner): static
     {
         copy(from: match ($testRunner) {
-            TestRunner::Pest => __DIR__ . '/../../../../stubs/jetstream/pest-tests/SocialstreamRegistrationTest.php',
-            TestRunner::PhpUnit => __DIR__ . '/../../../../stubs/jetstream/tests/SocialstreamRegistrationTest.php',
+            TestRunner::Pest => __DIR__.'/../../../../stubs/jetstream/pest-tests/SocialstreamRegistrationTest.php',
+            TestRunner::PhpUnit => __DIR__.'/../../../../stubs/jetstream/tests/SocialstreamRegistrationTest.php',
         }, to: base_path('tests/Feature/SocialstreamRegistrationTest.php'));
 
         return $this;
@@ -107,10 +107,10 @@ abstract class JetstreamDriver extends Driver
 
         note('Making Socialstream compatible with teams');
 
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', app_path('Actions/Jetstream/DeleteUser.php'));
-        copy(__DIR__ . '/../../../../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-        copy(__DIR__ . '/../../../../stubs/jetstream/app/Models/UserWithTeams.php', app_path('Models/User.php'));
-        copy(__DIR__ . '/../../../../stubs/app/Providers/TeamsAuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', app_path('Actions/Jetstream/DeleteUser.php'));
+        copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+        copy(__DIR__.'/../../../../stubs/jetstream/app/Models/UserWithTeams.php', app_path('Models/User.php'));
+        copy(__DIR__.'/../../../../stubs/app/Providers/TeamsAuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
 
         return $this;
     }

@@ -8,6 +8,7 @@ use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
+
 use function Laravel\Prompts\spin;
 use function Laravel\Prompts\warning;
 
@@ -51,7 +52,7 @@ abstract class BreezeDriver extends Driver
                 ->run(function ($type, $output) {
                     (new BufferedOutput)->write($output);
                 });
-        }, message: 'Installing Laravel Breeze: '. static::stack()->label().'...');
+        }, message: 'Installing Laravel Breeze: '.static::stack()->label().'...');
 
         \Laravel\Prompts\info('Laravel Breeze has been installed successfully!');
     }
@@ -61,9 +62,9 @@ abstract class BreezeDriver extends Driver
      */
     protected function copyAppFiles(): static
     {
-        copy(__DIR__ . '/../../../../stubs/breeze/default/app/Http/Controllers/Auth/ConnectedAccountController.php', app_path('Http/Controllers/Auth/ConnectedAccountController.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/default/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/default/app/Http/Controllers/ProfileController.php', app_path('Http/Controllers/ProfileController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/ConnectedAccountController.php', app_path('Http/Controllers/Auth/ConnectedAccountController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/ProfileController.php', app_path('Http/Controllers/ProfileController.php'));
 
         return $this;
     }
@@ -75,8 +76,8 @@ abstract class BreezeDriver extends Driver
     {
         parent::copyModelsAndFactories();
 
-        copy(__DIR__ . '/../../../../stubs/breeze/default/app/Models/User.php', app_path('Models/User.php'));
-        copy(__DIR__ . '/../../../../stubs/breeze/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/default/app/Models/User.php', app_path('Models/User.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
 
         return $this;
     }
@@ -87,8 +88,8 @@ abstract class BreezeDriver extends Driver
     protected function copyTests(TestRunner $testRunner): static
     {
         copy(from: match ($testRunner) {
-            TestRunner::Pest => __DIR__ . '/../../../../stubs/breeze/pest-tests/SocialstreamRegistrationTest.php',
-            TestRunner::PhpUnit => __DIR__ . '/../../../../stubs/breeze/tests/SocialstreamRegistrationTest.php',
+            TestRunner::Pest => __DIR__.'/../../../../stubs/breeze/pest-tests/SocialstreamRegistrationTest.php',
+            TestRunner::PhpUnit => __DIR__.'/../../../../stubs/breeze/tests/SocialstreamRegistrationTest.php',
         }, to: base_path('tests/Feature/SocialstreamRegistrationTest.php'));
 
         return $this;

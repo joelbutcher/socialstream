@@ -114,7 +114,9 @@ export default function Register({ socialstream, errors: { socialstream: socials
                 </div>
             </form>
 
-            {socialstream.show && socialstream.providers.length > 0 && <Socialstream error={socialstreamErrors} providers={socialstream.providers} />}
+            {socialstream.show && socialstream.providers.length > 0 && (
+                <Socialstream error={socialstreamErrors} providers={socialstream.providers} />
+            )}
         </GuestLayout>
     );
 }

@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Installer\Drivers\Jetstream;
 use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
-use Symfony\Component\Finder\Finder;
 
 class InertiaDriver extends JetstreamDriver
 {
@@ -58,10 +57,10 @@ class InertiaDriver extends JetstreamDriver
      */
     protected function copySocialstreamComponents(InstallOptions ...$options): static
     {
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../../../stubs/jetstream/inertia/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));
-        copy(__DIR__ . '/../../../../stubs/jetstream/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));
-        copy(__DIR__ . '/../../../../stubs/jetstream/inertia/resources/js/Components/ConnectedAccount.vue', resource_path('js/Components/ConnectedAccount.vue'));
-        copy(__DIR__ . '/../../../../stubs/jetstream/inertia/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));
+        copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));
+        copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Components/ConnectedAccount.vue', resource_path('js/Components/ConnectedAccount.vue'));
+        copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
 
         return $this;
     }

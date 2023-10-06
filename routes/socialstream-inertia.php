@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use JoelButcher\Socialstream\Http\Controllers\Inertia\PasswordController;
 use JoelButcher\Socialstream\Http\Controllers\Inertia\ConnectedAccountController;
+use JoelButcher\Socialstream\Http\Controllers\Inertia\PasswordController;
 use JoelButcher\Socialstream\Http\Controllers\Inertia\UpdateUserProfilePhotoController;
 use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 use JoelButcher\Socialstream\Socialstream;

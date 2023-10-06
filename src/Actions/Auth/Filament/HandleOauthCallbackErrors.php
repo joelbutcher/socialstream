@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
 use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
-use Laravel\Fortify\Features as FortifyFeatures;
 
 class HandleOauthCallbackErrors implements HandlesOauthCallbackErrors
 {

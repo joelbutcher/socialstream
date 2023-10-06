@@ -17,8 +17,8 @@ class SocialstreamPlugin implements Plugin
     public function register(Panel $panel): void
     {
         Config::set('socialstream.features', array_merge(config('socialstream.features'), [
-                Features::createAccountOnFirstLogin(),
-            ]));
+            Features::createAccountOnFirstLogin(),
+        ]));
 
         $panel->renderHook('panels::auth.login.form.after', function () {
             return view('components.socialstream', [

@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
-use function Laravel\Prompts\intro;
+
 use function Laravel\Prompts\spin;
 
 abstract class Driver
@@ -70,7 +70,7 @@ abstract class Driver
     }
 
     /**
-     * Check the required dependencies are installed and install them if not
+     * Check the required dependencies are installed and install them if not.
      */
     abstract protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void;
 
@@ -129,8 +129,8 @@ abstract class Driver
      */
     protected function installServiceProviders(): static
     {
-        copy(__DIR__ . '/../../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-        copy(__DIR__ . '/../../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
+        copy(__DIR__.'/../../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
+        copy(__DIR__.'/../../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
 
         $this->installServiceProviderAfter('RouteServiceProvider', 'SocialstreamServiceProvider');
 
@@ -162,8 +162,8 @@ abstract class Driver
      */
     protected function copyModelsAndFactories(): static
     {
-        copy(__DIR__ . '/../../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
-        copy(__DIR__ . '/../../../stubs/database/factories/ConnectedAccountFactory.php', database_path('factories/ConnectedAccountFactory.php'));
+        copy(__DIR__.'/../../../stubs/app/Models/ConnectedAccount.php', app_path('Models/ConnectedAccount.php'));
+        copy(__DIR__.'/../../../stubs/database/factories/ConnectedAccountFactory.php', database_path('factories/ConnectedAccountFactory.php'));
 
         return $this;
     }
@@ -173,7 +173,7 @@ abstract class Driver
      */
     protected function copyPolicies(): static
     {
-        copy(__DIR__ . '/../../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccountPolicy.php'));
+        copy(__DIR__.'/../../../stubs/app/Policies/ConnectedAccountPolicy.php', app_path('Policies/ConnectedAccountPolicy.php'));
 
         return $this;
     }
@@ -183,13 +183,13 @@ abstract class Driver
      */
     protected function copyActions(): static
     {
-        copy(__DIR__ . '/../../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
-        copy(__DIR__ . '/../../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
-        copy(__DIR__ . '/../../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php', app_path('Actions/Socialstream/GenerateRedirectForProvider.php'));
-        copy(__DIR__ . '/../../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
-        copy(__DIR__ . '/../../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-        copy(__DIR__ . '/../../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
-        copy(__DIR__ . '/../../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
+        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
+        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
+        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php', app_path('Actions/Socialstream/GenerateRedirectForProvider.php'));
+        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
+        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
+        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
+        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
 
         return $this;
     }
@@ -267,7 +267,7 @@ abstract class Driver
     }
 
     /**
-     * Remove any dark classes, if dark mode has not been specified
+     * Remove any dark classes, if dark mode has not been specified.
      */
     protected function removeDarkClasses(Finder $finder): void
     {
@@ -285,7 +285,7 @@ abstract class Driver
         $process = Process::fromShellCommandline(implode(' && ', $commands), null, $env, null, null);
 
         $process->run(function ($type, $line) use ($output) {
-            $output->write('    ' . $line);
+            $output->write('    '.$line);
         });
 
         return $process;
@@ -296,10 +296,10 @@ abstract class Driver
      */
     protected function installServiceProviderAfter(string $after, string $name): void
     {
-        if (!Str::contains($appConfig = file_get_contents(config_path('app.php')), 'App\\Providers\\' . $name . '::class')) {
+        if (! Str::contains($appConfig = file_get_contents(config_path('app.php')), 'App\\Providers\\'.$name.'::class')) {
             file_put_contents(config_path('app.php'), str_replace(
-                'App\\Providers\\' . $after . '::class,',
-                'App\\Providers\\' . $after . '::class,' . PHP_EOL . '        App\\Providers\\' . $name . '::class,',
+                'App\\Providers\\'.$after.'::class,',
+                'App\\Providers\\'.$after.'::class,'.PHP_EOL.'        App\\Providers\\'.$name.'::class,',
                 $appConfig
             ));
         }

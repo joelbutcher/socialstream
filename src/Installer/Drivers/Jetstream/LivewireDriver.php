@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Installer\Drivers\Jetstream;
 use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
-use Symfony\Component\Finder\Finder;
 
 class LivewireDriver extends JetstreamDriver
 {
@@ -60,9 +59,9 @@ class LivewireDriver extends JetstreamDriver
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 
-        copy(__DIR__ . '/../../../../stubs/jetstream/livewire/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/jetstream/livewire/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
-        copy(__DIR__ . '/../../../../stubs/jetstream/livewire/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
+        copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
+        copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
+        copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
 
         return $this;
     }

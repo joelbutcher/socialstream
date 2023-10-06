@@ -18,6 +18,7 @@ use RuntimeException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
+
 use function Laravel\Prompts\alert;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\multiselect;
@@ -62,7 +63,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             $this->getStarterKit() === InstallStarterKit::Filament => 'filament',
             $this->getStarterKit() === InstallStarterKit::Breeze &&
             $this->getStack() === BreezeInstallStack::Livewire => 'livewire-breeze',
-            default => $this->getStack()->value . '-' . $this->getStarterKit()->value,
+            default => $this->getStack()->value.'-'.$this->getStarterKit()->value,
         })->install(
             $this->option('composer'),
             ...collect($this->options())
@@ -133,7 +134,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
 
                 return $callback();
             },
-            'stack' => fn() => match ($this->getStarterKit()) {
+            'stack' => fn () => match ($this->getStarterKit()) {
                 InstallStarterKit::Filament => null,
                 InstallStarterKit::Breeze => $this->getBreezeStack(),
                 InstallStarterKit::Jetstream => $this->getJetstreamStack(),
@@ -180,7 +181,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
                             $this->getStack() === JetstreamInstallStack::Inertia,
                             fn ($options) => $options->put('ssr', 'Inertia SSR')
                         )->sort(),
-                ))->each(fn($option) => $input->setOption($option, true));
+                ))->each(fn ($option) => $input->setOption($option, true));
             } elseif ($this->isUsingBreeze() && in_array($this->getStack(), [BreezeInstallStack::React, BreezeInstallStack::Vue])) {
                 collect(multiselect(
                     label: 'Would you like any optional features?',
@@ -189,7 +190,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
                         'ssr' => 'Inertia SSR',
                         'typescript' => 'TypeScript (experimental)',
                     ]
-                ))->each(fn($option) => $input->setOption($option, true));
+                ))->each(fn ($option) => $input->setOption($option, true));
             } else {
                 $input->setOption('dark', confirm(
                     label: 'Would you like dark mode support?',
@@ -198,9 +199,9 @@ class InstallCommand extends Command implements PromptsForMissingInput
             }
 
             $input->setOption('pest', select(
-                    label: 'Which testing framework do you prefer?',
-                    options: ['PHPUnit', 'Pest'],
-                ) === 'Pest');
+                label: 'Which testing framework do you prefer?',
+                options: ['PHPUnit', 'Pest'],
+            ) === 'Pest');
         }
     }
 
@@ -318,10 +319,10 @@ class InstallCommand extends Command implements PromptsForMissingInput
     private function isLaravelBreezeInstalled(): bool
     {
         return $this->hasComposerPackage('laravel/breeze') && (
-                class_exists('\App\Http\Middleware\HandleInertiaRequests') || // Vue / React with Inertia
-                class_exists('\App\Http\Controllers\ProfileController') || // Blade with Alpine
-                class_exists('\App\Providers\VoltServiceProvider') // Livewire / Volt with Alpine
-            );
+            class_exists('\App\Http\Middleware\HandleInertiaRequests') || // Vue / React with Inertia
+            class_exists('\App\Http\Controllers\ProfileController') || // Blade with Alpine
+            class_exists('\App\Providers\VoltServiceProvider') // Livewire / Volt with Alpine
+        );
     }
 
     /**
@@ -355,7 +356,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         $files = (new Finder)
             ->in([resource_path('views'), resource_path('js')])
             ->name(['*.blade.php', '*.vue', '*.jsx', '*.tsx'])
-            ->notPath(['Pages/Welcome.vue', 'Pages/Welcome.vue', 'Pages/Welcome.jsx', 'Pages/Welcome.tsx',])
+            ->notPath(['Pages/Welcome.vue', 'Pages/Welcome.vue', 'Pages/Welcome.jsx', 'Pages/Welcome.tsx'])
             ->notPath(['Pages/Auth/Login.vue', 'Pages/Auth/Login.jsx', 'Pages/Auth/Login.tsx'])
             ->notPath(['Pages/Auth/Register.vue', 'Pages/Auth/Register.jsx', 'Pages/Auth/Register.tsx'])
             ->notPath(['Pages/Profile/Partials/ConnectedAccountsForm.vue', 'Pages/Profile/Partials/ConnectedAccountsForm.jsx', 'Pages/Profile/Partials/ConnectedAccountsForm.tsx'])

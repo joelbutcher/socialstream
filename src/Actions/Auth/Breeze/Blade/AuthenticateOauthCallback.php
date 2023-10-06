@@ -15,7 +15,6 @@ use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
-use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class AuthenticateOauthCallback implements AuthenticatesOauthCallback

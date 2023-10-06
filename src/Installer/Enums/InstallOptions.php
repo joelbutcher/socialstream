@@ -30,7 +30,7 @@ enum InstallOptions: string
             self::DarkMode,
             self::Pest,
             self::ServerSideRendering,
-            self::TypeScript
+            self::TypeScript,
         ];
     }
 }

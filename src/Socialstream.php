@@ -215,7 +215,7 @@ class Socialstream
      */
     public static function hasProviderAvatarsFeature(): bool
     {
-        if (! class_exists(Jetstream::class) ) {
+        if (! class_exists(Jetstream::class)) {
             return false;
         }
 

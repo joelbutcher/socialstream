@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use JoelButcher\Socialstream\Socialstream;

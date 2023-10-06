@@ -8,7 +8,12 @@ import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 import Socialstream from '@/Components/Socialstream.jsx';
 
-export default function Login({ status, canResetPassword, socialstream, errors: { socialstream: socialstreamErrors } }) {
+export default function Login({
+    status,
+    canResetPassword,
+    socialstream,
+    errors: { socialstream: socialstreamErrors },
+}) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -94,7 +99,9 @@ export default function Login({ status, canResetPassword, socialstream, errors: 
                 </div>
             </form>
 
-            {socialstream.show && socialstream.providers.length > 0 && <Socialstream error={socialstreamErrors} providers={socialstream.providers} />}
+            {socialstream.show && socialstream.providers.length > 0 && (
+                <Socialstream error={socialstreamErrors} providers={socialstream.providers} />
+            )}
         </GuestLayout>
     );
 }

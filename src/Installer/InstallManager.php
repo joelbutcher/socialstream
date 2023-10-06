@@ -7,8 +7,8 @@ use JoelButcher\Socialstream\Installer\Drivers\Breeze\BladeDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\LivewireDriver as BreezeLivewireDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\ReactInertiaDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\VueInertiaDriver;
-use JoelButcher\Socialstream\Installer\Drivers\Filament\FilamentDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
+use JoelButcher\Socialstream\Installer\Drivers\Filament\FilamentDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Jetstream\InertiaDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Jetstream\LivewireDriver as JetstreamLivewireDriver;
 
@@ -19,7 +19,7 @@ class InstallManager extends Manager
 {
     public function getDefaultDriver(): void
     {
-        return;
+
     }
 
     public function createInertiaJetstreamDriver(): InertiaDriver
