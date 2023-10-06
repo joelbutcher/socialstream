@@ -24,6 +24,8 @@
         "laravel/socialite": "^5.9"
     },
     "require-dev": {
+        "laravel/jetstream": "^4.0",
+        "laravel/sanctum": "^3.3",
         "mockery/mockery": "^1.0",
         "orchestra/testbench": "^8.0",
         "pestphp/pest": "^2.0",
