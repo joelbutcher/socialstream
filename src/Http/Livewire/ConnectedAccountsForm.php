@@ -111,8 +111,6 @@ class ConnectedAccountsForm extends Component
 
     /**
      * Get the users connected accounts.
-     *
-     * @return Collection
      */
     public function getAccountsProperty(): Collection
     {

@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use JoelButcher\Socialstream\Contracts\RefreshedCredentials as RefreshedCredentialsContract;
 use JsonSerializable;
 
-class RefreshedCredentials implements RefreshedCredentialsContract, Arrayable, Jsonable, JsonSerializable
+class RefreshedCredentials implements Arrayable, Jsonable, JsonSerializable, RefreshedCredentialsContract
 {
     /**
      * Create a new credentials instance.

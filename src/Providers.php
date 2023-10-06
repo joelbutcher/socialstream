@@ -218,8 +218,6 @@ class Providers
     /**
      * Dynamically handle static calls.
      *
-     * @param  $name
-     * @param  $arguments
      * @return mixed
      */
     public static function __callStatic($name, $arguments)

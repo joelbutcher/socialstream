@@ -7,7 +7,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use JoelButcher\Socialstream\Contracts\Credentials as CredentialsContract;
 use JsonSerializable;
 
-class Credentials extends RefreshedCredentials implements CredentialsContract, Arrayable, Jsonable, JsonSerializable
+class Credentials extends RefreshedCredentials implements Arrayable, CredentialsContract, Jsonable, JsonSerializable
 {
     /**
      * The credentials user ID.

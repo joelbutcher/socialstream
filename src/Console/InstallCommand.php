@@ -28,8 +28,8 @@ use function Laravel\Prompts\warning;
 
 class InstallCommand extends Command implements PromptsForMissingInput
 {
-    use InteractsWithNode;
     use InteractsWithComposer;
+    use InteractsWithNode;
 
     /**
      * The name and signature of the console command.

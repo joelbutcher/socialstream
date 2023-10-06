@@ -15,11 +15,11 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens;
+    use HasConnectedAccounts;
     use HasFactory;
     use HasProfilePhoto {
         HasProfilePhoto::profilePhotoUrl as getPhotoUrl;
     }
-    use HasConnectedAccounts;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;

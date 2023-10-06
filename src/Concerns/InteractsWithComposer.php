@@ -48,10 +48,10 @@ trait InteractsWithComposer
         $command = $this->buildBaseComposerCommand($composerBinary, 'remove', $packages, dev: true);
 
         return (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
-                ->setTimeout(null)
-                ->run(function ($type, $output) use ($outputStyle) {
-                    $outputStyle->write($output);
-                }) === 0;
+            ->setTimeout(null)
+            ->run(function ($type, $output) use ($outputStyle) {
+                $outputStyle->write($output);
+            }) === 0;
     }
 
     /**
@@ -64,10 +64,10 @@ trait InteractsWithComposer
         $command = $this->buildBaseComposerCommand($composerBinary, 'require', $packages, dev: true);
 
         return (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
-                ->setTimeout(null)
-                ->run(function ($type, $output) use ($outputStyle) {
-                    $outputStyle->write($output);
-                }) === 0;
+            ->setTimeout(null)
+            ->run(function ($type, $output) use ($outputStyle) {
+                $outputStyle->write($output);
+            }) === 0;
     }
 
     protected function buildBaseComposerCommand(string $composerBinary, string $command, array $packages, bool $dev = false): array
