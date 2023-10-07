@@ -22,7 +22,7 @@ class SocialstreamPlugin implements Plugin
         ]));
 
         $panel->renderHook('panels::auth.login.form.after', function () {
-            return Socialstream::show()) ?
+            return Socialstream::show() ?
                 view('components.socialstream', [
                     'errors' => session('errors')?->get('socialstream') ?? [],
                 ]) : '';
