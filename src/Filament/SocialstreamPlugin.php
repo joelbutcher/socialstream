@@ -6,6 +6,7 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Illuminate\Support\Facades\Config;
 use JoelButcher\Socialstream\Features;
+use JoelButcher\Socialstream\Socialstream;
 
 class SocialstreamPlugin implements Plugin
 {
@@ -21,9 +22,10 @@ class SocialstreamPlugin implements Plugin
         ]));
 
         $panel->renderHook('panels::auth.login.form.after', function () {
-            return view('components.socialstream', [
-                'errors' => session('errors')?->get('socialstream') ?? [],
-            ]);
+            return Socialstream::show()) ?
+                view('components.socialstream', [
+                    'errors' => session('errors')?->get('socialstream') ?? [],
+                ]) : '';
         });
     }
 
