@@ -1,5 +1,30 @@
 # Upgrade Guide
 
+## Upgrading to Socialstream 5.x
+
+> [!NOTE]
+> This upgrade guide assumes you're coming from Socialstream 4.x
+
+### Changes
+
+#### Project dependencies
+
+Socialstream 5.x drops `laravel/jetstream`, and by extension, `laravel/fortify` as dependencies.
+As a result, before you upgrade, you will need to add these dependencies to your projects' `composer.json` 
+file.
+
+Add `laravel/jetstream` to your project with composer:
+
+```shell
+composer require laravel/jetstream
+```
+
+Upgrade Socialstream via composer:
+
+```shell
+composer require joelbutcher/socialstream:^5.x
+```
+
 ## Upgrading to Socialstream 4.x
 
 ### Changes
