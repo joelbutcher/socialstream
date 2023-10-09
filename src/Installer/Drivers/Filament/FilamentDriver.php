@@ -92,6 +92,7 @@ PHP.PHP_EOL, $appConfig));
 
         copy(__DIR__.'/../../../../stubs/filament/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
         copy(__DIR__.'/../../../../stubs/filament/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
+        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/input-error.blade.php', resource_path('views/components/input-error.blade.php'));
         copy(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
 
         return $this;
