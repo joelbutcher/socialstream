@@ -62,7 +62,7 @@ class CreateProviderCommand extends Command implements PromptsForMissingInput
             'provider' => fn () => search(
                 label: 'Which provider would you like to create a configuration for?',
                 options: fn (string $search) => array_values(array_filter(
-                    array_diff(Providers::all(), config('socialstream.providers')),
+                    array_diff(Providers::all(), config('socialstream.providers'), array_keys(config('services'))),
                     fn ($choice) => str_contains(strtolower($choice), strtolower($search))
                 )),
                 placeholder: 'Search...',
