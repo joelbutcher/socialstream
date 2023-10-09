@@ -101,7 +101,7 @@ class CreateProviderCommand extends Command implements PromptsForMissingInput
         }
 
         $dotEnvContents = file_get_contents(
-            filename: base_path('.env.example')
+            filename: base_path('.env')
         );
 
         if (
