@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Providers;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\search;
 use function Laravel\Prompts\table;
@@ -41,7 +42,7 @@ class CreateProviderCommand extends Command implements PromptsForMissingInput
         if (in_array($provider, array_keys(config('services')))) {
             warning("A service configuration already exists for $provider.");
 
-            if (!confirm(label: 'Do you want to overwrite it?', default: false)) {
+            if (! confirm(label: 'Do you want to overwrite it?', default: false)) {
                 return self::INVALID;
             }
         }
@@ -58,20 +59,20 @@ class CreateProviderCommand extends Command implements PromptsForMissingInput
     protected function promptForMissingArgumentsUsing(): array
     {
         return [
-            'provider' => fn() => search(
+            'provider' => fn () => search(
                 label: 'Which provider would you like to create a configuration for?',
-                options: fn(string $search) => array_values(array_filter(
+                options: fn (string $search) => array_values(array_filter(
                     array_diff(Providers::all(), config('socialstream.providers')),
-                    fn($choice) => str_contains(strtolower($choice), strtolower($search))
+                    fn ($choice) => str_contains(strtolower($choice), strtolower($search))
                 )),
                 placeholder: 'Search...',
                 scroll: 10,
             ),
-            'client' => fn() => text(
+            'client' => fn () => text(
                 label: 'Client ID?',
                 required: true,
             ),
-            'secret' => fn() => text(
+            'secret' => fn () => text(
                 label: 'Client Secret',
                 required: true,
             ),
@@ -82,9 +83,9 @@ class CreateProviderCommand extends Command implements PromptsForMissingInput
     {
         $provider = Str::of($this->argument('provider'))->replace('-', '_')->upper()->toString();
 
-        $clientIdKey = $provider . '_CLIENT_ID';
-        $clientSecretKey = $provider . '_CLIENT_SECRET';
-        $redirectKey = $provider . '_REDIRECT';
+        $clientIdKey = $provider.'_CLIENT_ID';
+        $clientSecretKey = $provider.'_CLIENT_SECRET';
+        $redirectKey = $provider.'_REDIRECT';
 
         table(
             headers: ['Variable', 'Value'],
@@ -111,7 +112,7 @@ class CreateProviderCommand extends Command implements PromptsForMissingInput
 
             if (! confirm('Do you want to continue', required: true)) {
                 return;
-            };
+            }
         }
 
         $comment = Str::of($provider)->lower()->headline()->toString();
@@ -158,13 +159,13 @@ class CreateProviderCommand extends Command implements PromptsForMissingInput
             return;
         }
 
-        $search1 = <<<PHP
+        $search1 = <<<'PHP'
     ],
 
 ];
 PHP;
 
-        $search2 = <<<PHP
+        $search2 = <<<'PHP'
     ],
 ];
 PHP;
