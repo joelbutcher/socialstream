@@ -32,8 +32,7 @@ PHP.PHP_EOL, $appConfig));
 
     protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
     {
-        if (class_exists('App\Providers\Filament\AdminPanelProvider')
-        ) {
+        if (class_exists('App\Providers\Filament\AdminPanelProvider')) {
             return;
         }
 
