@@ -210,8 +210,12 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     private function getStarterKit(): InstallStarterKit
     {
-        /** @var InstallStarterKit $kit */
+        /** @var InstallStarterKit|string $kit */
         $kit = $this->argument('starter-kit');
+
+        if (is_string($kit)) {
+            $kit = InstallStarterKit::from($kit);
+        }
 
         return $kit;
     }
