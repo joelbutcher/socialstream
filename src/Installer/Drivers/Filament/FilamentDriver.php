@@ -47,6 +47,7 @@ PHP.PHP_EOL, $appConfig));
                 $this->phpBinary(),
                 'artisan',
                 'filament:install',
+                '--panels',
                 '--force',
                 '--quiet',
             ], base_path()))
