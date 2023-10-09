@@ -62,7 +62,7 @@ abstract class Driver
             ->copyResourceFiles(...$options)
             ->copySocialstreamComponents(...$options)
             ->copyTests(collect($options)->contains(InstallOptions::Pest) ? TestRunner::Pest : TestRunner::PhpUnit)
-            ->postInstall($composerBinary, ...$options), message: 'Installing...');
+            ->postInstall($composerBinary, ...$options), message: 'Installing Socialstream...');
 
         spin(fn () => $this
             ->optionallyRemoveDarkMode(...$options)
