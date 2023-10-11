@@ -38,7 +38,6 @@ class InstallManager extends Manager
         return $this->container->make(BreezeLivewireFunctionalDriver::class);
     }
 
-
     public function createBreezeReactDriver(): ReactInertiaDriver
     {
         return $this->container->make(ReactInertiaDriver::class);
