@@ -6,14 +6,14 @@ use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 
-class LivewireDriver extends BreezeDriver
+class FunctionalLivewireDriver extends BreezeDriver
 {
     /**
      * Specify the stack used by this installer.
      */
     protected static function stack(): BreezeInstallStack
     {
-        return BreezeInstallStack::Livewire;
+        return BreezeInstallStack::FunctionalLivewire;
     }
 
     protected static function directoriesToCreateForStack(): array
@@ -37,8 +37,8 @@ class LivewireDriver extends BreezeDriver
      */
     protected function copyAuthViews(InstallOptions ...$options): static
     {
-        copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/pages/auth/login.blade.php', resource_path('views/livewire/pages/auth/login.blade.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/pages/auth/register.blade.php', resource_path('views/livewire/pages/auth/register.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/livewire-functional/resources/views/livewire/pages/auth/login.blade.php', resource_path('views/livewire/pages/auth/login.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/livewire-functional/resources/views/livewire/pages/auth/register.blade.php', resource_path('views/livewire/pages/auth/register.blade.php'));
 
         return $this;
     }
@@ -49,9 +49,9 @@ class LivewireDriver extends BreezeDriver
     protected function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/livewire-common/resources/views/profile.blade.php', resource_path('views/profile.blade.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/profile/delete-user-form.blade.php', resource_path('views/livewire/profile/delete-user-form.blade.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/profile/set-password-form.blade.php', resource_path('views/livewire/profile/set-password-form.blade.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/profile/connected-accounts-form.blade.php', resource_path('views/livewire/profile/connected-accounts-form.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/livewire-functional/resources/views/livewire/profile/delete-user-form.blade.php', resource_path('views/livewire/profile/delete-user-form.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/livewire-functional/resources/views/livewire/profile/set-password-form.blade.php', resource_path('views/livewire/profile/set-password-form.blade.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/livewire-functional/resources/views/livewire/profile/connected-accounts-form.blade.php', resource_path('views/livewire/profile/connected-accounts-form.blade.php'));
 
         return $this;
     }

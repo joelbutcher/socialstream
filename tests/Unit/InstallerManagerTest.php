@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream\Tests\Unit;
 
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\BladeDriver;
+use JoelButcher\Socialstream\Installer\Drivers\Breeze\FunctionalLivewireDriver as BreezeLivewireFunctionalDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\LivewireDriver as BreezeLivewireDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\ReactInertiaDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\VueInertiaDriver;
@@ -29,6 +30,11 @@ it('resolves the blade driver for Laravel Breeze', function () {
 it('resolves the livewire driver for Laravel Breeze', function () {
     expect(app(InstallManager::class)->driver('breeze-livewire'))
         ->toBeInstanceOf(BreezeLivewireDriver::class);
+});
+
+it('resolves the functional livewire driver for Laravel Breeze', function () {
+    expect(app(InstallManager::class)->driver('breeze-livewire-functional'))
+        ->toBeInstanceOf(BreezeLivewireFunctionalDriver::class);
 });
 
 it('resolves the react driver for Laravel Breeze', function () {

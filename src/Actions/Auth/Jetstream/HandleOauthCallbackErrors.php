@@ -4,7 +4,6 @@ namespace JoelButcher\Socialstream\Actions\Auth\Jetstream;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
 use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
 use Laravel\Fortify\Features as FortifyFeatures;
@@ -23,7 +22,7 @@ class HandleOauthCallbackErrors implements HandlesOauthCallbackErrors
         $messageBag = new MessageBag;
         $messageBag->add('socialstream', $request->get('error_description'));
 
-        return Auth::check()
+        return auth()->check()
             ? redirect(config('fortify.home'))->dangerBanner($request->get('error_description'))
             : redirect()->route(
                 FortifyFeatures::enabled(FortifyFeatures::registration()) ? 'register' : 'login'

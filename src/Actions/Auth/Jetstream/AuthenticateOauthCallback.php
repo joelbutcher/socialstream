@@ -6,7 +6,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
@@ -38,7 +37,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
         $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
 
         // Authenticated...
-        if (! is_null($user = Auth::user())) {
+        if (! is_null($user = auth()->user())) {
             return $this->alreadyAuthenticated($user, $account, $provider, $providerAccount);
         }
 

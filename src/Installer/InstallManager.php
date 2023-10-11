@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Installer;
 
 use Illuminate\Support\Manager;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\BladeDriver;
+use JoelButcher\Socialstream\Installer\Drivers\Breeze\FunctionalLivewireDriver as BreezeLivewireFunctionalDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\LivewireDriver as BreezeLivewireDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\ReactInertiaDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Breeze\VueInertiaDriver;
@@ -31,6 +32,12 @@ class InstallManager extends Manager
     {
         return $this->container->make(BreezeLivewireDriver::class);
     }
+
+    public function createBreezeLivewireFunctionalDriver(): BreezeLivewireFunctionalDriver
+    {
+        return $this->container->make(BreezeLivewireFunctionalDriver::class);
+    }
+
 
     public function createBreezeReactDriver(): ReactInertiaDriver
     {

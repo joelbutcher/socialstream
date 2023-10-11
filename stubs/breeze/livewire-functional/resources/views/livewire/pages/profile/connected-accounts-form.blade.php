@@ -1,24 +1,23 @@
 <?php
 
-use Livewire\Attributes\Rule;
-use Livewire\Volt\Component;
+use function Livewire\Volt\rules;
+use function Livewire\Volt\state;
 
-new class extends Component
-{
-    #[Rule(['required', 'string', 'current_password'])]
-    public string $password = '';
+state(['password' => '']);
 
-    public function removeAccount(string|int $id): void
-    {
-        $this->validate();
+rules(['password' => ['required', 'string', 'current_password']]);
 
-        auth()->user()->connectedAccounts()
-            ->where('id', $id)
-            ->delete();
+$removeAccount = function () {
+    $this->validate();
 
-        $this->redirect(route('profile'), navigate: true);
-    }
-}; ?>
+    auth()->user()->connectedAccounts()
+        ->where('id', $id)
+        ->delete();
+
+    $this->redirect(route('profile'), navigate: true);
+};
+
+?>
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">

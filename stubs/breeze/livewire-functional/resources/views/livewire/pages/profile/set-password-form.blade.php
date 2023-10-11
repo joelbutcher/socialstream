@@ -1,36 +1,36 @@
 <?php
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
-use Livewire\Volt\Component;
 
-new class extends Component
-{
-    public string $password = '';
-    public string $password_confirmation = '';
+use function Livewire\Volt\rules;
+use function Livewire\Volt\state;
 
-    public function setPassword(): void
-    {
-        try {
-            $validated = $this->validate([
-                'password' => ['required', 'string', Password::defaults(), 'confirmed'],
-            ]);
-        } catch (ValidationException $e) {
-            $this->reset('current_password', 'password', 'password_confirmation');
+state(['password' => '', 'password_confirmation' => '']);
 
-            throw $e;
-        }
+rules(['password' => ['required', 'string', 'confirmed', Password::defaults()]]);
 
-        auth()->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+$setPassword = function () {
+    try {
+        $validated = $this->validate();
+    } catch (ValidationException $e) {
+        $this->reset('current_password', 'password', 'password_confirmation');
 
-        $this->reset('password', 'password_confirmation');
-
-        redirect()->route('profile');
+        throw $e;
     }
-}; ?>
+
+    auth()->user()->update([
+        'password' => Hash::make($validated['password']),
+    ]);
+
+    $this->reset('password', 'password_confirmation');
+
+    redirect()->route('profile');
+};
+
+?>
 
 <section>
     <header>

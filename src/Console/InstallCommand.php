@@ -61,8 +61,8 @@ class InstallCommand extends Command implements PromptsForMissingInput
     {
         $installManager->driver(match (true) {
             $this->getStarterKit() === InstallStarterKit::Filament => 'filament',
-            $this->getStarterKit() === InstallStarterKit::Breeze &&
-            $this->getStack() === BreezeInstallStack::Livewire => 'livewire-breeze',
+            ($this->getStarterKit() === InstallStarterKit::Breeze &&
+            $this->getStack() === BreezeInstallStack::Livewire) => 'livewire-breeze',
             default => $this->getStarterKit()->value.'-'.$this->getStack()->value,
         })->install(
             $this->option('composer'),

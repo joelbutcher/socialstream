@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Actions\Auth\Breeze;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
 use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
 
@@ -23,7 +22,7 @@ class HandleOauthCallbackErrors implements HandlesOauthCallbackErrors
         $messageBag = new MessageBag;
         $messageBag->add('socialstream', $request->get('error_description'));
 
-        return Auth::check()
+        return auth()->check()
             ? redirect(RouteServiceProvider::HOME)->withErrors(['callback' => $request->get('error_description')])
             : redirect()->route('login')->withErrors($messageBag);
     }

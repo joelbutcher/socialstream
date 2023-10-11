@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Http\Livewire;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use Livewire\Component;
@@ -26,7 +25,7 @@ class SetPasswordForm extends Component
     {
         $this->resetErrorBag();
 
-        $setter->set(Auth::user(), $this->state);
+        $setter->set(auth()->user(), $this->state);
 
         $this->state = [
             'password' => '',
@@ -43,7 +42,7 @@ class SetPasswordForm extends Component
      */
     public function getUserProperty(): mixed
     {
-        return Auth::user();
+        return auth()->user();
     }
 
     /**
