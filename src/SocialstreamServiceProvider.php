@@ -67,9 +67,14 @@ class SocialstreamServiceProvider extends ServiceProvider
         }
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
-            ], 'socialstream-config');
+            match (true) {
+                $this->hasComposerPackage('filament/filament') => $this->publishes([
+                    __DIR__.'/../config/filament.php' => config_path('socialstream.php'),
+                ], 'socialstream-config'),
+                default => $this->publishes([
+                    __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
+                ], 'socialstream-config')
+            };
         }
     }
 
