@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Data;
 
-use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Enums\ProviderEnum;
 use JoelButcher\Socialstream\Providers;
 use Webmozart\Assert\Assert;
@@ -13,8 +12,8 @@ use Webmozart\Assert\Assert;
 final class ProviderData
 {
     private function __construct(
-        public readonly string  $id,
-        public readonly string  $name,
+        public readonly string $id,
+        public readonly string $name,
         public readonly ?string $buttonLabel = null,
     ) {
         Assert::stringNotEmpty($id);

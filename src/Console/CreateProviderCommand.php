@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Console;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
-use JoelButcher\Socialstream\Providers;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\search;

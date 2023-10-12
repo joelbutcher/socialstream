@@ -23,7 +23,7 @@ enum ProviderEnum: string
 
     public function name(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Github => 'GitHub',
             self::Twitter, self::TwitterOauth2 => 'Twitter',
             self::LinkedIn, self::LinkedInOpenId => 'LinkedIn',
@@ -36,7 +36,7 @@ enum ProviderEnum: string
         return [
             'id' => $this->value,
             'name' => $this->name(),
-            'buttonLabel' => Providers::buttonLabel($this->value)
+            'buttonLabel' => Providers::buttonLabel($this->value),
         ];
     }
 }

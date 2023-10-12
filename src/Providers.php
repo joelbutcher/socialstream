@@ -50,7 +50,7 @@ class Providers
      */
     public static function name(string $provider): string
     {
-        return match($provider) {
+        return match ($provider) {
             static::github() => 'GitHub',
             static::twitterOAuth1(), static::twitterOAuth2() => 'Twitter',
             static::linkedin(), static::linkedinOpenId() => 'LinkedIn',
@@ -152,7 +152,7 @@ class Providers
     /**
      * Enable the Bitbucket provider.
      */
-    public static function bitbucket(?string $label = null): string
+    public static function bitbucket(string $label = null): string
     {
         return tap(ProviderEnum::Bitbucket->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -160,7 +160,7 @@ class Providers
     /**
      * Enable the Facebook provider.
      */
-    public static function facebook(?string $label = null): string
+    public static function facebook(string $label = null): string
     {
         return tap(ProviderEnum::Facebook->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -168,7 +168,7 @@ class Providers
     /**
      * Enable the GitHub provider.
      */
-    public static function github(?string $label = null): string
+    public static function github(string $label = null): string
     {
         return tap(ProviderEnum::Github->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -176,7 +176,7 @@ class Providers
     /**
      * Enable the GitLab provider.
      */
-    public static function gitlab(?string $label = null): string
+    public static function gitlab(string $label = null): string
     {
         return tap(ProviderEnum::Gitlab->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -184,7 +184,7 @@ class Providers
     /**
      * Enable the Google provider.
      */
-    public static function google(?string $label = null): string
+    public static function google(string $label = null): string
     {
         return tap(ProviderEnum::Google->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -192,7 +192,7 @@ class Providers
     /**
      * Enable the LinkedIn provider.
      */
-    public static function linkedin(?string $label = null): string
+    public static function linkedin(string $label = null): string
     {
         return tap(ProviderEnum::LinkedIn->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -200,7 +200,7 @@ class Providers
     /**
      * Enable the LinkedIn OpenID provider.
      */
-    public static function linkedinOpenId(?string $label = null): string
+    public static function linkedinOpenId(string $label = null): string
     {
         return tap(ProviderEnum::LinkedInOpenId->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -208,7 +208,7 @@ class Providers
     /**
      * Enable the Slack provider.
      */
-    public static function slack(?string $label = null): string
+    public static function slack(string $label = null): string
     {
         return tap(ProviderEnum::Slack->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -218,7 +218,7 @@ class Providers
      *
      * @deprecated use `twitterOAuth1` instead.
      */
-    public static function twitter(?string $label = null): string
+    public static function twitter(string $label = null): string
     {
         return tap(ProviderEnum::Twitter->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -226,7 +226,7 @@ class Providers
     /**
      * Enable the Twitter OAuth 1.0 provider.
      */
-    public static function twitterOAuth1(?string $label = null): string
+    public static function twitterOAuth1(string $label = null): string
     {
         return tap(ProviderEnum::Twitter->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
@@ -234,18 +234,18 @@ class Providers
     /**
      * Enable the Twitter OAuth 2.0 provider.
      */
-    public static function twitterOAuth2(?string $label = null): string
+    public static function twitterOAuth2(string $label = null): string
     {
         return tap(ProviderEnum::TwitterOauth2->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
-    public static function addLabelFor(ProviderEnum|string $provider, ?string $label = null): void
+    public static function addLabelFor(ProviderEnum|string $provider, string $label = null): void
     {
         if (! $label) {
             return;
         }
 
-        $key = match(true) {
+        $key = match (true) {
             $provider instanceof ProviderEnum => $provider->value,
             default => $provider,
         };

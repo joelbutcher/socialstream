@@ -59,7 +59,7 @@ it('builds from a unknown provider string with a custom button label', function 
 it('builds from an array', function () {
     $data = ProviderData::from([
         'id' => 'my-provider',
-        'name' => 'My Provider'
+        'name' => 'My Provider',
     ]);
 
     expect($data->toArray())
@@ -74,7 +74,7 @@ it('builds from an array with a custom button label', function () {
     $data = ProviderData::from([
         'id' => 'my-provider',
         'name' => 'My Provider',
-        'label' => 'A Custom Button Label'
+        'label' => 'A Custom Button Label',
     ]);
 
     expect($data->toArray())

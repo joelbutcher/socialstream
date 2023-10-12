@@ -6,9 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use JoelButcher\Socialstream\ConnectedAccount;
-use JoelButcher\Socialstream\Data\ProviderData;
-use JoelButcher\Socialstream\Enums\ProviderEnum;
-use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
 use Symfony\Component\HttpFoundation\Response;
 

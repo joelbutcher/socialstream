@@ -4,7 +4,6 @@ namespace JoelButcher\Socialstream\Tests\Unit;
 
 use Illuminate\Support\Facades\Config;
 use JoelButcher\Socialstream\Providers;
-use NunoMaduro\Collision\Provider;
 
 it('supports the \'bitbucket\' provider', function (): void {
     Config::set('socialstream.providers', [Providers::bitbucket()]);
@@ -100,8 +99,8 @@ it('can set a default label for both linkedin providers', function () {
 });
 
 it('can set a label for a provider', function () {
-   Providers::google('The Google Provider');
+    Providers::google('The Google Provider');
 
-   expect(Providers::buttonLabel(Providers::google()))
-       ->toEqual('The Google Provider');
+    expect(Providers::buttonLabel(Providers::google()))
+        ->toEqual('The Google Provider');
 });
