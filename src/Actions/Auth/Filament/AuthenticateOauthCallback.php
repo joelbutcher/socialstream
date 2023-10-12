@@ -41,6 +41,6 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
 
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-        return redirect()->route('filament.admin.pages.dashboard');
+        return redirect()->route('filament.admin.home');
     }
 }
