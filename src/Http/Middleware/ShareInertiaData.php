@@ -6,6 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use JoelButcher\Socialstream\ConnectedAccount;
+use JoelButcher\Socialstream\Data\ProviderData;
+use JoelButcher\Socialstream\Enums\ProviderEnum;
+use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +23,7 @@ class ShareInertiaData
             'socialstream' => function () use ($request) {
                 return [
                     'show' => Socialstream::show(),
+                    'prompt' => config('socialstream.prompt', 'Or Login Via'),
                     'providers' => Socialstream::providers(),
                     'hasPassword' => $request->user() && ! is_null($request->user()->getAuthPassword()),
                     'connectedAccounts' => $request->user() ? $request->user()->connectedAccounts

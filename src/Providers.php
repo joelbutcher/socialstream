@@ -4,9 +4,12 @@ namespace JoelButcher\Socialstream;
 
 use BadMethodCallException;
 use Illuminate\Support\Str;
+use JoelButcher\Socialstream\Enums\ProviderEnum;
 
 class Providers
 {
+    public static array $buttonLabels = [];
+
     /**
      * Determine if the given provider is enabled.
      */
@@ -21,17 +24,38 @@ class Providers
     public static function all(): array
     {
         return [
-            self::bitbucket(),
-            self::facebook(),
-            self::github(),
-            self::gitlab(),
-            self::google(),
-            self::linkedin(),
-            self::linkedinOpenId(),
-            self::slack(),
-            self::twitterOAuth1(),
-            self::twitterOAuth2(),
+            static::bitbucket(),
+            static::facebook(),
+            static::github(),
+            static::gitlab(),
+            static::google(),
+            static::linkedin(),
+            static::linkedinOpenId(),
+            static::slack(),
+            static::twitterOAuth1(),
+            static::twitterOAuth2(),
         ];
+    }
+
+    /**
+     * Get the label for a given provider.
+     */
+    public static function buttonLabel(string $provider): ?string
+    {
+        return static::$buttonLabels[$provider] ?? null;
+    }
+
+    /**
+     * Get the name for a given provider.
+     */
+    public static function name(string $provider): string
+    {
+        return match($provider) {
+            static::github() => 'GitHub',
+            static::twitterOAuth1(), static::twitterOAuth2() => 'Twitter',
+            static::linkedin(), static::linkedinOpenId() => 'LinkedIn',
+            default => Str::of($provider)->replace(['-', '_'], ' ')->lower()->headline()->toString(),
+        };
     }
 
     /**
@@ -128,65 +152,65 @@ class Providers
     /**
      * Enable the Bitbucket provider.
      */
-    public static function bitbucket(): string
+    public static function bitbucket(?string $label = null): string
     {
-        return 'bitbucket';
+        return tap(ProviderEnum::Bitbucket->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the Facebook provider.
      */
-    public static function facebook(): string
+    public static function facebook(?string $label = null): string
     {
-        return 'facebook';
+        return tap(ProviderEnum::Facebook->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the GitHub provider.
      */
-    public static function github(): string
+    public static function github(?string $label = null): string
     {
-        return 'github';
+        return tap(ProviderEnum::Github->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the GitLab provider.
      */
-    public static function gitlab(): string
+    public static function gitlab(?string $label = null): string
     {
-        return 'gitlab';
+        return tap(ProviderEnum::Gitlab->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the Google provider.
      */
-    public static function google(): string
+    public static function google(?string $label = null): string
     {
-        return 'google';
+        return tap(ProviderEnum::Google->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the LinkedIn provider.
      */
-    public static function linkedin(): string
+    public static function linkedin(?string $label = null): string
     {
-        return 'linkedin';
+        return tap(ProviderEnum::LinkedIn->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the LinkedIn OpenID provider.
      */
-    public static function linkedinOpenId(): string
+    public static function linkedinOpenId(?string $label = null): string
     {
-        return 'linkedin-openid';
+        return tap(ProviderEnum::LinkedInOpenId->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the Slack provider.
      */
-    public static function slack(): string
+    public static function slack(?string $label = null): string
     {
-        return 'slack';
+        return tap(ProviderEnum::Slack->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
@@ -194,25 +218,39 @@ class Providers
      *
      * @deprecated use `twitterOAuth1` instead.
      */
-    public static function twitter(): string
+    public static function twitter(?string $label = null): string
     {
-        return 'twitter';
+        return tap(ProviderEnum::Twitter->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the Twitter OAuth 1.0 provider.
      */
-    public static function twitterOAuth1(): string
+    public static function twitterOAuth1(?string $label = null): string
     {
-        return 'twitter';
+        return tap(ProviderEnum::Twitter->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     /**
      * Enable the Twitter OAuth 2.0 provider.
      */
-    public static function twitterOAuth2(): string
+    public static function twitterOAuth2(?string $label = null): string
     {
-        return 'twitter-oauth-2';
+        return tap(ProviderEnum::TwitterOauth2->value, fn (string $provider) => static::addLabelFor($provider, $label));
+    }
+
+    public static function addLabelFor(ProviderEnum|string $provider, ?string $label = null): void
+    {
+        if (! $label) {
+            return;
+        }
+
+        $key = match(true) {
+            $provider instanceof ProviderEnum => $provider->value,
+            default => $provider,
+        };
+
+        static::$buttonLabels[$key] = $label;
     }
 
     /**

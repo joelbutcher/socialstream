@@ -5,10 +5,19 @@ export interface ConnectedAccount {
     created_at: string
 }
 
+export declare type ProviderId = 'bitbucket' | 'facebook' | 'github' | 'gitlab' | 'google' | 'linkedin' | 'linkedin-openid' | 'slack' | 'twitter' | 'twitter-oauth-2';
+
+export interface Provider {
+    id: ProviderId;
+    name: string;
+    buttonLabel?: string;
+}
+
 export interface Socialstream {
     show: boolean;
+    prompt: string;
     hasPassword: boolean;
-    providers: string[];
+    providers: Provider[];
     connectedAccounts: ConnectedAccount[];
 }
 

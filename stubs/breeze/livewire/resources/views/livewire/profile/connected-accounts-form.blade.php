@@ -19,6 +19,7 @@ new class extends Component
         $this->redirect(route('profile'), navigate: true);
     }
 }; ?>
+
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -30,16 +31,16 @@ new class extends Component
         </p>
     </header>
 
-    <x-input-error :messages="$errors->get('callback')" class="mt-2" />
+    <x-input-error :messages="$errors->get('socialstream')" class="mt-2" />
 
     <div class="mt-5 space-y-6">
         @foreach (JoelButcher\Socialstream\Socialstream::providers() as $provider)
             @php
                 $account = null;
-                $account = auth()->user()->connectedAccounts->where('provider', $provider)->first();
+                $account = auth()->user()->connectedAccounts->where('provider', $provider['id'])->first();
             @endphp
 
-            <x-connected-account provider="{{ $provider }}" created-at="{{ $account?->created_at->diffForHumans() ?? null }}">
+            <x-connected-account :provider="$provider" created-at="{{ $account?->created_at->diffForHumans() ?? null }}">
                 <x-slot name="action">
                     @if (! is_null($account))
                         <div class="flex items-center space-x-6">
@@ -51,7 +52,7 @@ new class extends Component
                             @endif
                         </div>
                     @else
-                        <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
+                        <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider['id']]) }}">
                             {{ __('Connect') }}
                         </x-action-link>
                     @endif

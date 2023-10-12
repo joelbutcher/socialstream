@@ -45,7 +45,7 @@
         </div>
     </form>
 
-    @if (JoelButcher\Socialstream\Socialstream::show())
+    @if (\JoelButcher\Socialstream\Socialstream::show())
         <x-socialstream />
     @endif
 </x-guest-layout>

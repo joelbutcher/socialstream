@@ -8,11 +8,10 @@ import TextInput from '@/Components/TextInput.jsx';
 import SecondaryButton from '@/Components/SecondaryButton.jsx';
 import {useForm} from '@inertiajs/react';
 import ActionLink from '@/Components/ActionLink.jsx';
-import { ConnectedAccount as ConnectedAccountType } from '@/types';
+import {ConnectedAccount as ConnectedAccountType, Provider} from '@/types';
 
-export default function ConnectedAccountsForm({ className = '', hasPassword, providers, connectedAccounts }: { className?: string, hasPassword: boolean, providers: string[], connectedAccounts: ConnectedAccountType[] }) {
+export default function ConnectedAccountsForm({ className = '', hasPassword, providers, connectedAccounts }: { className?: string, hasPassword: boolean, providers: Provider[], connectedAccounts: ConnectedAccountType[] }) {
     const [confirmingAccountDeletion, setConfirmingAccountDeletion] = useState<boolean>(false);
-    const [accountIdToRemove, setAccountIdToRemove] = useState<number>();
     const passwordInput = useRef<HTMLInputElement>();
 
     const {
@@ -27,12 +26,12 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
     });
 
     const confirmAccountDeletion = (e: MouseEvent) => {
+        e.preventDefault();
 
         setConfirmingAccountDeletion(true);
     };
 
     const deleteAccount = (e: FormEvent, connectedAccount: ConnectedAccountType) => {
-        console.log(e);
         e.preventDefault();
 
         destroy(route('connected-accounts.destroy', connectedAccount.id), {
@@ -62,13 +61,13 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
             </header>
 
             <div className="mt-5 space-y-6">
-                {providers.map((provider: string) => {
+                {providers.map(provider => {
                     const connectedAccount = connectedAccounts
-                        .filter(account => account.provider === provider)
+                        .filter(account => account.provider === provider.id)
                         .shift();
 
                     return (
-                        <React.Fragment key={provider}>
+                        <React.Fragment key={provider.id}>
                             <ConnectedAccount provider={provider} connectedAccount={connectedAccount}>
                                 {connectedAccount ?
                                     (connectedAccounts.length > 1 || hasPassword && <DangerButton onClick={confirmAccountDeletion}>Remove</DangerButton>)

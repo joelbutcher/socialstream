@@ -99,6 +99,6 @@ const submit = () => {
         </form>
 
         <Socialstream v-if="socialstream.show && socialstream.providers.length" :error="errors.socialstream"
-                      :providers="socialstream.providers"/>
+                      :prompt="socialstream.prompt" :providers="socialstream.providers"/>
     </GuestLayout>
 </template>

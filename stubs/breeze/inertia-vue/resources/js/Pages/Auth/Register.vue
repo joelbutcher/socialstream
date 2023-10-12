@@ -7,6 +7,15 @@ import TextInput from '@/Components/TextInput.vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
 import Socialstream from '@/Components/Socialstream.vue';
 
+defineProps({
+    socialstream: {
+        type: Object,
+    },
+    errors: {
+        type: Object,
+    },
+});
+
 const form = useForm({
     name: '',
     email: '',
@@ -102,6 +111,6 @@ const submit = () => {
         </form>
 
         <Socialstream v-if="socialstream.show && socialstream.providers.length" :error="errors.socialstream"
-                      :providers="socialstream.providers"/>
+                      :prompt="socialstream.prompt" :providers="socialstream.providers"/>
     </GuestLayout>
 </template>

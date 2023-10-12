@@ -3,23 +3,12 @@ import {computed, defineProps} from 'vue';
 import ProviderIcon from '@/Components/SocialstreamIcons/ProviderIcon.vue';
 
 const props = defineProps({
-    provider: String,
+    provider: {
+        type: Object
+    },
     createdAt: {
         type: String,
         default: null,
-    }
-});
-
-const providerName = computed(() => {
-    switch (props.provider) {
-        case 'twitter':
-        case 'twitter-oauth-2':
-            return 'Twitter';
-        case 'linkedin':
-        case 'linkedin-openid':
-            return 'LinkedIn';
-        default:
-            return props.provider.charAt(0).toUpperCase() + props.provider?.slice(1);
     }
 });
 </script>
@@ -30,9 +19,9 @@ const providerName = computed(() => {
             <div class="flex items-center">
                 <ProviderIcon :provider="provider" classes="h-6 w-6 mr-2"/>
 
-                <div>
+                <div class="ml-2">
                     <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                        {{ providerName }}
+                        {{ provider.name }}
                     </div>
 
                     <div v-if="createdAt !== null" class="text-xs text-gray-500">

@@ -13,6 +13,8 @@ use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
+use JoelButcher\Socialstream\Data\ProviderData;
+use JoelButcher\Socialstream\Enums\ProviderEnum;
 use Laravel\Jetstream\Jetstream;
 use RuntimeException;
 
@@ -103,7 +105,10 @@ class Socialstream
      */
     public static function providers(): array
     {
-        return config('socialstream.providers');
+        return array_map(
+            fn (ProviderEnum|string|array $provider) => ProviderData::from($provider)->toArray(),
+            config('socialstream.providers'),
+        );
     }
 
     /**

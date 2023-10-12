@@ -3,37 +3,11 @@
 <div>
     <div class="pl-3 flex items-center justify-between">
         <div class="flex items-center">
-            @switch($provider)
-                @case(JoelButcher\Socialstream\Providers::facebook())
-                    <x-socialstream-icons.facebook class="h-6 w-6 mr-2" />
-                    @break
-                @case(JoelButcher\Socialstream\Providers::google())
-                    <x-socialstream-icons.google class="h-6 w-6 mr-2" />
-                    @break
-                @case(JoelButcher\Socialstream\Providers::twitter())
-                @case(JoelButcher\Socialstream\Providers::twitterOAuth1())
-                @case(JoelButcher\Socialstream\Providers::twitterOAuth2())
-                    <x-socialstream-icons.twitter class="h-6 w-6 mr-2" />
-                    @break
-                @case(JoelButcher\Socialstream\Providers::linkedin())
-                @case(JoelButcher\Socialstream\Providers::linkedinOpenId())
-                    <x-socialstream-icons.linkedin class="h-6 w-6 mr-2" />
-                    @break
-                @case(JoelButcher\Socialstream\Providers::github())
-                    <x-socialstream-icons.github class="h-6 w-6 mr-2" />
-                    @break
-                @case(JoelButcher\Socialstream\Providers::gitlab())
-                    <x-socialstream-icons.gitlab class="h-6 w-6 mr-2" />
-                    @break
-                @case(JoelButcher\Socialstream\Providers::bitbucket())
-                    <x-socialstream-icons.bitbucket class="h-6 w-6 mr-2" />
-                    @break
-                @default
-            @endswitch
+            <x-socialstream-icons.provider-icon :provider="$provider['id']" class="h-6 w-6" />
 
-            <div>
+            <div class="ml-2">
                 <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                    {{ __(ucfirst($provider)) }}
+                    {{ __($provider['name']) }}
                 </div>
 
                 @if (! empty($createdAt))
@@ -53,7 +27,7 @@
         </div>
     </div>
 
-    @error($provider.'_connect_error')
+    @error($provider['id'].'_connect_error')
     <div class="text-sm font-semibold text-red-500 px-3 mt-2">
         {{ $message }}
     </div>

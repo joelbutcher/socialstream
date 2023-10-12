@@ -21,7 +21,8 @@
     "require": {
         "php": "^8.1",
         "laravel/prompts": "^0.1.10",
-        "laravel/socialite": "^5.9"
+        "laravel/socialite": "^5.9",
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
         "laravel/jetstream": "^4.0",

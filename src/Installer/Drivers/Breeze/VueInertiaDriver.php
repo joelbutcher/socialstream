@@ -86,6 +86,8 @@ class VueInertiaDriver extends BreezeDriver
             copy(__DIR__.'/../../../../stubs/breeze/inertia-vue-ts/resources/js/Components/ConnectedAccount.vue', resource_path('js/Components/ConnectedAccount.vue'));
             copy(__DIR__.'/../../../../stubs/breeze/inertia-vue-ts/resources/js/Components/Socialstream.vue', resource_path('js/Components/Socialstream.vue'));
 
+            copy(__DIR__.'/../../../../stubs/breeze/inertia-vue-ts/resources/js/types/index.d.ts', resource_path('js/types/index.d.ts'));
+
             return $this;
         }
 

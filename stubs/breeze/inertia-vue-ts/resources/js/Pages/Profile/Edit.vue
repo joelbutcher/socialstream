@@ -6,7 +6,7 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import {Head} from '@inertiajs/vue3';
 import ConnectedAccountsForm from '@/Pages/Profile/Partials/ConnectedAccountsForm.vue';
-import { type Socialstream } from '@/types';
+import type { Socialstream } from '@/types';
 
 defineProps<{
     mustVerifyEmail?: boolean;

@@ -95,7 +95,9 @@ export default function Login({ status, canResetPassword, socialstream, errors: 
                 </div>
             </form>
 
-            {socialstream.show && socialstream.providers.length > 0 && <Socialstream error={socialstreamErrors} providers={socialstream.providers} />}
+            {socialstream.show && socialstream.providers.length > 0 && (
+                <Socialstream prompt={socialstream.prompt} error={socialstreamErrors} providers={socialstream.providers} />
+            )}
         </GuestLayout>
     );
 }

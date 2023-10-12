@@ -7,12 +7,13 @@ import Google from './Google';
 import Linkedin from './Linkedin';
 import Slack from './Slack';
 import Twitter from './Twitter';
+import {Provider} from '@/types';
 
 export default function ProviderIcon({ className = '', provider, ...props }: SVGAttributes<SVGElement> & {
-    provider: string
+    provider: Provider
 }) {
     const Icon = () => {
-        switch(provider) {
+        switch(provider.id) {
             case 'bitbucket':
                 return <Bitbucket {...props} className={className} />
             case 'facebook':

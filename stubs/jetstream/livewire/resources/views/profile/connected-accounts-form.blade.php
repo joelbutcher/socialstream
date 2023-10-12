@@ -24,10 +24,10 @@
             @foreach ($this->providers as $provider)
                 @php
                     $account = null;
-                    $account = $this->accounts->where('provider', $provider)->first();
+                    $account = $this->accounts->where('provider', $provider['id'])->first();
                 @endphp
 
-                <x-connected-account provider="{{ $provider }}" created-at="{{ $account?->created_at }}">
+                <x-connected-account :provider="$provider" created-at="{{ $account?->created_at }}">
                     <x-slot name="action">
                         @if (! is_null($account))
                             <div class="flex items-center space-x-6">
@@ -44,7 +44,7 @@
                                 @endif
                             </div>
                         @else
-                            <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
+                            <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider['id']]) }}">
                                 {{ __('Connect') }}
                             </x-action-link>
                         @endif

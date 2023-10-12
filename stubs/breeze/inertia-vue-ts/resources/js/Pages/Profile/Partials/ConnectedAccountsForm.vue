@@ -9,31 +9,31 @@ import Modal from '@/Components/Modal.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import {useForm} from '@inertiajs/vue3';
-import { ConnectedAccount as ConnectedAccountType } from '@/types';
+import {ConnectedAccount as ConnectedAccountType, Provider} from '@/types';
 
-const providerToRemove = ref<string>();
+const providerToRemove = ref<Provider>();
 const passwordInput = ref<HTMLInputElement | null>(null);
 const confirmingRemoveAccount = ref<boolean>(false);
 
 const props = defineProps<{
     hasPassword: boolean;
     connectedAccounts: ConnectedAccountType[];
-    providers: string[];
+    providers: Provider[];
 }>();
 
 const form = useForm({
     password: '',
 });
 
-const hasAccountForProvider = (provider: string): boolean => props.connectedAccounts
-    .filter(account => account.provider === provider)
+const hasAccountForProvider = (provider: Provider): boolean => props.connectedAccounts
+    .filter(account => account.provider === provider.id)
     .shift() !== undefined;
 
-const getAccountForProvider = (provider: string): ConnectedAccountType => props.connectedAccounts
-    .filter(account => account.provider === provider)
+const getAccountForProvider = (provider: Provider): ConnectedAccountType => props.connectedAccounts
+    .filter(account => account.provider === provider.id)
     .shift() as ConnectedAccountType;
 
-const confirmAccountRemoval = (provider: string) => {
+const confirmAccountRemoval = (provider: Provider) => {
     providerToRemove.value = provider;
     confirmingRemoveAccount.value = true;
 
@@ -77,7 +77,7 @@ const closeModal = () => {
         </header>
 
         <div class="mt-5 space-y-6">
-            <div v-for="(provider) in providers" :key="provider">
+            <div v-for="provider in providers" :key="provider.id">
                 <ConnectedAccount :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider)?.created_at : ''" :provider="provider">
                     <template #action>
                         <template v-if="hasAccountForProvider(provider)">

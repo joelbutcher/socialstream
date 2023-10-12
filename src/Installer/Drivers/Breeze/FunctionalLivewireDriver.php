@@ -19,7 +19,7 @@ class FunctionalLivewireDriver extends BreezeDriver
     protected static function directoriesToCreateForStack(): array
     {
         return [
-            resource_path('views/livewire/pages/auth/auth'),
+            resource_path('views/livewire/pages/auth'),
             resource_path('views/livewire/profile'),
         ];
     }

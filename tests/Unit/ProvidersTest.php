@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Tests\Unit;
 
 use Illuminate\Support\Facades\Config;
 use JoelButcher\Socialstream\Providers;
+use NunoMaduro\Collision\Provider;
 
 it('supports the \'bitbucket\' provider', function (): void {
     Config::set('socialstream.providers', [Providers::bitbucket()]);
@@ -77,4 +78,30 @@ it('supports dynamic calls for custom providers', function (): void {
     $this->assertTrue(Providers::hasACustomProviderSupport());
     $this->assertTrue(Providers::hasAnotherProviderSupport());
     $this->assertTrue(Providers::hasAndAnotherSupport());
+});
+
+it('can set a default label for a provider', function () {
+    expect(Providers::buttonLabel(Providers::google()))
+        ->toEqual('Google');
+});
+
+it('can set a default label for both twitter providers', function () {
+    expect(Providers::buttonLabel(Providers::twitterOAuth1()))
+        ->toEqual('Twitter')
+        ->and(Providers::buttonLabel(Providers::twitterOAuth2()))
+        ->toEqual('Twitter');
+});
+
+it('can set a default label for both linkedin providers', function () {
+    expect(Providers::buttonLabel(Providers::linkedin()))
+        ->toEqual('LinkedIn')
+        ->and(Providers::buttonLabel(Providers::linkedinOpenId()))
+        ->toEqual('LinkedIn');
+});
+
+it('can set a label for a provider', function () {
+   Providers::google('The Google Provider');
+
+   expect(Providers::buttonLabel(Providers::google()))
+       ->toEqual('The Google Provider');
 });

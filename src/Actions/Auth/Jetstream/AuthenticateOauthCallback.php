@@ -13,6 +13,7 @@ use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Features;
+use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Features as FortifyFeatures;
@@ -64,7 +65,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
             $messageBag = new MessageBag;
             $messageBag->add(
                 'socialstream',
-                __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => $provider])
+                __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => Providers::name($provider)])
             );
 
             return redirect()->route('login')->withErrors(
@@ -77,7 +78,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
                 $messageBag = new MessageBag;
                 $messageBag->add(
                     'socialstream',
-                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
+                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => Providers::name($provider)])
                 );
 
                 return redirect()->route('login')->withErrors(
@@ -107,19 +108,19 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
             $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
 
             return redirect()->route('profile.show')->banner(
-                __('You have successfully connected :Provider to your account.', ['provider' => $provider])
+                __('You have successfully connected :Provider to your account.', ['provider' => Providers::name($provider)])
             );
         }
 
         if ($account->user_id !== $user->id) {
             return redirect()->route('profile.show')->dangerBanner(
-                __('This :Provider sign in account is already associated with another user. Please log in with that user or connect a different :Provider account.', ['provider' => $provider])
+                __('This :Provider sign in account is already associated with another user. Please log in with that user or connect a different :Provider account.', ['provider' => Providers::buttonLabel($provider)])
             );
         }
 
         // Account already connected
         return redirect()->route('profile.show')->dangerBanner(
-            __('This :Provider sign in account is already associated with your user.', ['provider' => $provider])
+            __('This :Provider sign in account is already associated with your user.', ['provider' => Providers::buttonLabel($provider)])
         );
     }
 
@@ -138,7 +139,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
         }
 
         $messageBag = new MessageBag;
-        $messageBag->add('socialstream', __('An account with that :Provider sign in already exists, please login.', ['provider' => $provider]));
+        $messageBag->add('socialstream', __('An account with that :Provider sign in already exists, please login.', ['provider' => Providers::buttonLabel($provider)]));
 
         return redirect()->route('login')->withErrors($messageBag);
     }
@@ -152,7 +153,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
             $messageBag = new MessageBag;
             $messageBag->add(
                 'socialstream',
-                __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => $provider])
+                __('No email address is associated with this :Provider account. Please try a different account.', ['provider' => Providers::buttonLabel($provider)])
             );
 
             return redirect()->route('register')->withErrors($messageBag);
@@ -162,7 +163,7 @@ class AuthenticateOauthCallback implements AuthenticatesOauthCallback
             $messageBag = new MessageBag;
             $messageBag->add(
                 'socialstream',
-                __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => $provider])
+                __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => Providers::buttonLabel($provider)])
             );
 
             return redirect()->route('register')->withErrors($messageBag);

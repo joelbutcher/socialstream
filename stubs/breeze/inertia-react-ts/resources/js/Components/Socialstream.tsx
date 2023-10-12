@@ -1,37 +1,35 @@
 import InputError from '@/Components/InputError.jsx';
 import ProviderIcon from '@/Components/SocialstreamIcons/ProviderIcon.jsx';
+import {Provider} from '@/types';
 
-export default function Socialstream ({ providers, error }: { providers: string[], error?: string }) {
-    const providerName = (provider: string): string => {
-        switch(provider) {
-            case 'twitter':
-            case 'twitter-oauth-2':
-                return 'Twitter'
-            case 'linkedin':
-            case 'linkedin-openid':
-                return 'LinkedIn'
-            default:
-                return provider.charAt(0).toUpperCase() + provider?.slice(1);
-        }
-    }
-
+export default function Socialstream({prompt, providers, error}: {
+    prompt: string,
+    providers: Provider[],
+    error?: string
+}) {
     return (
-        <div>
-            <div className="flex flex-row items-center justify-between py-4 text-gray-600 dark:text-gray-400">
-                <hr className="w-full mr-2" />
-                Or
-                <hr className="w-full ml-2" />
+        <div className="space-y-6 mt-6 mb-2">
+            <div className="relative flex items-center">
+                <div className="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
+                <span className="flex-shrink text-gray-400 dark:text-gray-500 mx-6">
+                    {prompt}
+                </span>
+                <div className="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
             </div>
 
-            {error && <InputError message={error} className="mb-2 text-center" />}
+            {error && <InputError message={error} className="text-center"/>}
 
-            <div className="flex items-center justify-center gap-x-2">
-                {providers.map((provider, i) => {
+            <div className="grid gap-4">
+                {providers.map(provider => {
                     return (
-                        <a href={route('oauth.redirect', provider)} key={provider}>
+                        <a
+                            key={provider.id}
+                            href={route('oauth.redirect', provider.id)}
+                            className="inline-flex justify-center items-center gap-2 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150"
+                        >
                             <ProviderIcon provider={provider} className="h-6 w-6"/>
 
-                            <span className="sr-only">{providerName(provider)}</span>
+                            <span class="block font-medium text-sm text-gray-700 dark:text-gray-300">{provider.buttonLabel || provider.name}</span>
                         </a>
                     );
                 })}

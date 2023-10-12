@@ -240,19 +240,42 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     private function getBreezeStack(): BreezeInstallStack
     {
+        if (
+            class_exists('\App\Http\Middleware\HandleInertiaRequests') ||
+            class_exists('\App\Http\Middleware\HandleInertiaRequests') ||
+            class_exists('\App\Providers\VoltServiceProvider') ||
+            class_exists('\App\Http\Controllers\ProfileController')
+        ) {
+            warning('Installing Socialstream will overwrite some key files already published by Laravel Breeze.');
+
+            $decision = select(
+                label: 'Do you wish to proceed?',
+                options: [
+                    'yes' => 'Yes',
+                    'no' => 'No (exit)',
+                ],
+                default: 'yes',
+                hint: 'This will overwrite any changes you have made to any previously published files.'
+            );
+
+            if ($decision === 'no') {
+                throw new RuntimeException(message: 'An error occurred installing Socialstream', code: self::INVALID);
+            }
+        }
+
         return match (true) {
             class_exists('\App\Http\Middleware\HandleInertiaRequests') && $this->hasNodePackage('react') => BreezeInstallStack::React,
             class_exists('\App\Http\Middleware\HandleInertiaRequests') && $this->hasNodePackage('vue') => BreezeInstallStack::Vue,
-            class_exists('\App\Providers\VoltServiceProvider') => BreezeInstallStack::Livewire,
+            class_exists('\App\Providers\VoltServiceProvider') => match (true) {
+                str_contains(file_get_contents(resource_path('views/livewire/pages/auth/login.blade.php')), '$login = function () {') => BreezeInstallStack::FunctionalLivewire,
+                default => BreezeInstallStack::Livewire,
+            },
             class_exists('\App\Http\Controllers\ProfileController') => BreezeInstallStack::Blade,
             default => BreezeInstallStack::from(select(
-                label: 'Which Breeze stack would you like to use?',
-                options: [
-                    BreezeInstallStack::Blade->value => BreezeInstallStack::Blade->label(),
-                    BreezeInstallStack::Livewire->value => BreezeInstallStack::Livewire->label(),
-                    BreezeInstallStack::React->value => BreezeInstallStack::React->label(),
-                    BreezeInstallStack::Vue->value => BreezeInstallStack::Vue->label(),
-                ]
+                label: 'Which stack would you like to use?',
+                options: collect(BreezeInstallStack::cases())->mapWithKeys(
+                    fn (BreezeInstallStack $stack) => [$stack->value => $stack->label()]
+                )->all(),
             ))
         };
     }
@@ -263,32 +286,30 @@ class InstallCommand extends Command implements PromptsForMissingInput
     private function getJetstreamStack(): JetstreamInstallStack
     {
         if (file_exists(config_path('jetstream.php'))) {
-            $stack = config('jetstream.stack');
-
             warning('Installing Socialstream will overwrite some key files already published by Laravel Jetstream.');
 
             $decision = select(
-                label: "Proceed with the {$stack} stack?",
+                label: 'Do you wish to proceed?',
                 options: [
                     'yes' => 'Yes',
                     'no' => 'No (exit)',
                 ],
                 default: 'yes',
+                hint: 'This will overwrite any changes you have made to any published files.'
             );
 
             if ($decision === 'no') {
                 throw new RuntimeException(message: 'An error occurred installing Socialstream', code: self::INVALID);
             }
 
-            return JetstreamInstallStack::from($stack);
+            return JetstreamInstallStack::from(config('jetstream.stack'));
         }
 
         return JetstreamInstallStack::from(select(
-            label: 'Which Jetstream stack would you like to use?',
-            options: [
-                JetstreamInstallStack::Inertia->value => JetstreamInstallStack::Inertia->label(),
-                JetstreamInstallStack::Livewire->value => JetstreamInstallStack::Livewire->label(),
-            ],
+            label: 'Which stack would you like to use?',
+            options: collect(JetstreamInstallStack::cases())->mapWithKeys(
+                fn (JetstreamInstallStack $stack) => [$stack->value => $stack->label()],
+            ),
             default: 'inertia',
         ));
     }

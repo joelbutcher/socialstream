@@ -3,43 +3,41 @@ import InputError from '@/Components/InputError.vue';
 import ProviderIcon from '@/Components/SocialstreamIcons/ProviderIcon.vue';
 
 defineProps({
+    prompt: {
+        type: String,
+        default: 'Or Login Via',
+    },
     error: {
         type: String,
         default: null,
     },
     providers: {
         type: Array,
+    },
+    labels: {
+        type: Object,
     }
 });
-
-const providerName = (provider) => {
-    switch (provider) {
-        case 'twitter':
-        case 'twitter-oauth-2':
-            return 'Twitter';
-        case 'linkedin':
-        case 'linkedin-openid':
-            return 'LinkedIn';
-        default:
-            return provider.charAt(0).toUpperCase() + provider?.slice(1);
-    }
-};
 </script>
 
 <template>
-    <div v-if="$page.props.socialstream.providers.length">
-        <div class="flex flex-row items-center justify-between py-4 text-gray-600 dark:text-gray-400">
-            <hr class="w-full mr-2">
-            Or
-            <hr class="w-full ml-2">
+    <div v-if="providers.length" class="space-y-6 mt-6  mb-2">
+        <div class="relative flex items-center">
+            <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
+            <span class="flex-shrink text-gray-400 dark:text-gray-500 mx-6">
+                {{ prompt }}
+             </span>
+            <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
         </div>
 
-        <InputError v-if="error" :message="error" class="mb-2 text-center"/>
+        <InputError v-if="error" :message="error" class="text-center"/>
 
-        <div class="flex items-center justify-center gap-x-2">
-            <a v-for="provider in providers" :key="provider" :href="route('oauth.redirect', provider)">
+        <div class="grid gap-4">
+            <a v-for="provider in providers" :key="provider.id"
+               class="flex gap-2 items-center justify-center transition duration-200 border border-gray-400 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-normal text-center inline-block"
+               :href="route('oauth.redirect', provider.id)">
                 <ProviderIcon :provider="provider" classes="h-6 w-6 mx-2"/>
-                <span class="sr-only">{{ providerName(provider) }}</span>
+                <span class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ provider.buttonLabel || provider.name }}</span>
             </a>
         </div>
     </div>

@@ -15,10 +15,10 @@
         @foreach (JoelButcher\Socialstream\Socialstream::providers() as $provider)
             @php
                 $account = null;
-                $account = $user->connectedAccounts->where('provider', $provider)->first();
+                $account = $user->connectedAccounts->where('provider', $provider['id'])->first();
             @endphp
 
-            <x-connected-account provider="{{ $provider }}" created-at="{{ $account?->created_at->diffForHumans() ?? null }}">
+            <x-connected-account :provider="$provider" created-at="{{ $account?->created_at->diffForHumans() ?? null }}">
                 <x-slot name="action">
                     @if (! is_null($account))
                         <div class="flex items-center space-x-6">
@@ -30,7 +30,7 @@
                             @endif
                         </div>
                     @else
-                        <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
+                        <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider['id']) }}">
                             {{ __('Connect') }}
                         </x-action-link>
                     @endif

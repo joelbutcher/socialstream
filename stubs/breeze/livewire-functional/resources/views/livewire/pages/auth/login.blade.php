@@ -102,4 +102,8 @@ $login = function () {
             </x-primary-button>
         </div>
     </form>
+
+    @if (\JoelButcher\Socialstream\Socialstream::show())
+        <x-socialstream />
+    @endif
 </div>

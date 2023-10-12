@@ -91,7 +91,6 @@ PHP.PHP_EOL, $appConfig));
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 
         copy(__DIR__.'/../../../../stubs/filament/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
-        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
         copy(__DIR__.'/../../../../stubs/filament/resources/views/components/input-error.blade.php', resource_path('views/components/input-error.blade.php'));
         copy(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
 

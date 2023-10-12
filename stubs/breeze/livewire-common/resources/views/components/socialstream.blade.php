@@ -1,18 +1,24 @@
-@if(! empty(JoelButcher\Socialstream\Socialstream::providers()))
-    <div class="flex flex-row items-center justify-between py-4 text-gray-600 dark:text-gray-400">
-        <hr class="w-full mr-2">
-        {{ __('Or') }}
-        <hr class="w-full ml-2">
+<div class="space-y-6 mt-6 mb-2">
+    @if(! empty(\JoelButcher\Socialstream\Socialstream::providers()))
+        <div class="relative flex items-center">
+            <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
+            <span class="flex-shrink text-gray-400 dark:text-gray-500 mx-6">
+                {{ config('socialstream.prompt', 'Or Login Via') }}
+            </span>
+            <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
+        </div>
+    @endif
+
+    <x-input-error :messages="session('errors')?->get('socialstream') ?? []" class="text-center"/>
+
+    <div class="grid gap-4">
+        @foreach (\JoelButcher\Socialstream\Socialstream::providers() as $provider)
+            <a class="flex gap-2 items-center justify-center transition duration-200 border border-gray-400 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md"
+               href='{{ route('oauth.redirect', $provider['id']) }}'>
+                <x-socialstream-icons.provider-icon :provider="$provider['id']" class="h-6 w-6"/>
+                <span class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ $provider['buttonLabel'] ?? $provider['name'] }}</span>
+            </a>
+        @endforeach
     </div>
-@endif
 
-<x-input-error :messages="session('errors')?->get('socialstream') ?? []" class="text-center mb-2" />
-
-<div class="flex items-center justify-center gap-x-2">
-    @foreach (\JoelButcher\Socialstream\Socialstream::providers() as $provider)
-        <a href="{{ route('oauth.redirect', ['provider' => $provider]) }}">
-            <x-socialstream-icons.provider-icon :provider="$provider" class="h-6 w-6" />
-            <span class="sr-only">{{ $provider }}</span>
-        </a>
-    @endforeach
 </div>

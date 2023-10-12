@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+import {nextTick, ref} from 'vue';
 import ActionLink from '@/Components/ActionLink.vue';
 import ConnectedAccount from '@/Components/ConnectedAccount.vue';
 import DangerButton from '@/Components/DangerButton.vue';
@@ -31,11 +31,11 @@ const form = useForm({
 });
 
 const hasAccountForProvider = (provider) => props.connectedAccounts
-    .filter(account => account.provider === provider)
+    .filter(account => account.provider === provider.id)
     .shift() !== undefined;
 
 const getAccountForProvider = (provider) => props.connectedAccounts
-    .filter(account => account.provider === provider)
+    .filter(account => account.provider === provider.id)
     .shift();
 
 const confirmAccountRemoval = (provider) => {
@@ -82,7 +82,7 @@ const closeModal = () => {
         </header>
 
         <div class="mt-5 space-y-6">
-            <div v-for="(provider) in providers" :key="provider">
+            <div v-for="provider in providers" :key="provider.id">
                 <ConnectedAccount :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider)?.created_at : ''" :provider="provider">
                     <template #action>
                         <template v-if="hasAccountForProvider(provider)">

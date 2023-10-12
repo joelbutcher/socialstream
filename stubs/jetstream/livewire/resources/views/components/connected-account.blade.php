@@ -3,11 +3,11 @@
 <div>
     <div class="pl-3 flex items-center justify-between">
         <div class="flex items-center">
-            <x-socialstream-icons.provider-icon :provider="$provider" class="h-6 w-6" />
+            <x-socialstream-icons.provider-icon :provider="$provider['id']" class="h-6 w-6" />
 
-            <div>
+            <div class="ml-2">
                 <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                    {{ __(ucfirst($provider)) }}
+                    {{ __($provider['name']) }}
                 </div>
 
                 @if (! empty($createdAt))
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    @error($provider.'_connect_error')
+    @error($provider['id'].'_connect_error')
     <div class="text-sm font-semibold text-red-500 px-3 mt-2">
         {{ $message }}
     </div>

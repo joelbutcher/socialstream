@@ -62,6 +62,7 @@ class LivewireDriver extends JetstreamDriver
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/connected-account.blade.php', resource_path('views/components/connected-account.blade.php'));
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
+        copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/validation-errors.blade.php', resource_path('views/components/validation-errors.blade.php'));
 
         return $this;
     }

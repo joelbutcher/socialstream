@@ -22,8 +22,9 @@ const form = useForm({
 });
 
 const getAccountForProvider = (provider) => page.props.socialstream.connectedAccounts
-    .filter(account => account.provider === provider)
+    .filter(account => account.provider === provider.id)
     .shift();
+
 
 const setProfilePhoto = (id) => {
     form.put(route('user-profile-photo.set', { id }), {

@@ -6,14 +6,14 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
 import Socialstream from '@/Components/Socialstream.vue';
-import { type Socialstream as SocialstreamType } from '@/types';
+import type {Socialstream as SocialstreamType} from '@/types';
 
 defineProps<{
     socialstream: SocialstreamType,
     errors: {
         socialstream: string;
     };
-}>()
+}>();
 
 const form = useForm({
     name: '',
@@ -110,6 +110,6 @@ const submit = () => {
         </form>
 
         <Socialstream v-if="socialstream.show && socialstream.providers.length" :error="errors.socialstream"
-                      :providers="socialstream.providers"/>
+                      :prompt="socialstream.prompt" :providers="socialstream.providers"/>
     </GuestLayout>
 </template>

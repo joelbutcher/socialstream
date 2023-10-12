@@ -1,24 +1,11 @@
 import { PropsWithChildren } from 'react';
 import ProviderIcon from '@/Components/SocialstreamIcons/ProviderIcon.jsx';
-import { ConnectedAccount as ConnectedAccountType } from '@/types';
+import {ConnectedAccount as ConnectedAccountType, Provider} from '@/types';
 
 export default function ConnectedAccount({ children, provider, connectedAccount }: PropsWithChildren<{
-    provider: string,
+    provider: Provider,
     connectedAccount?: ConnectedAccountType
 }>) {
-    const providerName = (): string => {
-        switch(provider) {
-            case 'twitter':
-            case 'twitter-oauth-2':
-                return 'Twitter'
-            case 'linkedin':
-            case 'linkedin-openid':
-                return 'LinkedIn'
-            default:
-                return provider.charAt(0).toUpperCase() + provider?.slice(1);
-        }
-    }
-
     return (
         <div>
             <div className="px-3 flex items-center justify-between">
@@ -27,7 +14,7 @@ export default function ConnectedAccount({ children, provider, connectedAccount 
 
                     <div className="ml-2">
                         <div className="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                            {providerName()}
+                            {provider.name}
                         </div>
 
                         {connectedAccount?.created_at ? (
@@ -45,5 +32,5 @@ export default function ConnectedAccount({ children, provider, connectedAccount 
                 {children}
             </div>
         </div>
-    )
+    );
 }

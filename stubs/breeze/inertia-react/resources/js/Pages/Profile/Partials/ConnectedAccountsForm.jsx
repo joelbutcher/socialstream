@@ -24,7 +24,9 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
         password: '',
     });
 
-    const confirmAccountDeletion = () => {
+    const confirmAccountDeletion = (e) => {
+        e.preventDefault();
+
         setConfirmingAccountDeletion(true);
     };
 
@@ -34,7 +36,7 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
         destroy(route('connected-accounts.destroy', connectedAccount.id), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
-            onError: () => passwordInput.current.focus(),
+            onError: () => passwordInput.current?.focus(),
             onFinish: () => reset(),
         });
     };
@@ -51,70 +53,69 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Connected Accounts</h2>
 
                 <p className="max-w-xl mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    You are free to connect any social accounts to your profile and may remove any connected accounts at
-                    any time. If you feel any of your connected accounts have been compromised, you should disconnect
-                    them immediately and change your password.
+                    You are free to connect any social accounts to your profile and may remove any connected accounts at any
+                    time. If you feel any of your connected accounts have been compromised, you should disconnect them
+                    immediately and change your password.
                 </p>
             </header>
 
             <div className="mt-5 space-y-6">
-                {providers.map((provider) => {
+                {providers.map(provider => {
                     const connectedAccount = connectedAccounts
-                        .filter((account) => account.provider === provider)
+                        .filter(account => account.provider === provider.id)
                         .shift();
 
                     return (
-                        <React.Fragment key={provider}>
+                        <React.Fragment key={provider.id}>
                             <ConnectedAccount provider={provider} connectedAccount={connectedAccount}>
-                                {connectedAccount ? (
-                                    connectedAccounts.length > 1 ||
-                                    (hasPassword && (
-                                        <DangerButton onClick={confirmAccountDeletion}>Remove</DangerButton>
-                                    ))
-                                ) : (
-                                    <ActionLink href={route('oauth.redirect', { provider })}>Connect</ActionLink>
-                                )}
+                                {connectedAccount ?
+                                    (connectedAccounts.length > 1 || hasPassword && <DangerButton onClick={confirmAccountDeletion}>Remove</DangerButton>)
+                                    : (
+                                        <ActionLink href={route('oauth.redirect', { provider })}>Connect</ActionLink>
+                                    )}
                             </ConnectedAccount>
 
-                            <Modal show={confirmingAccountDeletion} onClose={closeModal}>
-                                <form onSubmit={(e) => deleteAccount(e, connectedAccount)} className="p-6">
-                                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                        Are you sure you want to remove this account?
-                                    </h2>
+                            {connectedAccount && (
+                                <Modal show={confirmingAccountDeletion} onClose={closeModal}>
+                                    <form onSubmit={(e) => deleteAccount(e, connectedAccount)} className="p-6">
+                                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                            Are you sure you want to remove this account?
+                                        </h2>
 
-                                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                        Please enter your password to confirm you would like to remove this account.
-                                    </p>
+                                        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                            Please enter your password to confirm you would like to remove this account.
+                                        </p>
 
-                                    <div className="mt-6">
-                                        <InputLabel htmlFor="password" value="Password" className="sr-only" />
+                                        <div className="mt-6">
+                                            <InputLabel htmlFor="password" value="Password" className="sr-only"/>
 
-                                        <TextInput
-                                            id="password"
-                                            type="password"
-                                            name="password"
-                                            ref={passwordInput}
-                                            value={data.password}
-                                            onChange={(e) => setData('password', e.target.value)}
-                                            className="mt-1 block w-3/4"
-                                            isFocused
-                                            placeholder="Password"
-                                        />
+                                            <TextInput
+                                                id="password"
+                                                type="password"
+                                                name="password"
+                                                ref={passwordInput}
+                                                value={data.password}
+                                                onChange={(e) => setData('password', e.target.value)}
+                                                className="mt-1 block w-3/4"
+                                                isFocused
+                                                placeholder="Password"
+                                            />
 
-                                        <InputError message={errors.password} className="mt-2" />
-                                    </div>
+                                            <InputError message={errors.password} className="mt-2"/>
+                                        </div>
 
-                                    <div className="mt-6 flex justify-end">
-                                        <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
+                                        <div className="mt-6 flex justify-end">
+                                            <SecondaryButton onClick={closeModal}>Cancel</SecondaryButton>
 
-                                        <DangerButton className="ml-3" disabled={processing}>
-                                            Remove Account
-                                        </DangerButton>
-                                    </div>
-                                </form>
-                            </Modal>
+                                            <DangerButton className="ml-3" disabled={processing}>
+                                                Remove Account
+                                            </DangerButton>
+                                        </div>
+                                    </form>
+                                </Modal>
+                            )}
                         </React.Fragment>
-                    );
+                    )
                 })}
             </div>
         </section>
