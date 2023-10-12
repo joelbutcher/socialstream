@@ -2,7 +2,7 @@
     @if(! empty(\JoelButcher\Socialstream\Socialstream::providers()))
         <div class="relative flex items-center">
             <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
-            <span class="flex-shrink text-gray-400 dark:text-gray-500 mx-6">
+            <span class="flex-shrink text-gray-400 dark:text-gray-500 px-6">
             {{ config('socialstream.prompt', 'Or Login Via') }}
         </span>
             <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
