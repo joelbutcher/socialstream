@@ -2,18 +2,13 @@
 
 namespace JoelButcher\Socialstream\Actions\Auth\Filament;
 
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\MessageBag;
-use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
-use JoelButcher\Socialstream\Features;
-use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 

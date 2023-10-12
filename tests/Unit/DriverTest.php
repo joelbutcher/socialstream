@@ -12,7 +12,6 @@ it('can build a composer require command for an array of packages', function () 
     {
         protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
         {
-
         }
     };
 
@@ -31,7 +30,6 @@ it('can build a composer require dev command for an array of packages', function
     {
         protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
         {
-
         }
     };
 
@@ -50,7 +48,6 @@ it('can build a composer remove dev command for an array of packages', function 
     {
         protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
         {
-
         }
     };
 

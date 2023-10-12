@@ -20,7 +20,6 @@ class InstallManager extends Manager
 {
     public function getDefaultDriver(): void
     {
-
     }
 
     public function createBreezeBladeDriver(): BladeDriver

@@ -100,7 +100,11 @@ export default function Login({
             </form>
 
             {socialstream.show && socialstream.providers.length > 0 && (
-                <Socialstream prompt={socialstream.prompt} error={socialstreamErrors} providers={socialstream.providers} />
+                <Socialstream
+                    prompt={socialstream.prompt}
+                    error={socialstreamErrors}
+                    providers={socialstream.providers}
+                />
             )}
         </GuestLayout>
     );
