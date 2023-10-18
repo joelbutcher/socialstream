@@ -29,7 +29,7 @@ export default function Socialstream({prompt, providers, error}: {
                         >
                             <ProviderIcon provider={provider} className="h-6 w-6"/>
 
-                            <span class="block font-medium text-sm text-gray-700 dark:text-gray-300">{provider.buttonLabel || provider.name}</span>
+                            <span className="block font-medium text-sm text-gray-700 dark:text-gray-300">{provider.buttonLabel || provider.name}</span>
                         </a>
                     );
                 })}

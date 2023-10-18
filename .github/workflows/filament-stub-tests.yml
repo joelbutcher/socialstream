@@ -1,0 +1,60 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - main
+      - '*.x'
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  filament-stub-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [  8.1, 8.2 ]
+        laravel: [ 10 ]
+
+    name: Test Laravel Breeze Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - Filament Admin Panel
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pdo, pdo_sqlite
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Laravel
+        run: |
+          composer create-project laravel/laravel:^${{ matrix.laravel }} .
+          composer require joelbutcher/socialstream:@dev --no-interaction --no-update
+          composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: 'socialstream'
+
+      - name: Install Socialstream
+        run: |
+          composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
+          php artisan socialstream:install filament
+
+      - name: Install NPM dependencies
+        run: npm i
+
+      - name: Compile assets
+        run: npm run build
+
+      - name: Execute tests
+        run: ./vendor/bin/phpunit
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"

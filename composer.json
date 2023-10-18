@@ -25,6 +25,7 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
+        "laravel/breeze": "^1.25",
         "laravel/jetstream": "^4.0",
         "laravel/sanctum": "^3.3",
         "mockery/mockery": "^1.0",

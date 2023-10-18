@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -40,61 +40,3 @@ jobs:
 
       - name: Execute tests
         run: ./vendor/bin/pest
-
-#  stub-tests:
-#    runs-on: ubuntu-latest
-#
-#    strategy:
-#      fail-fast: true
-#      matrix:
-#        php: [  8.1, 8.2 ]
-#        laravel: [ 10 ]
-#        stack: [ inertia, livewire ]
-#        tester: [ phpunit, pest ]
-#
-#    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }} – ${{ matrix.tester }}
-#
-#    steps:
-#      - name: Setup PHP
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: ${{ matrix.php }}
-#          extensions: dom, curl, libxml, mbstring, zip
-#          ini-values: error_reporting=E_ALL
-#          tools: composer:v2
-#          coverage: none
-#
-#      - name: Setup Laravel
-#        run: |
-#          composer create-project laravel/laravel:^${{ matrix.laravel }} .
-#          composer require joelbutcher/socialstream:@dev --no-interaction --no-update
-#          composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
-#
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#        with:
-#          path: 'socialstream'
-#
-#      - name: Install Socialstream
-#        if: ${{ matrix.tester == 'pest' }}
-#        run: |
-#          composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
-#          php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification --pest
-#
-#      - name: Install Socialstream
-#        if: ${{ matrix.tester == 'phpunit' }}
-#        run: |
-#          composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
-#          php artisan socialstream:install --stack=${{ matrix.stack }} --teams --api --verification
-#
-#      - name: Install NPM dependencies
-#        run: npm i
-#
-#      - name: Compile assets
-#        run: npm run build
-#
-#      - name: Execute tests
-#        run: ./vendor/bin/${{ matrix.tester }}
-#        env:
-#          DB_CONNECTION: sqlite
-#          DB_DATABASE: ":memory:"

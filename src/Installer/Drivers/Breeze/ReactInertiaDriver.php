@@ -30,7 +30,7 @@ class ReactInertiaDriver extends BreezeDriver
     protected function copyAppFiles(): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/ConnectedAccountController.php', app_path('Http/Controllers/Auth/ConnectedAccountController.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/inertia-common/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
         copy(__DIR__.'/../../../../stubs/breeze/inertia-common/app/Http/Controllers/ProfileController.php', app_path('Http/Controllers/ProfileController.php'));
 
         return $this;

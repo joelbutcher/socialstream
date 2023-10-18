@@ -229,8 +229,21 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return null;
         }
 
-        /** @var JetstreamInstallStack|BreezeInstallStack $stack */
+        /** @var JetstreamInstallStack|BreezeInstallStack|string $stack */
         $stack = $this->argument('stack');
+
+        if (! is_string($stack)) {
+            return $stack;
+        }
+
+        /** @var JetstreamInstallStack|BreezeInstallStack|null  $stack */
+        $stack = (JetstreamInstallStack::tryFrom($stack) ?? BreezeInstallStack::tryFrom($stack));
+
+        if (! $stack) {
+            throw new \InvalidArgumentException(
+                "Invalid stack [{$this->argument('stack')}] for starter-kit '{$this->getStarterKit()->value}'"
+            );
+        }
 
         return $stack;
     }
