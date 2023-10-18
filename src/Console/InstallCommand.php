@@ -236,7 +236,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return $stack;
         }
 
-        /** @var JetstreamInstallStack|BreezeInstallStack|null  $stack */
+        /** @var JetstreamInstallStack|BreezeInstallStack|null $stack */
         $stack = (JetstreamInstallStack::tryFrom($stack) ?? BreezeInstallStack::tryFrom($stack));
 
         if (! $stack) {
