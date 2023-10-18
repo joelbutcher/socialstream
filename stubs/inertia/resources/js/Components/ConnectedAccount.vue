@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue';
 import BitbucketIcon from '@/Components/SocialstreamIcons/BitbucketIcon.vue';
 import FacebookIcon from '@/Components/SocialstreamIcons/FacebookIcon.vue';
 import GithubIcon from '@/Components/SocialstreamIcons/GithubIcon.vue';
@@ -8,7 +9,7 @@ import LinkedInIcon from '@/Components/SocialstreamIcons/LinkedInIcon.vue';
 import SlackIcon from '@/Components/SocialstreamIcons/SlackIcon.vue';
 import TwitterIcon from '@/Components/SocialstreamIcons/TwitterIcon.vue';
 
-defineProps({
+const props = defineProps({
     provider: String,
     createdAt: {
         type: String,
@@ -17,7 +18,7 @@ defineProps({
 });
 
 const providerName =  computed(() => {
-    switch(this.provider) {
+    switch(props.provider) {
         case 'twitter':
         case 'twitter-oauth-2':
             return 'Twitter'
@@ -25,7 +26,7 @@ const providerName =  computed(() => {
         case 'linkedin-openid':
             return 'LinkedIn'
         default:
-            return name.charAt(0).toUpperCase() + provider.slice(1);
+            return props.provider.charAt(0).toUpperCase() + props.provider.slice(1);
     };
 });
 </script>
