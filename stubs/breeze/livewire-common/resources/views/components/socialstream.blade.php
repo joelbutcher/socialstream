@@ -16,7 +16,7 @@
             <a class="flex gap-2 items-center justify-center transition duration-200 border border-gray-400 w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md"
                href='{{ route('oauth.redirect', $provider['id']) }}'>
                 <x-socialstream-icons.provider-icon :provider="$provider['id']" class="h-6 w-6"/>
-                <span class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ $provider['buttonLabel'] ?? $provider['name'] }}</span>
+                <span class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ $provider['buttonLabel'] }}</span>
             </a>
         @endforeach
     </div>
