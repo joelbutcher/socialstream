@@ -32,7 +32,7 @@ abstract class BreezeDriver extends Driver
 
         spin(function () use ($options, $composerBinary) {
             if (! $this->hasComposerPackage('laravel/breeze')) {
-                $this->requireComposerPackages($composerBinary, ['laravel/breeze']);
+                $this->requireComposerPackages(['laravel/breeze'], $composerBinary);
             }
 
             (new Process([

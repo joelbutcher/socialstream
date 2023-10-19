@@ -40,7 +40,7 @@ PHP.PHP_EOL, $appConfig));
 
         spin(function () use ($composerBinary) {
             if (! $this->hasComposerPackage('filament/filament')) {
-                $this->requireComposerPackages($composerBinary, ['filament/filament']);
+                $this->requireComposerPackages(['filament/filament'], $composerBinary);
             }
 
             (new Process([
@@ -73,12 +73,12 @@ PHP.PHP_EOL, $appConfig));
         return $this;
     }
 
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         return $this;
     }
 
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         return $this;
     }
@@ -86,7 +86,7 @@ PHP.PHP_EOL, $appConfig));
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 

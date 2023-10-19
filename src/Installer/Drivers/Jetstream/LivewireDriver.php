@@ -32,7 +32,7 @@ class LivewireDriver extends JetstreamDriver
     /**
      * Copy the auth views to the app "resources" directory for the given stack.
      */
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
@@ -43,7 +43,7 @@ class LivewireDriver extends JetstreamDriver
     /**
      * Copy the profile views to the app "resources" directory for the given stack.
      */
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/profile/connected-accounts-form.blade.php', resource_path('views/profile/connected-accounts-form.blade.php'));
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/profile/set-password-form.blade.php', resource_path('views/profile/set-password-form.blade.php'));
@@ -55,7 +55,7 @@ class LivewireDriver extends JetstreamDriver
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 

@@ -32,7 +32,7 @@ class InertiaDriver extends JetstreamDriver
     /**
      * Copy the auth views to the app "resources" directory for the given stack.
      */
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
         copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Pages/Auth/Register.vue', resource_path('js/Pages/Auth/Register.vue'));
@@ -43,7 +43,7 @@ class InertiaDriver extends JetstreamDriver
     /**
      * Copy the profile views to the app "resources" directory for the given stack.
      */
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Pages/Profile/Partials/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/Partials/ConnectedAccountsForm.vue'));
         copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Pages/Profile/Partials/SetPasswordForm.vue', resource_path('js/Pages/Profile/Partials/SetPasswordForm.vue'));
@@ -55,7 +55,7 @@ class InertiaDriver extends JetstreamDriver
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));
         copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Components/ActionLink.vue', resource_path('js/Components/ActionLink.vue'));

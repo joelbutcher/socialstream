@@ -33,7 +33,7 @@ abstract class JetstreamDriver extends Driver
 
         spin(function () use ($options, $composerBinary) {
             if (! $this->hasComposerPackage('laravel/jetstream')) {
-                $this->requireComposerPackages($composerBinary, ['laravel/jetstream']);
+                $this->requireComposerPackages(['laravel/jetstream'], $composerBinary);
             }
 
             (new Process([
@@ -74,7 +74,7 @@ abstract class JetstreamDriver extends Driver
     /**
      * Copy the actions to the base "app" directory.
      */
-    protected function copyActions(): static
+    public function copyActions(): static
     {
         parent::copyActions();
 

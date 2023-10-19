@@ -35,7 +35,7 @@ class LivewireDriver extends BreezeDriver
     /**
      * Copy the auth views to the app "resources" directory for the given stack.
      */
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/pages/auth/login.blade.php', resource_path('views/livewire/pages/auth/login.blade.php'));
         copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/pages/auth/register.blade.php', resource_path('views/livewire/pages/auth/register.blade.php'));
@@ -46,7 +46,7 @@ class LivewireDriver extends BreezeDriver
     /**
      * Copy the profile views to the app "resources" directory for the given stack.
      */
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/livewire-common/resources/views/profile.blade.php', resource_path('views/profile.blade.php'));
         copy(__DIR__.'/../../../../stubs/breeze/livewire/resources/views/livewire/profile/delete-user-form.blade.php', resource_path('views/livewire/profile/delete-user-form.blade.php'));
@@ -59,7 +59,7 @@ class LivewireDriver extends BreezeDriver
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/breeze/default/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 

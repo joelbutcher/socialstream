@@ -39,7 +39,7 @@ class VueInertiaDriver extends BreezeDriver
     /**
      * Copy the auth views to the app "resources" directory for the given stack.
      */
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
             copy(__DIR__.'/../../../../stubs/breeze/inertia-vue-ts/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
@@ -57,7 +57,7 @@ class VueInertiaDriver extends BreezeDriver
     /**
      * Copy the profile views to the app "resources" directory for the given stack.
      */
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
             copy(__DIR__.'/../../../../stubs/breeze/inertia-vue-ts/resources/js/Pages/Profile/Edit.vue', resource_path('js/Pages/Profile/Edit.vue'));
@@ -77,7 +77,7 @@ class VueInertiaDriver extends BreezeDriver
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
             (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/breeze/inertia-vue-ts/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));

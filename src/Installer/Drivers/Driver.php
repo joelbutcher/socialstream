@@ -181,7 +181,7 @@ abstract class Driver
     /**
      * Copy the actions to the base "app" directory.
      */
-    protected function copyActions(): static
+    public function copyActions(): static
     {
         copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
         copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
@@ -197,7 +197,7 @@ abstract class Driver
     /**
      * Copy the auth views to the app "resources" directory for the given stack.
      */
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         return $this;
     }
@@ -205,7 +205,7 @@ abstract class Driver
     /**
      * Copy the profile views to the app "resources" directory for the given stack.
      */
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         return $this;
     }
@@ -213,7 +213,7 @@ abstract class Driver
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         return $this;
     }
@@ -247,7 +247,7 @@ abstract class Driver
     /**
      * Build the Socialstream frontend.
      */
-    private function build(): void
+    public function build(): void
     {
         if (file_exists(base_path('pnpm-lock.yaml'))) {
             $this->runCommands(['pnpm install', 'pnpm run build']);

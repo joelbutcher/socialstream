@@ -114,6 +114,7 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         $this->commands([
             Console\InstallCommand::class,
+            Console\UpgradeCommand::class,
             Console\CreateProviderCommand::class,
         ]);
     }

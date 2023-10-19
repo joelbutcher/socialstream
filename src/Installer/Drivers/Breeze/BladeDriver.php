@@ -32,7 +32,7 @@ class BladeDriver extends BreezeDriver
     /**
      * Copy the actions to the base "app" directory.
      */
-    protected function copyActions(): static
+    public function copyActions(): static
     {
         copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
         copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
@@ -47,7 +47,7 @@ class BladeDriver extends BreezeDriver
     /**
      * Copy the auth views to the app "resources" directory for the given stack.
      */
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
         copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/auth/register.blade.php', resource_path('views/auth/register.blade.php'));
@@ -58,7 +58,7 @@ class BladeDriver extends BreezeDriver
     /**
      * Copy the profile views to the app "resources" directory for the given stack.
      */
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/profile/edit.blade.php', resource_path('views/profile/edit.blade.php'));
         copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/profile/partials/set-password-form.blade.php', resource_path('views/profile/partials/set-password-form.blade.php'));
@@ -70,7 +70,7 @@ class BladeDriver extends BreezeDriver
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/breeze/default/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 

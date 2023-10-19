@@ -51,7 +51,7 @@ final class ProviderData
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'buttonLabel' => $this->buttonLabel,
+            'buttonLabel' => $this->buttonLabel ?: $this->name,
         ];
     }
 }

@@ -25,11 +25,11 @@ trait InteractsWithComposer
     /**
      * Installs the given Composer Packages into the application.
      */
-    protected function requireComposerPackages(string $composerBinary, array $packages): bool
+    protected function requireComposerPackages(array $packages, string $composerBinary = 'global'): bool
     {
         $outputStyle = new BufferedOutput();
 
-        $command = $this->buildBaseComposerCommand($composerBinary, 'require', $packages);
+        $command = $this->buildBaseComposerCommand('require', $packages, $composerBinary);
 
         return ! (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
@@ -41,11 +41,11 @@ trait InteractsWithComposer
     /**
      * Removes the given Composer Packages as "dev" dependencies.
      */
-    protected function removeComposerDevPackages(string $composerBinary, array $packages): bool
+    protected function removeComposerDevPackages(array $packages, string $composerBinary = 'global'): bool
     {
         $outputStyle = new BufferedOutput();
 
-        $command = $this->buildBaseComposerCommand($composerBinary, 'remove', $packages, dev: true);
+        $command = $this->buildBaseComposerCommand('remove', $packages, $composerBinary, dev: true);
 
         return (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
@@ -57,11 +57,11 @@ trait InteractsWithComposer
     /**
      * Install the given Composer Packages as "dev" dependencies.
      */
-    protected function requireComposerDevPackages(string $composerBinary, array $packages): bool
+    protected function requireComposerDevPackages(array $packages, string $composerBinary = 'global'): bool
     {
         $outputStyle = new BufferedOutput();
 
-        $command = $this->buildBaseComposerCommand($composerBinary, 'require', $packages, dev: true);
+        $command = $this->buildBaseComposerCommand('require', $packages, $composerBinary, dev: true);
 
         return (new Process($command, base_path(), ['COMPOSER_MEMORY_LIMIT' => '-1']))
             ->setTimeout(null)
@@ -70,7 +70,7 @@ trait InteractsWithComposer
             }) === 0;
     }
 
-    protected function buildBaseComposerCommand(string $composerBinary, string $command, array $packages, bool $dev = false): array
+    protected function buildBaseComposerCommand(string $command, array $packages, string $composerBinary = 'global', bool $dev = false): array
     {
         $command = $composerBinary !== 'global'
             ? [$this->phpBinary(), $composerBinary, $command]
