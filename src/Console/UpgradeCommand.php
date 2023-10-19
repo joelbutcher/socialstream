@@ -9,6 +9,7 @@ use JoelButcher\Socialstream\Installer\Drivers\Jetstream\InertiaDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Jetstream\JetstreamDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Jetstream\LivewireDriver;
 use JoelButcher\Socialstream\Socialstream;
+
 use function Laravel\Prompts\alert;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\intro;
@@ -36,7 +37,7 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
 
     public function handle(): int
     {
-        if (!$this->isSocialstreamInstalled()) {
+        if (! $this->isSocialstreamInstalled()) {
             alert('Socialstream is not installed, please run the `socialstream:install` command to setup Socialstream');
 
             return self::INVALID;
@@ -54,11 +55,10 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
             return self::FAILURE;
         }
 
-        if (!$this->hasComposerPackage('laravel/jetstream')) {
+        if (! $this->hasComposerPackage('laravel/jetstream')) {
             \Laravel\Prompts\info('First, we need to add Laravel Jetstream to your projects composer dependencies.');
 
-            if (!confirm('Install laravel/jetstream?')) {
-
+            if (! confirm('Install laravel/jetstream?')) {
                 return self::INVALID;
             }
 
@@ -78,9 +78,9 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
             'inertia' => $this->laravel->make(InertiaDriver::class),
         };
 
-        spin(fn() => $driver->build(), message: 'Scaffolding frontend...');
+        spin(fn () => $driver->build(), message: 'Scaffolding frontend...');
 
-        outro('You\'ve successfully upgraded to Socialstream ' . Socialstream::VERSION . '!');
+        outro('You\'ve successfully upgraded to Socialstream '.Socialstream::VERSION.'!');
 
         return self::SUCCESS;
     }
@@ -93,14 +93,14 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
     private function copyActions(): self
     {
         $options = [
-            __DIR__ . '/../../stubs/app/Actions/Jetstream/DeleteUser.php' => 'app/Actions/Jetstream/DeleteUser.php',
-            __DIR__ . '/../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php' => 'app/Actions/Socialstream/ResolveSocialiteUser.php',
-            __DIR__ . '/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php' => 'app/Actions/Socialstream/CreateConnectedAccount.php',
-            __DIR__ . '/../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php' => 'app/Actions/Socialstream/GenerateRedirectForProvider.php',
-            __DIR__ . '/../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php' => 'app/Actions/Socialstream/UpdateConnectedAccount.php',
-            __DIR__ . '/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php' => 'app/Actions/Socialstream/CreateUserFromProvider.php',
-            __DIR__ . '/../../stubs/app/Actions/Socialstream/HandleInvalidState.php' => 'app/Actions/Socialstream/HandleInvalidState.php',
-            __DIR__ . '/../../stubs/app/Actions/Socialstream/SetUserPassword.php' => 'app/Actions/Socialstream/SetUserPassword.php',
+            __DIR__.'/../../stubs/app/Actions/Jetstream/DeleteUser.php' => 'app/Actions/Jetstream/DeleteUser.php',
+            __DIR__.'/../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php' => 'app/Actions/Socialstream/ResolveSocialiteUser.php',
+            __DIR__.'/../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php' => 'app/Actions/Socialstream/CreateConnectedAccount.php',
+            __DIR__.'/../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php' => 'app/Actions/Socialstream/GenerateRedirectForProvider.php',
+            __DIR__.'/../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php' => 'app/Actions/Socialstream/UpdateConnectedAccount.php',
+            __DIR__.'/../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php' => 'app/Actions/Socialstream/CreateUserFromProvider.php',
+            __DIR__.'/../../stubs/app/Actions/Socialstream/HandleInvalidState.php' => 'app/Actions/Socialstream/HandleInvalidState.php',
+            __DIR__.'/../../stubs/app/Actions/Socialstream/SetUserPassword.php' => 'app/Actions/Socialstream/SetUserPassword.php',
         ];
 
         $selected = multiselect(
@@ -113,7 +113,7 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
         $this->copyFiles(
             files: array_filter(
                 array: $options,
-                callback: fn(string $option) => in_array($option, $selected),
+                callback: fn (string $option) => in_array($option, $selected),
                 mode: ARRAY_FILTER_USE_KEY,
             ),
         );
@@ -125,12 +125,12 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
     {
         $views = match (config('jetstream.stack')) {
             'livewire' => [
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/auth/login.blade.php' => 'resources/views/auth/login.blade.php',
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/auth/register.blade.php' => 'resources/views/auth/register.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/auth/login.blade.php' => 'resources/views/auth/login.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/auth/register.blade.php' => 'resources/views/auth/register.blade.php',
             ],
             'inertia' => [
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Pages/Auth/Login.vue' => 'resources/js/Pages/Auth/Login.vue',
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Pages/Auth/Register.vue' => 'resources/js/Pages/Auth/Register.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Pages/Auth/Login.vue' => 'resources/js/Pages/Auth/Login.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Pages/Auth/Register.vue' => 'resources/js/Pages/Auth/Register.vue',
             ],
         };
 
@@ -145,7 +145,7 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
         $this->copyFiles(
             files: array_filter(
                 array: $views,
-                callback: fn(string $option) => in_array($option, $selected),
+                callback: fn (string $option) => in_array($option, $selected),
                 mode: ARRAY_FILTER_USE_KEY,
             ),
         );
@@ -157,14 +157,14 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
     {
         $views = match (config('jetstream.stack')) {
             'livewire' => [
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/profile/connected-accounts-form.blade.php' => 'resources/views/profile/connected-accounts-form.blade.php',
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/profile/set-password-form.blade.php' => 'resources/views/profile/set-password-form.blade.php',
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/profile/show.blade.php' => 'resources/views/profile/show.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/profile/connected-accounts-form.blade.php' => 'resources/views/profile/connected-accounts-form.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/profile/set-password-form.blade.php' => 'resources/views/profile/set-password-form.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/profile/show.blade.php' => 'resources/views/profile/show.blade.php',
             ],
             'inertia' => [
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Pages/Profile/Partials/ConnectedAccountsForm.vue' => 'resources/js/Pages/Profile/Partials/ConnectedAccountsForm.vue',
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Pages/Profile/Partials/SetPasswordForm.vue' => 'resources/js/Pages/Profile/Partials/SetPasswordForm.vue',
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Pages/Profile/Show.vue' => 'resources/js/Pages/Profile/Show.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Pages/Profile/Partials/ConnectedAccountsForm.vue' => 'resources/js/Pages/Profile/Partials/ConnectedAccountsForm.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Pages/Profile/Partials/SetPasswordForm.vue' => 'resources/js/Pages/Profile/Partials/SetPasswordForm.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Pages/Profile/Show.vue' => 'resources/js/Pages/Profile/Show.vue',
             ],
         };
 
@@ -179,7 +179,7 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
         $this->copyFiles(
             files: array_filter(
                 array: $views,
-                callback: fn(string $option) => in_array($option, $selected),
+                callback: fn (string $option) => in_array($option, $selected),
                 mode: ARRAY_FILTER_USE_KEY,
             ),
         );
@@ -191,15 +191,15 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
     {
         $components = match (config('jetstream.stack')) {
             'livewire' => [
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/components/action-link.blade.php' => 'resources/views/components/action-link.blade.php',
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/components/connected-account.blade.php' => 'resources/views/components/connected-account.blade.php',
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/components/socialstream.blade.php' => 'resources/views/components/socialstream.blade.php',
-                __DIR__ . '/../../stubs/jetstream/livewire/resources/views/components/validation-errors.blade.php' => 'resources/views/components/validation-errors.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/action-link.blade.php' => 'resources/views/components/action-link.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/connected-account.blade.php' => 'resources/views/components/connected-account.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/socialstream.blade.php' => 'resources/views/components/socialstream.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/validation-errors.blade.php' => 'resources/views/components/validation-errors.blade.php',
             ],
             'inertia' => [
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Components/ActionLink.vue' => 'resources/js/Components/ActionLink.vue',
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Components/ConnectedAccount.vue' => 'resources/js/Components/ConnectedAccount.vue',
-                __DIR__ . '/../../stubs/jetstream/inertia/resources/js/Components/Socialstream.vue' => 'resources/js/Components/Socialstream.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Components/ActionLink.vue' => 'resources/js/Components/ActionLink.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Components/ConnectedAccount.vue' => 'resources/js/Components/ConnectedAccount.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Components/Socialstream.vue' => 'resources/js/Components/Socialstream.vue',
             ],
         };
 
@@ -214,11 +214,10 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
         $this->copyFiles(
             files: array_filter(
                 array: $components,
-                callback: fn(string $option) => in_array($option, $selected),
+                callback: fn (string $option) => in_array($option, $selected),
                 mode: ARRAY_FILTER_USE_KEY,
             ),
         );
-
 
         return $this;
     }
