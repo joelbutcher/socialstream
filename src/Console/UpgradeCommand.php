@@ -195,11 +195,13 @@ class UpgradeCommand extends Command implements PromptsForMissingInput
                 __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/connected-account.blade.php' => 'resources/views/components/connected-account.blade.php',
                 __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/socialstream.blade.php' => 'resources/views/components/socialstream.blade.php',
                 __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/validation-errors.blade.php' => 'resources/views/components/validation-errors.blade.php',
+                __DIR__.'/../../stubs/jetstream/livewire/resources/views/components/socialstream-icons/provider-icon.blade.php' => 'resources/views/components/socialstream-icons/provider-icon.blade.php',
             ],
             'inertia' => [
                 __DIR__.'/../../stubs/jetstream/inertia/resources/js/Components/ActionLink.vue' => 'resources/js/Components/ActionLink.vue',
                 __DIR__.'/../../stubs/jetstream/inertia/resources/js/Components/ConnectedAccount.vue' => 'resources/js/Components/ConnectedAccount.vue',
                 __DIR__.'/../../stubs/jetstream/inertia/resources/js/Components/Socialstream.vue' => 'resources/js/Components/Socialstream.vue',
+                __DIR__.'/../../stubs/jetstream/inertia/resources/js/Components/SocialstreamIcons/ProviderIcon.vue' => 'resources/js/Components/SocialstreamIcons/ProviderIcon.vue',
             ],
         };
 
