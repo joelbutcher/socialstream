@@ -2,13 +2,13 @@
 
 namespace JoelButcher\Socialstream\Resolvers\OAuth;
 
-use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
-use JoelButcher\Socialstream\Contracts\Oauth2RefreshResolver;
+use JoelButcher\Socialstream\Concerns\RefreshesOAuth2Tokens;
+use JoelButcher\Socialstream\Contracts\OAuth2RefreshResolver;
 use Laravel\Socialite\Two\LinkedInProvider;
 
-class LinkedInOauth2RefreshResolver extends LinkedInProvider implements Oauth2RefreshResolver
+class LinkedInOAuth2RefreshResolver extends LinkedInProvider implements OAuth2RefreshResolver
 {
-    use RefreshesOauth2Tokens;
+    use RefreshesOAuth2Tokens;
 
     /**
      * Create a new provider instance.

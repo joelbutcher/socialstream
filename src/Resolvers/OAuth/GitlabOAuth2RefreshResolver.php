@@ -2,13 +2,13 @@
 
 namespace JoelButcher\Socialstream\Resolvers\OAuth;
 
-use JoelButcher\Socialstream\Concerns\RefreshesOauth2Tokens;
-use JoelButcher\Socialstream\Contracts\Oauth2RefreshResolver;
+use JoelButcher\Socialstream\Concerns\RefreshesOAuth2Tokens;
+use JoelButcher\Socialstream\Contracts\OAuth2RefreshResolver;
 use Laravel\Socialite\Two\GitlabProvider;
 
-class GitlabOauth2RefreshResolver extends GitlabProvider implements Oauth2RefreshResolver
+class GitlabOAuth2RefreshResolver extends GitlabProvider implements OAuth2RefreshResolver
 {
-    use RefreshesOauth2Tokens;
+    use RefreshesOAuth2Tokens;
 
     /**
      * Create a new provider instance.

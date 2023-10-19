@@ -3,8 +3,8 @@
 namespace JoelButcher\Socialstream\Tests;
 
 use Illuminate\Support\Facades\Config;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOauthCallbackErrors;
+use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOAuthCallbackErrors;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\JetstreamServiceProvider;
@@ -18,8 +18,8 @@ abstract class JetstreamTestCase extends TestCase
         Config::set('jetstream.stack', 'livewire');
         Config::set('jetstream.features', []);
 
-        Socialstream::authenticatesOauthCallbackUsing(AuthenticateOauthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(HandleOauthCallbackErrors::class);
+        Socialstream::authenticatesOAuthCallbackUsing(AuthenticateOAuthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(HandleOAuthCallbackErrors::class);
     }
 
     protected function getPackageProviders($app): array

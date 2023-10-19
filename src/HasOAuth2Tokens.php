@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property string|null $refresh_token
  * @property DateTimeInterface|null $expires_at
  */
-trait HasOauth2Tokens
+trait HasOAuth2Tokens
 {
     /**
      * Intercepts and refreshes the "token" attribute if it has expired.
@@ -22,7 +22,7 @@ trait HasOauth2Tokens
     {
         return Attribute::make(
             get: function ($token) {
-                if (! Socialstream::refreshesOauthTokens()) {
+                if (! Socialstream::refreshesOAuthTokens()) {
                     return $token;
                 }
 

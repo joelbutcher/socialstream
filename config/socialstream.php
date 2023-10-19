@@ -14,6 +14,6 @@ return [
         // Features::generateMissingEmails(),
         Features::rememberSession(),
         Features::providerAvatars(),
-        Features::refreshOauthTokens(),
+        Features::refreshOAuthTokens(),
     ],
 ];

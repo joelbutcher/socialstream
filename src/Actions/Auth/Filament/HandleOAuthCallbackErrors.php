@@ -1,14 +1,13 @@
 <?php
 
-namespace JoelButcher\Socialstream\Actions\Auth\Breeze;
+namespace JoelButcher\Socialstream\Actions\Auth\Filament;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
-use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
+use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
 
-class HandleOauthCallbackErrors implements HandlesOauthCallbackErrors
+class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
 {
     /**
      * Handles the request if the "errors" key is present.
@@ -23,7 +22,9 @@ class HandleOauthCallbackErrors implements HandlesOauthCallbackErrors
         $messageBag->add('socialstream', $request->get('error_description'));
 
         return auth()->check()
-            ? redirect(RouteServiceProvider::HOME)->withErrors(['callback' => $request->get('error_description')])
-            : redirect()->route('login')->withErrors($messageBag);
+            ? redirect()->route('filament.home')->withErrors($messageBag)
+            : redirect()->route(
+                'filament.admin.auth.login'
+            )->withErrors($messageBag);
     }
 }

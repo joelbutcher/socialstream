@@ -5,14 +5,14 @@ namespace JoelButcher\Socialstream\Actions\Auth\Filament;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
+use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
-class AuthenticateOauthCallback implements AuthenticatesOauthCallback
+class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 {
     /**
      * Create a new controller instance.

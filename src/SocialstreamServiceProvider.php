@@ -6,25 +6,25 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\Blade\AuthenticateOauthCallback as BreezeBladeAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\HandleOauthCallbackErrors as BreezeHandleOauthCallbackErrors;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\Livewire\AuthenticateOauthCallback as BreezeLivewireAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Filament\AuthenticateOauthCallback as FilamentAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Filament\HandleOauthCallbackErrors as FilamentHandleOauthCallbackErrors;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOauthCallback as JetstreamAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOauthCallbackErrors as JetstreamHandleOauthCallbackErrors;
+use JoelButcher\Socialstream\Actions\Auth\Breeze\Blade\AuthenticateOAuthCallback as BreezeBladeAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Breeze\HandleOAuthCallbackErrors as BreezeHandleOAuthCallbackErrors;
+use JoelButcher\Socialstream\Actions\Auth\Breeze\Livewire\AuthenticateOAuthCallback as BreezeLivewireAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Filament\AuthenticateOAuthCallback as FilamentAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Filament\HandleOAuthCallbackErrors as FilamentHandleOAuthCallbackErrors;
+use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOAuthCallback as JetstreamAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOAuthCallbackErrors as JetstreamHandleOAuthCallbackErrors;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
-use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\GithubOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\GitlabOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\SlackOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GithubOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GitlabOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
 use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
@@ -124,16 +124,16 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function configureRefreshTokenResolvers(): void
     {
-        Socialstream::refreshesTokensForProviderUsing(Providers::bitbucket(), BitbucketOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::github(), GithubOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::linkedinOpenId(), LinkedInOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::slack(), SlackOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth1(), TwitterOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth2(), TwitterOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::bitbucket(), BitbucketOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::github(), GithubOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedinOpenId(), LinkedInOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::slack(), SlackOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth1(), TwitterOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth2(), TwitterOAuth2RefreshResolver::class);
     }
 
     /**
@@ -141,8 +141,8 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelJetstream(): void
     {
-        Socialstream::authenticatesOauthCallbackUsing(JetstreamAuthenticateOauthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(JetstreamHandleOauthCallbackErrors::class);
+        Socialstream::authenticatesOAuthCallbackUsing(JetstreamAuthenticateOAuthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(JetstreamHandleOAuthCallbackErrors::class);
 
         if (! $this->app->runningInConsole()) {
             return;
@@ -159,10 +159,10 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelBreeze(): void
     {
-        Socialstream::handlesOAuthCallbackErrorsUsing(BreezeHandleOauthCallbackErrors::class);
-        Socialstream::authenticatesOauthCallbackUsing(match (true) {
-            class_exists('\App\Providers\VoltServiceProvider') => BreezeLivewireAuthenticateOauthCallback::class,
-            default => BreezeBladeAuthenticateOauthCallback::class,
+        Socialstream::handlesOAuthCallbackErrorsUsing(BreezeHandleOAuthCallbackErrors::class);
+        Socialstream::authenticatesOAuthCallbackUsing(match (true) {
+            class_exists('\App\Providers\VoltServiceProvider') => BreezeLivewireAuthenticateOAuthCallback::class,
+            default => BreezeBladeAuthenticateOAuthCallback::class,
         });
 
         if (! $this->app->runningInConsole()) {
@@ -195,8 +195,8 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootFilament(): void
     {
-        Socialstream::authenticatesOauthCallbackUsing(FilamentAuthenticateOauthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(FilamentHandleOauthCallbackErrors::class);
+        Socialstream::authenticatesOAuthCallbackUsing(FilamentAuthenticateOAuthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(FilamentHandleOAuthCallbackErrors::class);
 
         if (! $this->app->runningInConsole()) {
             return;

@@ -5,7 +5,7 @@ namespace JoelButcher\Socialstream\Contracts;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-interface HandlesOauthCallbackErrors
+interface HandlesOAuthCallbackErrors
 {
     /**
      * Handles the request if the "errors" key is present.

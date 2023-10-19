@@ -5,10 +5,10 @@ namespace JoelButcher\Socialstream\Actions\Auth\Jetstream;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
-use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
+use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
 use Laravel\Fortify\Features as FortifyFeatures;
 
-class HandleOauthCallbackErrors implements HandlesOauthCallbackErrors
+class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
 {
     /**
      * Handles the request if the "errors" key is present.

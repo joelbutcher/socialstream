@@ -10,9 +10,9 @@ use JoelButcher\Socialstream\RefreshedCredentials;
 use Laravel\Socialite\Two\AbstractProvider;
 
 /**
- * @mixin AbstractProvider&RefreshesOauth2Tokens
+ * @mixin AbstractProvider&RefreshesOAuth2Tokens
  */
-trait RefreshesOauth2Tokens
+trait RefreshesOAuth2Tokens
 {
     /**
      * Refresh the token for the current provider.

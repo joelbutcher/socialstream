@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Socialite\Contracts\User;
 
-interface AuthenticatesOauthCallback
+interface AuthenticatesOAuthCallback
 {
     /**
      * Authenticates users returning from an OAuth flow.
