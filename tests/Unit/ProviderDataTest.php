@@ -17,7 +17,7 @@ it('builds from a known provider enum', function () {
         ->toEqual([
             'id' => 'github',
             'name' => 'GitHub',
-            'buttonLabel' => null,
+            'buttonLabel' => 'GitHub',
         ]);
 });
 
@@ -40,7 +40,7 @@ it('builds from a unknown provider string', function () {
         ->toEqual([
             'id' => 'my-provider',
             'name' => 'My Provider',
-            'buttonLabel' => null,
+            'buttonLabel' => 'My Provider',
         ]);
 });
 
@@ -66,7 +66,7 @@ it('builds from an array', function () {
         ->toEqual([
             'id' => 'my-provider',
             'name' => 'My Provider',
-            'buttonLabel' => null,
+            'buttonLabel' => 'My Provider',
         ]);
 });
 
