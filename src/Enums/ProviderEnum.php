@@ -19,13 +19,13 @@ enum ProviderEnum: string
     case LinkedInOpenId = 'linkedin-openid';
     case Slack = 'slack';
     case Twitter = 'twitter';
-    case TwitterOauth2 = 'twitter-oauth-2';
+    case TwitterOAuth2 = 'twitter-oauth-2';
 
     public function name(): string
     {
         return match ($this) {
             self::Github => 'GitHub',
-            self::Twitter, self::TwitterOauth2 => 'Twitter',
+            self::Twitter, self::TwitterOAuth2 => 'Twitter',
             self::LinkedIn, self::LinkedInOpenId => 'LinkedIn',
             default => Str::of($this->value)->headline(),
         };

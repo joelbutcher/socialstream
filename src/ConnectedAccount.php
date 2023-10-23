@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 abstract class ConnectedAccount extends Model
 {
-    use HasOauth2Tokens;
+    use HasOAuth2Tokens;
 
     /**
      * Get the credentials used for authenticating services.

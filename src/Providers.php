@@ -236,7 +236,7 @@ class Providers
      */
     public static function twitterOAuth2(string $label = null): string
     {
-        return tap(ProviderEnum::TwitterOauth2->value, fn (string $provider) => static::addLabelFor($provider, $label));
+        return tap(ProviderEnum::TwitterOAuth2->value, fn (string $provider) => static::addLabelFor($provider, $label));
     }
 
     public static function addLabelFor(ProviderEnum|string $provider, string $label = null): void

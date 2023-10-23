@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Installer\Drivers;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
@@ -58,7 +57,6 @@ abstract class Driver
             ->copyAppFiles()
             ->copyModelsAndFactories()
             ->copyPolicies()
-            ->copyActions()
             ->copyResourceFiles(...$options)
             ->copySocialstreamComponents(...$options)
             ->copyTests(collect($options)->contains(InstallOptions::Pest) ? TestRunner::Pest : TestRunner::PhpUnit)
@@ -99,6 +97,12 @@ abstract class Driver
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
+
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-actions', '--force'], base_path()))
+                ->setTimeout(null)
+                ->run(function ($type, $output) use ($outputStyle) {
+                    $outputStyle->write($output);
+                });
         }, message: 'Publishing config, migration and route files');
 
         return $this;
@@ -130,9 +134,6 @@ abstract class Driver
     protected function installServiceProviders(): static
     {
         copy(__DIR__.'/../../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-        copy(__DIR__.'/../../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
-
-        $this->installServiceProviderAfter('RouteServiceProvider', 'SocialstreamServiceProvider');
 
         return $this;
     }
@@ -179,25 +180,9 @@ abstract class Driver
     }
 
     /**
-     * Copy the actions to the base "app" directory.
-     */
-    protected function copyActions(): static
-    {
-        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/ResolveSocialiteUser.php', app_path('Actions/Socialstream/ResolveSocialiteUser.php'));
-        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/CreateConnectedAccount.php', app_path('Actions/Socialstream/CreateConnectedAccount.php'));
-        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/GenerateRedirectForProvider.php', app_path('Actions/Socialstream/GenerateRedirectForProvider.php'));
-        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/UpdateConnectedAccount.php', app_path('Actions/Socialstream/UpdateConnectedAccount.php'));
-        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/CreateUserFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
-        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/HandleInvalidState.php', app_path('Actions/Socialstream/HandleInvalidState.php'));
-        copy(__DIR__.'/../../../stubs/app/Actions/Socialstream/SetUserPassword.php', app_path('Actions/Socialstream/SetUserPassword.php'));
-
-        return $this;
-    }
-
-    /**
      * Copy the auth views to the app "resources" directory for the given stack.
      */
-    protected function copyAuthViews(InstallOptions ...$options): static
+    public function copyAuthViews(InstallOptions ...$options): static
     {
         return $this;
     }
@@ -205,7 +190,7 @@ abstract class Driver
     /**
      * Copy the profile views to the app "resources" directory for the given stack.
      */
-    protected function copyProfileViews(InstallOptions ...$options): static
+    public function copyProfileViews(InstallOptions ...$options): static
     {
         return $this;
     }
@@ -213,7 +198,7 @@ abstract class Driver
     /**
      * Copy the Socialstream components to the app "resources" directory for the given stack.
      */
-    protected function copySocialstreamComponents(InstallOptions ...$options): static
+    public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         return $this;
     }
@@ -247,7 +232,7 @@ abstract class Driver
     /**
      * Build the Socialstream frontend.
      */
-    private function build(): void
+    public function build(): void
     {
         if (file_exists(base_path('pnpm-lock.yaml'))) {
             $this->runCommands(['pnpm install', 'pnpm run build']);
@@ -289,20 +274,6 @@ abstract class Driver
         });
 
         return $process;
-    }
-
-    /**
-     * Install the Socialstream service providers in the application configuration file.
-     */
-    protected function installServiceProviderAfter(string $after, string $name): void
-    {
-        if (! Str::contains($appConfig = file_get_contents(config_path('app.php')), 'App\\Providers\\'.$name.'::class')) {
-            file_put_contents(config_path('app.php'), str_replace(
-                'App\\Providers\\'.$after.'::class,',
-                'App\\Providers\\'.$after.'::class,'.PHP_EOL.'        App\\Providers\\'.$name.'::class,',
-                $appConfig
-            ));
-        }
     }
 
     /**

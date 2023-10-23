@@ -6,10 +6,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
+use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
-use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
+use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -21,9 +21,9 @@ class OAuthController extends Controller
      * Create a new controller instance.
      */
     public function __construct(
-        protected HandlesOauthCallbackErrors $errorHandler,
+        protected HandlesOAuthCallbackErrors $errorHandler,
         protected ResolvesSocialiteUsers $userResolver,
-        protected AuthenticatesOauthCallback $authenticator,
+        protected AuthenticatesOAuthCallback $authenticator,
         protected HandlesInvalidState $invalidStateHandler
     ) {
         //

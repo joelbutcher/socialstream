@@ -30,7 +30,7 @@
                             @endif
                         </div>
                     @else
-                        <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider['id']) }}">
+                        <x-action-link href="{{ route('oauth.redirect', ['provider' => $provider['id']]) }}">
                             {{ __('Connect') }}
                         </x-action-link>
                     @endif

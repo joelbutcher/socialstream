@@ -6,25 +6,34 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\Blade\AuthenticateOauthCallback as BreezeBladeAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\HandleOauthCallbackErrors as BreezeHandleOauthCallbackErrors;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\Livewire\AuthenticateOauthCallback as BreezeLivewireAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Filament\AuthenticateOauthCallback as FilamentAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Filament\HandleOauthCallbackErrors as FilamentHandleOauthCallbackErrors;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOauthCallback as JetstreamAuthenticateOauthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOauthCallbackErrors as JetstreamHandleOauthCallbackErrors;
+use JoelButcher\Socialstream\Actions\Auth\Breeze\Blade\AuthenticateOAuthCallback as BreezeBladeAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Breeze\HandleOAuthCallbackErrors as BreezeHandleOAuthCallbackErrors;
+use JoelButcher\Socialstream\Actions\Auth\Breeze\Livewire\AuthenticateOAuthCallback as BreezeLivewireAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Filament\AuthenticateOAuthCallback as FilamentAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Filament\HandleOAuthCallbackErrors as FilamentHandleOAuthCallbackErrors;
+use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOAuthCallback as JetstreamAuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOAuthCallbackErrors as JetstreamHandleOAuthCallbackErrors;
+use JoelButcher\Socialstream\Actions\CreateConnectedAccount;
+use JoelButcher\Socialstream\Actions\CreateUserFromProvider;
+use JoelButcher\Socialstream\Actions\CreateUserWithTeamsFromProvider;
+use JoelButcher\Socialstream\Actions\GenerateRedirectForProvider;
+use JoelButcher\Socialstream\Actions\HandleInvalidState;
+use JoelButcher\Socialstream\Actions\ResolveSocialiteUser;
+use JoelButcher\Socialstream\Actions\SetUserPassword;
+use JoelButcher\Socialstream\Actions\UpdateConnectedAccount;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
-use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\GithubOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\GitlabOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\SlackOauth2RefreshResolver;
-use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOauth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GithubOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GitlabOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
+use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
+use Laravel\Jetstream\Jetstream;
 use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
@@ -53,6 +62,7 @@ class SocialstreamServiceProvider extends ServiceProvider
     {
         $this->configureRoutes();
         $this->configureCommands();
+        $this->configureActions();
         $this->configureRefreshTokenResolvers();
 
         match (true) {
@@ -64,17 +74,6 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         if ($this->hasComposerPackage('inertiajs/inertia-laravel')) {
             $this->bootInertia();
-        }
-
-        if ($this->app->runningInConsole()) {
-            match (true) {
-                $this->hasComposerPackage('filament/filament') => $this->publishes([
-                    __DIR__.'/../config/filament.php' => config_path('socialstream.php'),
-                ], 'socialstream-config'),
-                default => $this->publishes([
-                    __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
-                ], 'socialstream-config')
-            };
         }
     }
 
@@ -114,8 +113,27 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         $this->commands([
             Console\InstallCommand::class,
+            Console\UpgradeCommand::class,
             Console\CreateProviderCommand::class,
         ]);
+    }
+
+    /**
+     * Configure the default actions used by Socialstream.
+     */
+    public function configureActions(): void
+    {
+        Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
+        Socialstream::createUsersFromProviderUsing(match (true) {
+            $this->hasComposerPackage('laravel/jetstream') => Jetstream::hasTeamFeatures()
+                ? CreateUserWithTeamsFromProvider::class
+                : CreateUserFromProvider::class,
+            default => CreateUserFromProvider::class,
+        });
+        Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
+        Socialstream::updateConnectedAccountsUsing(UpdateConnectedAccount::class);
+        Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
+        Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
     }
 
     /**
@@ -123,16 +141,16 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function configureRefreshTokenResolvers(): void
     {
-        Socialstream::refreshesTokensForProviderUsing(Providers::bitbucket(), BitbucketOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::github(), GithubOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::linkedinOpenId(), LinkedInOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::slack(), SlackOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth1(), TwitterOauth2RefreshResolver::class);
-        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth2(), TwitterOauth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::bitbucket(), BitbucketOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::facebook(), FacebookOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::github(), GithubOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::gitlab(), GitlabOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::google(), GoogleOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedin(), LinkedInOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::linkedinOpenId(), LinkedInOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::slack(), SlackOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth1(), TwitterOAuth2RefreshResolver::class);
+        Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth2(), TwitterOAuth2RefreshResolver::class);
     }
 
     /**
@@ -140,13 +158,28 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelJetstream(): void
     {
-        Socialstream::authenticatesOauthCallbackUsing(JetstreamAuthenticateOauthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(JetstreamHandleOauthCallbackErrors::class);
+        Socialstream::setUserPasswordsUsing(SetUserPassword::class);
+        Socialstream::authenticatesOAuthCallbackUsing(JetstreamAuthenticateOAuthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(JetstreamHandleOAuthCallbackErrors::class);
 
         if (! $this->app->runningInConsole()) {
             return;
         }
 
+        // Config
+        $this->publishes([
+            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
+        ], 'socialstream-config');
+
+        // Actions
+        $this->publishes(array_merge([
+            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
+            __DIR__.'/../stubs/app/Actions/Jetstream/DeleteUser.php' => app_path('Actions/Jetstream/DeleteUser.php'),
+        ], Jetstream::hasTeamFeatures() ? [
+            __DIR__.'/../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php' => app_path('Actions/Socialstream/CreateUserFromProvider.php'),
+        ] : []), 'socialstream-actions');
+
+        // Migrations
         $this->publishes([
             __DIR__.'/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
@@ -158,16 +191,27 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelBreeze(): void
     {
-        Socialstream::handlesOAuthCallbackErrorsUsing(BreezeHandleOauthCallbackErrors::class);
-        Socialstream::authenticatesOauthCallbackUsing(match (true) {
-            class_exists('\App\Providers\VoltServiceProvider') => BreezeLivewireAuthenticateOauthCallback::class,
-            default => BreezeBladeAuthenticateOauthCallback::class,
+        Socialstream::handlesOAuthCallbackErrorsUsing(BreezeHandleOAuthCallbackErrors::class);
+        Socialstream::authenticatesOAuthCallbackUsing(match (true) {
+            class_exists('\App\Providers\VoltServiceProvider') => BreezeLivewireAuthenticateOAuthCallback::class,
+            default => BreezeBladeAuthenticateOAuthCallback::class,
         });
 
         if (! $this->app->runningInConsole()) {
             return;
         }
 
+        // Config
+        $this->publishes([
+            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
+        ], 'socialstream-config');
+
+        // Actions
+        $this->publishes([
+            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
+        ], 'socialstream-actions');
+
+        // Migrations
         $this->publishes([
             __DIR__.'/../database/migrations/2014_10_12_000000_create_breeze_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
@@ -194,21 +238,35 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootFilament(): void
     {
-        Socialstream::authenticatesOauthCallbackUsing(FilamentAuthenticateOauthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(FilamentHandleOauthCallbackErrors::class);
+        Socialstream::authenticatesOAuthCallbackUsing(FilamentAuthenticateOAuthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(FilamentHandleOAuthCallbackErrors::class);
+
+        $this->loadViewsFrom(__DIR__.'/../resources/filament/views', 'socialstream');
 
         if (! $this->app->runningInConsole()) {
             return;
         }
 
+        // Config
+        $this->publishes([
+            __DIR__.'/../config/filament.php' => config_path('socialstream.php'),
+        ], 'socialstream-config');
+
+        // Actions
+        $this->publishes([
+            __DIR__.'/../stubs/app/Actions/Socialstream' => app_path('Actions/Socialstream'),
+        ], 'socialstream-actions');
+
+        // Migrations
         $this->publishes([
             __DIR__.'/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
 
+        // Views
         $this->publishes([
-            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
-        ], 'socialstream-routes');
+            __DIR__.'/../resources/filament/views' => base_path('resources/views/vendor/socialstream'),
+        ], 'socialstream-views');
     }
 
     /**

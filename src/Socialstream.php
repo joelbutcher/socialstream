@@ -4,12 +4,12 @@ namespace JoelButcher\Socialstream;
 
 use Closure;
 use Illuminate\Support\Str;
-use JoelButcher\Socialstream\Contracts\AuthenticatesOauthCallback;
+use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
-use JoelButcher\Socialstream\Contracts\HandlesOauthCallbackErrors;
+use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
@@ -20,6 +20,8 @@ use RuntimeException;
 
 class Socialstream
 {
+    public const VERSION = '5.0.0';
+
     /**
      * Determines if the application is using Socialstream.
      */
@@ -238,9 +240,9 @@ class Socialstream
     /**
      * Determine if the application should refresh the tokens on retrieval.
      */
-    public static function refresesOauthTokens(): bool
+    public static function refreshesOAuthTokens(): bool
     {
-        return Features::refreshesOauthTokens();
+        return Features::refreshesOAuthTokens();
     }
 
     /**
@@ -328,14 +330,14 @@ class Socialstream
         app()->singleton(HandlesInvalidState::class, $callback);
     }
 
-    public static function authenticatesOauthCallbackUsing(callable|string $callback): void
+    public static function authenticatesOAuthCallbackUsing(callable|string $callback): void
     {
-        app()->singleton(AuthenticatesOauthCallback::class, $callback);
+        app()->singleton(AuthenticatesOAuthCallback::class, $callback);
     }
 
     public static function handlesOAuthCallbackErrorsUsing(callable|string $callback): void
     {
-        app()->singleton(HandlesOauthCallbackErrors::class, $callback);
+        app()->singleton(HandlesOAuthCallbackErrors::class, $callback);
     }
 
     /**

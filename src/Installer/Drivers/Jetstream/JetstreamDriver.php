@@ -33,7 +33,7 @@ abstract class JetstreamDriver extends Driver
 
         spin(function () use ($options, $composerBinary) {
             if (! $this->hasComposerPackage('laravel/jetstream')) {
-                $this->requireComposerPackages($composerBinary, ['laravel/jetstream']);
+                $this->requireComposerPackages(['laravel/jetstream'], $composerBinary);
             }
 
             (new Process([
@@ -67,18 +67,6 @@ abstract class JetstreamDriver extends Driver
 
         copy(__DIR__.'/../../../../stubs/jetstream/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../../../stubs/jetstream/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
-
-        return $this;
-    }
-
-    /**
-     * Copy the actions to the base "app" directory.
-     */
-    protected function copyActions(): static
-    {
-        parent::copyActions();
-
-        copy(__DIR__.'/../../../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
 
         return $this;
     }
