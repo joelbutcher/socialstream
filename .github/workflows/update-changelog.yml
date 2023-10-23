@@ -1,0 +1,10 @@
+name: update changelog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update:
+    uses: laravel/.github/.github/workflows/update-changelog.yml@main
