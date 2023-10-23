@@ -162,6 +162,12 @@ class InstallCommand extends Command implements PromptsForMissingInput
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
         if ($this->isUsingFilament()) {
+            $input->setOption('pest', select(
+                    label: 'Which testing framework do you prefer?',
+                    options: ['PHPUnit', 'Pest'],
+                    default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+                ) === 'Pest');
+
             return;
         }
 
@@ -215,6 +221,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             $input->setOption('pest', select(
                 label: 'Which testing framework do you prefer?',
                 options: ['PHPUnit', 'Pest'],
+                default: $this->isUsingPest() ? 'pest' : 'phpunit'
             ) === 'Pest');
         }
     }
