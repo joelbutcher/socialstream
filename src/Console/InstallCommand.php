@@ -89,47 +89,67 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     protected function promptForMissingArgumentsUsing(): array
     {
+        $defaultPrompt = function () {
+            \Laravel\Prompts\info('Socialstream supports Laravel Breeze, Laravel Jetstream, and Filament.');
+
+            return InstallStarterKit::from(select(
+                label: 'Which development starter kit would you like to use?',
+                options: array_merge(
+                    [
+                        'breeze' => 'Laravel Breeze',
+                        'jetstream' => 'Laravel Jetstream',
+                    ],
+                    // If filament is installed, the user has already told us they don't want to install for that starter kit.
+                    $this->isFilamentInstalled() ? [] : ['filament' => 'Filament Admin Panel'],
+                ),
+                scroll: 10,
+            ));
+        };
+
         return [
-            'starter-kit' => function () {
+            'starter-kit' => function () use ($defaultPrompt) {
                 $callback = match (true) {
-                    $this->isLaravelBreezeInstalled() => function () {
-                        alert('We\'ve detected that Laravel Breeze is installed.');
+                    ($this->isFilamentInstalled() && $this->isLaravelBreezeInstalled()) ||
+                    ($this->isFilamentInstalled() && $this->isLaravelJetstreamInstalled()) => function () use ($defaultPrompt) {
+                        warning('It looks like you have multiple starter kits / stacks installed.');
 
-                        return InstallStarterKit::Breeze;
+                        return $defaultPrompt;
                     },
-                    $this->isLaravelJetstreamInstalled() => function () {
-                        alert('We\'ve detected that Laravel Jetstream is installed.');
+                    $this->isFilamentInstalled() => function () use ($defaultPrompt) {
+                        alert('We\'ve detected that Filament is installed.');
 
-                        return InstallStarterKit::Jetstream;
-                    },
-                    default => function () {
-                        if ($this->isFilamentInstalled()) {
-                            alert('We\'ve detected that Filament is installed.');
-
-                            if (confirm(
-                                label: 'Would you like to install Socialstream for Filament?',
-                                default: 'no',
-                                hint: 'If you are also using Laravel Jetstream or Breeze, this will not affect those installations.'
-                            )) {
-                                return InstallStarterKit::Filament;
-                            }
+                        if (confirm(
+                            label: 'Would you like to install Socialstream for Filament?',
+                            hint: 'If you are also using Laravel Jetstream or Breeze, this will not affect those installations.'
+                        )) {
+                            return InstallStarterKit::Filament;
                         }
 
-                        \Laravel\Prompts\info('Socialstream supports Laravel Breeze, Laravel Jetstream, and Filament.');
+                        return $defaultPrompt();
+                    },
+                    $this->isLaravelBreezeInstalled() => function () use ($defaultPrompt) {
+                        alert('We\'ve detected that Laravel Breeze is installed.');
 
-                        return InstallStarterKit::from(select(
-                            label: 'Which development starter kit would you like to use?',
-                            options: array_merge(
-                                [
-                                    'breeze' => 'Laravel Breeze',
-                                    'jetstream' => 'Laravel Jetstream',
-                                ],
-                                // If filament is installed, the user has already told us they don't want to install for that starter kit.
-                                $this->isFilamentInstalled() ? [] : ['filament' => 'Filament Admin Panel'],
-                            ),
-                            scroll: 10,
-                        ));
-                    }
+                        if (confirm(
+                            label: 'Would you like to install Socialstream for Laravel Breeze?',
+                        )) {
+                            return InstallStarterKit::Breeze;
+                        }
+
+                        return $defaultPrompt();
+                    },
+                    $this->isLaravelJetstreamInstalled() => function () use ($defaultPrompt) {
+                        alert('We\'ve detected that Laravel Jetstream is installed.');
+
+                        if (confirm(
+                            label: 'Would you like to install Socialstream for Laravel Jetstream?',
+                        )) {
+                            return InstallStarterKit::Jetstream;
+                        }
+
+                        return $defaultPrompt();
+                    },
+                    default => $defaultPrompt,
                 };
 
                 return $callback();
@@ -148,6 +168,12 @@ class InstallCommand extends Command implements PromptsForMissingInput
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
         if ($this->isUsingFilament()) {
+            $input->setOption('pest', select(
+                label: 'Which testing framework do you prefer?',
+                options: ['PHPUnit', 'Pest'],
+                default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+            ) === 'Pest');
+
             return;
         }
 
@@ -201,6 +227,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             $input->setOption('pest', select(
                 label: 'Which testing framework do you prefer?',
                 options: ['PHPUnit', 'Pest'],
+                default: $this->isUsingPest() ? 'pest' : 'phpunit'
             ) === 'Pest');
         }
     }
