@@ -109,6 +109,12 @@ class InstallCommand extends Command implements PromptsForMissingInput
         return [
             'starter-kit' => function () use ($defaultPrompt) {
                 $callback = match (true) {
+                    ($this->isFilamentInstalled() && $this->isLaravelBreezeInstalled()) ||
+                    ($this->isFilamentInstalled() && $this->isLaravelJetstreamInstalled()) => function () use ($defaultPrompt) {
+                        warning('It looks like you have multiple starter kits / stacks installed.');
+
+                        return $defaultPrompt;
+                    },
                     $this->isFilamentInstalled() => function () use ($defaultPrompt) {
                         alert('We\'ve detected that Filament is installed.');
 
