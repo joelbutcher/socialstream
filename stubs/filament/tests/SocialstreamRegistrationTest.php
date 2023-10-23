@@ -39,7 +39,7 @@ class SocialstreamRegistrationTest extends TestCase
     public function test_users_can_register_using_socialite_providers(string $socialiteProvider): void
     {
         if (! Providers::enabled($socialiteProvider)) {
-            return $this->markTestSkipped("Registration support with the $socialiteProvider provider is not enabled.");
+            $this->markTestSkipped("Registration support with the $socialiteProvider provider is not enabled.");
         }
 
         $user = (new User())
