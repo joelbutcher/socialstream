@@ -21,7 +21,7 @@ test('users get redirected correctly', function (string $provider) {
     config()->set("services.$provider", [
         'client_id' => 'client-id',
         'client_secret' => 'client-secret',
-        'redirect' => "http://localhost/oauth/$provider/callback"
+        'redirect' => "http://localhost/oauth/$provider/callback",
     ]);
 
     $response = get("/oauth/$provider");
@@ -57,7 +57,7 @@ test('users can register using socialite providers', function (string $socialite
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider= Mockery::mock('Laravel\\Socialite\\Two\\'.$socialiteProvider.'Provider');
+    $provider = Mockery::mock('Laravel\\Socialite\\Two\\'.$socialiteProvider.'Provider');
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);

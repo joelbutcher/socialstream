@@ -27,7 +27,7 @@ class SocialstreamRegistrationTest extends TestCase
         config()->set("services.$provider", [
             'client_id' => 'client-id',
             'client_secret' => 'client-secret',
-            'redirect' => "http://localhost/oauth/$provider/callback"
+            'redirect' => "http://localhost/oauth/$provider/callback",
         ]);
 
         $response = $this->get("/oauth/$provider");
@@ -60,7 +60,7 @@ class SocialstreamRegistrationTest extends TestCase
             ->setRefreshToken('refresh-token')
             ->setExpiresIn(3600);
 
-        $provider= Mockery::mock('Laravel\\Socialite\\Two\\'.$socialiteProvider.'Provider');
+        $provider = Mockery::mock('Laravel\\Socialite\\Two\\'.$socialiteProvider.'Provider');
         $provider->shouldReceive('user')->once()->andReturn($user);
 
         Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);
