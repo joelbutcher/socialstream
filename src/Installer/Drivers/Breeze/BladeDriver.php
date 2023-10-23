@@ -16,11 +16,6 @@ class BladeDriver extends BreezeDriver
         return BreezeInstallStack::Blade;
     }
 
-    protected function postInstall(string $composerBinary, InstallOptions ...$options): void
-    {
-        $this->replaceInFile('Socialstream::setUserPasswordsUsing(SetUserPassword::class);', '', app_path('Providers/SocialstreamServiceProvider.php'));
-    }
-
     protected static function directoriesToCreateForStack(): array
     {
         return [

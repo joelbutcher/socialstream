@@ -132,7 +132,6 @@ class SocialstreamServiceProvider extends ServiceProvider
         });
         Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
         Socialstream::updateConnectedAccountsUsing(UpdateConnectedAccount::class);
-        Socialstream::setUserPasswordsUsing(SetUserPassword::class);
         Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
         Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
     }
@@ -159,6 +158,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelJetstream(): void
     {
+        Socialstream::setUserPasswordsUsing(SetUserPassword::class);
         Socialstream::authenticatesOAuthCallbackUsing(JetstreamAuthenticateOAuthCallback::class);
         Socialstream::handlesOAuthCallbackErrorsUsing(JetstreamHandleOAuthCallbackErrors::class);
 
