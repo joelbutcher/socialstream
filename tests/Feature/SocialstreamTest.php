@@ -15,7 +15,7 @@ use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Mockery as m;
+use Mockery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use function Pest\Laravel\get;
@@ -85,7 +85,7 @@ test('users can register', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider= Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -139,7 +139,7 @@ test('existing users can login', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider= Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -173,7 +173,7 @@ test('authenticated users can link to provider', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider= Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -210,7 +210,7 @@ test('new users can register from login page', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider= Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -253,7 +253,7 @@ test('users can login on registration', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider= Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -288,7 +288,7 @@ it('generates missing emails', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider= Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
