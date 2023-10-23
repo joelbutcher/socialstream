@@ -35,7 +35,6 @@ use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Livewire;
-use voku\helper\ASCII;
 
 class SocialstreamServiceProvider extends ServiceProvider
 {
@@ -266,7 +265,7 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         // Views
         $this->publishes([
-            __DIR__.'/../resources/filament/views' => base_path('resources/views/vendor/socialstream')
+            __DIR__.'/../resources/filament/views' => base_path('resources/views/vendor/socialstream'),
         ], 'socialstream-views');
     }
 

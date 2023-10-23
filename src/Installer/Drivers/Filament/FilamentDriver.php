@@ -2,12 +2,10 @@
 
 namespace JoelButcher\Socialstream\Installer\Drivers\Filament;
 
-use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\spin;

@@ -2,15 +2,7 @@
 
 namespace JoelButcher\Socialstream\Tests;
 
-use App\Actions\Socialstream\CreateConnectedAccount;
-use App\Actions\Socialstream\CreateUserFromProvider;
-use App\Actions\Socialstream\GenerateRedirectForProvider;
-use App\Actions\Socialstream\HandleInvalidState;
-use App\Actions\Socialstream\ResolveSocialiteUser;
-use App\Actions\Socialstream\SetUserPassword;
-use App\Actions\Socialstream\UpdateConnectedAccount;
 use Illuminate\Support\Facades\Config;
-use JoelButcher\Socialstream\Socialstream;
 use JoelButcher\Socialstream\SocialstreamServiceProvider;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Mockery;
