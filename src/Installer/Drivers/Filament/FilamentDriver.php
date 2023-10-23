@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Installer\Drivers\Filament;
 use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
+use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
@@ -97,6 +98,22 @@ PHP.PHP_EOL, $appConfig));
         return $this;
     }
 
+    /**
+     * Copy the Socialstream test files to the apps "tests" directory for the given test runner.
+     */
+    protected function copyTests(TestRunner $testRunner): static
+    {
+        copy(from: match ($testRunner) {
+            TestRunner::Pest => __DIR__.'/../../../../stubs/filament/pest-tests/SocialstreamRegistrationTest.php',
+            TestRunner::PhpUnit => __DIR__.'/../../../../stubs/filament/tests/SocialstreamRegistrationTest.php',
+        }, to: base_path('tests/Feature/SocialstreamRegistrationTest.php'));
+
+        return $this;
+    }
+
+    /**
+     * Remove dark mode classes from the stack, if requested.
+     */
     protected function optionallyRemoveDarkMode(InstallOptions ...$options): static
     {
         $this->removeDarkClasses((new Finder)
