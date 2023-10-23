@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Socialstream;
-use Laravel\Jetstream\Features;
 use Laravel\Socialite\Contracts\User as ProviderUserContract;
 
 class CreateUserFromProvider implements CreatesUserFromProvider
@@ -38,10 +37,8 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
 
-                if (Features::profilePhotos()) {
-                    if (Socialstream::hasProviderAvatarsFeature() && $providerUser->getAvatar()) {
-                        $user->setProfilePhotoFromUrl($providerUser->getAvatar());
-                    }
+                if (Socialstream::hasProviderAvatarsFeature() && $providerUser->getAvatar()) {
+                    $user->setProfilePhotoFromUrl($providerUser->getAvatar());
                 }
 
                 $this->createsConnectedAccounts->create($user, $provider, $providerUser);
