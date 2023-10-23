@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Socialstream;
+namespace JoelButcher\Socialstream\Actions;
 
 use App\Models\Team;
 use app\Models\User;
@@ -10,7 +10,7 @@ use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User as ProviderUserContract;
 
-class CreateUserFromProvider implements CreatesUserFromProvider
+class CreateUserWithTeamsFromProvider implements CreatesUserFromProvider
 {
     /**
      * The creates connected accounts instance.

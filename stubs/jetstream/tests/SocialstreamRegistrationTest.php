@@ -8,7 +8,7 @@ use JoelButcher\Socialstream\Providers;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User;
-use Mockery as m;
+use Mockery;
 use Tests\TestCase;
 
 class SocialstreamRegistrationTest extends TestCase
@@ -18,14 +18,33 @@ class SocialstreamRegistrationTest extends TestCase
     /**
      * @dataProvider socialiteProvidersDataProvider
      */
+    public function test_users_get_redirected_correctly(string $provider): void
+    {
+        if (! Providers::enabled($provider)) {
+            $this->markTestSkipped("Registration support with the $provider provider is not enabled.");
+        }
+
+        config()->set("services.$provider", [
+            'client_id' => 'client-id',
+            'client_secret' => 'client-secret',
+            'redirect' => "http://localhost/oauth/$provider/callback",
+        ]);
+
+        $response = $this->get("/oauth/$provider");
+        $response->assertRedirectContains($provider);
+    }
+
+    /**
+     * @dataProvider socialiteProvidersDataProvider
+     */
     public function test_users_can_register_using_socialite_providers(string $socialiteProvider)
     {
         if (! FortifyFeatures::enabled(FortifyFeatures::registration())) {
-            return $this->markTestSkipped('Registration support is not enabled.');
+            $this->markTestSkipped('Registration support is not enabled.');
         }
 
         if (! Providers::enabled($socialiteProvider)) {
-            return $this->markTestSkipped("Registration support with the $socialiteProvider provider is not enabled.");
+            $this->markTestSkipped("Registration support with the $socialiteProvider provider is not enabled.");
         }
 
         $user = (new User())
@@ -41,7 +60,7 @@ class SocialstreamRegistrationTest extends TestCase
             ->setRefreshToken('refresh-token')
             ->setExpiresIn(3600);
 
-        $provider = m::mock('Laravel\\Socialite\\Two\\'.$socialiteProvider.'Provider');
+        $provider = Mockery::mock('Laravel\\Socialite\\Two\\'.$socialiteProvider.'Provider');
         $provider->shouldReceive('user')->once()->andReturn($user);
 
         Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);

@@ -72,18 +72,6 @@ abstract class JetstreamDriver extends Driver
     }
 
     /**
-     * Copy the actions to the base "app" directory.
-     */
-    public function copyActions(): static
-    {
-        parent::copyActions();
-
-        copy(__DIR__.'/../../../../stubs/app/Actions/Jetstream/DeleteUser.php', app_path('Actions/Jetstream/DeleteUser.php'));
-
-        return $this;
-    }
-
-    /**
      * Copy the Socialstream test files to the apps "tests" directory for the stacks given test runner.
      */
     protected function copyTests(TestRunner $testRunner): static

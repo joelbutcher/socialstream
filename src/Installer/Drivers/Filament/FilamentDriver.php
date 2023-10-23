@@ -2,12 +2,10 @@
 
 namespace JoelButcher\Socialstream\Installer\Drivers\Filament;
 
-use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\spin;
@@ -74,30 +72,6 @@ PHP.PHP_EOL, $appConfig));
         return $this;
     }
 
-    public function copyAuthViews(InstallOptions ...$options): static
-    {
-        return $this;
-    }
-
-    public function copyProfileViews(InstallOptions ...$options): static
-    {
-        return $this;
-    }
-
-    /**
-     * Copy the Socialstream components to the app "resources" directory for the given stack.
-     */
-    public function copySocialstreamComponents(InstallOptions ...$options): static
-    {
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
-
-        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/action-link.blade.php', resource_path('views/components/action-link.blade.php'));
-        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/input-error.blade.php', resource_path('views/components/input-error.blade.php'));
-        copy(__DIR__.'/../../../../stubs/filament/resources/views/components/socialstream.blade.php', resource_path('views/components/socialstream.blade.php'));
-
-        return $this;
-    }
-
     /**
      * Copy the Socialstream test files to the apps "tests" directory for the given test runner.
      */
@@ -107,19 +81,6 @@ PHP.PHP_EOL, $appConfig));
             TestRunner::Pest => __DIR__.'/../../../../stubs/filament/pest-tests/SocialstreamRegistrationTest.php',
             TestRunner::PhpUnit => __DIR__.'/../../../../stubs/filament/tests/SocialstreamRegistrationTest.php',
         }, to: base_path('tests/Feature/SocialstreamRegistrationTest.php'));
-
-        return $this;
-    }
-
-    /**
-     * Remove dark mode classes from the stack, if requested.
-     */
-    protected function optionallyRemoveDarkMode(InstallOptions ...$options): static
-    {
-        $this->removeDarkClasses((new Finder)
-            ->in([resource_path('views')])
-            ->name(['*.blade.php'])
-            ->notName('welcome.blade.php'));
 
         return $this;
     }

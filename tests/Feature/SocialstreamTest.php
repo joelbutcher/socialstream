@@ -15,13 +15,15 @@ use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Mockery as m;
+use Mockery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use function Pest\Laravel\get;
 
 uses(WithFaker::class, RefreshDatabase::class);
 
 it('redirects users', function (): void {
-    $response = $this->get('http://localhost/oauth/github');
+    $response = get('http://localhost/oauth/github');
 
     $response->assertRedirect()
         ->assertRedirectContains('github.com');
@@ -54,7 +56,7 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
         }
     );
 
-    $response = $this->get('http://localhost/oauth/github');
+    $response = get('http://localhost/oauth/github');
 
     $response->assertRedirect()
         ->assertRedirectContains('github.com')
@@ -83,14 +85,14 @@ test('users can register', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
     session()->put('socialstream.previous_url', route('register'));
 
-    $response = $this->get('http://localhost/oauth/github/callback');
+    $response = get('http://localhost/oauth/github/callback');
 
     $response->assertRedirect('/home');
 
@@ -137,12 +139,12 @@ test('existing users can login', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $this->assertAuthenticated();
@@ -171,12 +173,12 @@ test('authenticated users can link to provider', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/user/profile');
 
     $this->assertAuthenticated();
@@ -208,12 +210,12 @@ test('new users can register from login page', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $this->assertAuthenticated();
@@ -251,14 +253,14 @@ test('users can login on registration', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
     session()->put('socialstream.previous_url', route('register'));
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $this->assertAuthenticated();
@@ -286,14 +288,14 @@ it('generates missing emails', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = m::mock(GithubProvider::class);
+    $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
     session()->put('socialstream.previous_url', route('register'));
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $user = User::first();
