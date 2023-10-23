@@ -1,16 +1,30 @@
 # Release Notes
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v4.4.6...5.x)
+
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.0.1...5.x)
 
 ## [v5.0.0](https://github.com/joelbutcher/socialstream/compare/v4.4.6...v5.0.0) - 2023-10-19
 
-- Laravel Breeze & Filament Support 
-- Update install command (Laravel Prompts)
-  - Select your starter kit (Jetstream, Breeze, Filament Admin Panel) and stack 
-  - Toggle features for your stack 
-  - Install Pest 
-  - Install dark mode support (if supported by the underlying starter kit & stack)
-- New socialstream:provider command to build out a new provider 
+- Laravel Breeze & Filament Support
+- Update install command (Laravel Prompts)   
+  - Select your starter kit (Jetstream, Breeze, Filament Admin Panel) and stack   
+  - Toggle features for your stack   
+  - Install Pest   
+  - Install dark mode support (if supported by the underlying starter kit & stack)   
+  
+- New socialstream:provider command to build out a new provider
 - New socialstream:upgrade command to help easily migrate your Socialstream install to the latest major version
+
+## [v5.0.1](https://github.com/joelbutcher/socialstream/compare/v4.4.6...v5.0.1) - 2023-10-23
+
+### What's Changed
+
+- [5.x] Publish tests for Filament by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/294
+- [5.x] Fix User Factories by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/295
+- [5.x] Fix `update-changelog` workflow by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/297
+- [5.x] Make publishing files opt-in by default for the Filament stack by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/296
+- [5.x] Remove StyleCI by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/298
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.0.0...v5.0.1
 
 ## [v4.4.6](https://github.com/joelbutcher/socialstream/compare/v4.4.5...v4.4.6) - 2023-10-19
 
@@ -91,6 +105,7 @@
 - [4.x] Add native type declarations by [@joelbutcher](https://github.com/joelbutcher) in #245
 - [4.x] Support Laravel Jetstream v3.0.0 by [@joelbutcher](https://github.com/joelbutcher)
 
+
 ---
 
 ## v1.x, 2.x, and 3.x
@@ -98,4 +113,4 @@
 > :warning: We no longer support v1.x, 2.x 8and 3.x, please update / upgrade to 4.x or later.
 
 Unfortunately, due to inconsistencies in the release structure of these branches alongside 4.x, the changelog between a number of releases doesn't make sense.
-Therefor, these changes have been omitted from this file. 
+Therefor, these changes have been omitted from this file.
