@@ -95,7 +95,7 @@
 
 ## v1.x, 2.x, and 3.x
 
-> [!WARNING] We no longer support v1.x, 2.x 8and 3.x, please update / upgrade to 4.x or later.
+> :warning: We no longer support v1.x, 2.x 8and 3.x, please update / upgrade to 4.x or later.
 
 Unfortunately, due to inconsistencies in the release structure of these branches alongside 4.x, the changelog between a number of releases doesn't make sense.
 Therefor, these changes have been omitted from this file. 
