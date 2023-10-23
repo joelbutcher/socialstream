@@ -45,7 +45,7 @@ jobs:
       - name: Install Socialstream
         run: |
           composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
-          php artisan socialstream:install filament
+          php artisan socialstream:install filament default
 
       - name: Install NPM dependencies
         run: npm i

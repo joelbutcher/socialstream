@@ -27,14 +27,6 @@ abstract class TestCase extends BaseTestCase
             'client_secret' => 'github-client-secret',
             'redirect' => 'https://example.test/oauth/github/callback',
         ]);
-
-        Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
-        Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
-        Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
-        Socialstream::updateConnectedAccountsUsing(UpdateConnectedAccount::class);
-        Socialstream::setUserPasswordsUsing(SetUserPassword::class);
-        Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
-        Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
     }
 
     protected function tearDown(): void

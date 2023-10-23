@@ -18,10 +18,12 @@ use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery as m;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use function Pest\Laravel\get;
+
 uses(WithFaker::class, RefreshDatabase::class);
 
 it('redirects users', function (): void {
-    $response = $this->get('http://localhost/oauth/github');
+    $response = get('http://localhost/oauth/github');
 
     $response->assertRedirect()
         ->assertRedirectContains('github.com');
@@ -54,7 +56,7 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
         }
     );
 
-    $response = $this->get('http://localhost/oauth/github');
+    $response = get('http://localhost/oauth/github');
 
     $response->assertRedirect()
         ->assertRedirectContains('github.com')
@@ -90,7 +92,7 @@ test('users can register', function (): void {
 
     session()->put('socialstream.previous_url', route('register'));
 
-    $response = $this->get('http://localhost/oauth/github/callback');
+    $response = get('http://localhost/oauth/github/callback');
 
     $response->assertRedirect('/home');
 
@@ -142,7 +144,7 @@ test('existing users can login', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $this->assertAuthenticated();
@@ -176,7 +178,7 @@ test('authenticated users can link to provider', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/user/profile');
 
     $this->assertAuthenticated();
@@ -213,7 +215,7 @@ test('new users can register from login page', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $this->assertAuthenticated();
@@ -258,7 +260,7 @@ test('users can login on registration', function (): void {
 
     session()->put('socialstream.previous_url', route('register'));
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $this->assertAuthenticated();
@@ -293,7 +295,7 @@ it('generates missing emails', function (): void {
 
     session()->put('socialstream.previous_url', route('register'));
 
-    $this->get('http://localhost/oauth/github/callback')
+    get('http://localhost/oauth/github/callback')
         ->assertRedirect('/home');
 
     $user = User::first();

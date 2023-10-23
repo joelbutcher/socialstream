@@ -8,4 +8,5 @@ return [
     'providers' => [
         // Providers::github(),
     ],
+    'component' => 'socialstream::components.socialstream'
 ];
