@@ -1,9 +1,8 @@
 name: update changelog
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [released]
 
 jobs:
   update:
