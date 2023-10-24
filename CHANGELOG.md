@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.0.1...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.0.2...5.x)
+
+## [v5.0.2](https://github.com/joelbutcher/socialstream/compare/v5.0.1...v5.0.2) - 2023-10-23
+
+### What's Changed
+
+- [5.x] Update default dark mode styling for filament by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/302
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.0.1...v5.0.2
 
 ## [v5.0.1](https://github.com/joelbutcher/socialstream/compare/v4.4.6...v5.0.1) - 2023-10-23
 
@@ -16,15 +24,19 @@
 
 ## [v5.0.0](https://github.com/joelbutcher/socialstream/compare/v4.4.6...v5.0.0) - 2023-10-19
 
-- Laravel Breeze & Filament Support
+- Laravel Breeze & Filament Support   
+  
 - Update install command (Laravel Prompts)   
+     
   - Select your starter kit (Jetstream, Breeze, Filament Admin Panel) and stack   
   - Toggle features for your stack   
   - Install Pest   
   - Install dark mode support (if supported by the underlying starter kit & stack)   
   
-- New socialstream:provider command to build out a new provider
-- New socialstream:upgrade command to help easily migrate your Socialstream install to the latest major version
+- New socialstream:provider command to build out a new provider   
+  
+- New socialstream:upgrade command to help easily migrate your Socialstream install to the latest major version   
+  
 
 ## [v4.4.6](https://github.com/joelbutcher/socialstream/compare/v4.4.5...v4.4.6) - 2023-10-19
 
