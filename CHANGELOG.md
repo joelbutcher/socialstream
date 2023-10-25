@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.0.2...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.0.3...5.x)
+
+## [v5.0.3](https://github.com/joelbutcher/socialstream/compare/v5.0.2...v5.0.3) - 2023-10-25
+
+### What's Changed
+
+- [5.x] Fix call to undefined method `except` on `$errors` by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/304
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.0.2...v5.0.3
 
 ## [v5.0.2](https://github.com/joelbutcher/socialstream/compare/v5.0.1...v5.0.2) - 2023-10-23
 
