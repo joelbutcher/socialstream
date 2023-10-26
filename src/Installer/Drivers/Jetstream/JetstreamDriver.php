@@ -21,7 +21,7 @@ abstract class JetstreamDriver extends Driver
     abstract protected static function stack(): JetstreamInstallStack;
 
     /**
-     * Check for, and install Laravel Jetstream, if required,.
+     * Check for, and install Laravel Jetstream, if required.
      */
     protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
     {

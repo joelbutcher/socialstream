@@ -3,8 +3,8 @@
 namespace JoelButcher\Socialstream\Tests;
 
 use Illuminate\Support\Facades\Config;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOAuthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOAuthCallbackErrors;
+use JoelButcher\Socialstream\Actions\AuthenticateOAuthCallback;
+use JoelButcher\Socialstream\Actions\HandleOAuthCallbackErrors;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\JetstreamServiceProvider;
