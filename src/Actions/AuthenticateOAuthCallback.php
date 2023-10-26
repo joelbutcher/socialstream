@@ -173,13 +173,13 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     {
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-        $previousUrl = session()->get('socialstream.previous_url');
+        $previousUrl = session()->pull('socialstream.previous_url');
 
         return match(true) {
             Route::has('filament.auth.login') && $previousUrl === route('filament.auth.login') => redirect()
-                ->route('filament.home'),
+                ->route('admin'),
             $this->hasComposerPackage('laravel/breeze') => redirect()
-                ->to('/dashboard'),
+                ->route('dashboard'),
             $this->hasComposerPackage('laravel/jetstream') => app(LoginResponse::class),
             default => redirect()
                 ->to(RouteServiceProvider::HOME),
@@ -188,7 +188,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 
     private function redirectAuthFailed(string $error): RedirectResponse
     {
-        $previousUrl = session()->get('socialstream.previous_url');
+        $previousUrl = session()->pull('socialstream.previous_url');
 
         return redirect()->route(match (true) {
             Route::has('login') && $previousUrl === route('login') => 'login',

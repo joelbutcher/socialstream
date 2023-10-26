@@ -29,33 +29,28 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
             return $this->unauthenticatedRedirectWithError($error);
         }
 
-        $previousUrl = session()->get('socialstream.previous_url');
+        $previousUrl = session()->pull('socialstream.previous_url');
 
-        if (Route::has('filament.home') && $previousUrl === route('filament.home')) {
-            return redirect()
+        return match(true) {
+            Route::has('filament.home') && $previousUrl === route('filament.home') => redirect()
                 ->route('filament.home')
-                ->withErrors((new MessageBag)->add('socialstream', $error));
-        }
-
-        if ($this->hasComposerPackage('laravel/breeze')) {
-            return redirect()
+                ->withErrors((new MessageBag)->add('socialstream', $error)),
+            $this->hasComposerPackage('laravel/breeze') => redirect()
                 ->route(match(true) {
                     Route::has('profile.show') => 'profile.show',
                     Route::has('profile.edit') => 'profile.edit',
                     Route::has('profile') => 'profile',
                 })
-                ->withErrors(['callback' => $error]);
-        }
-
-        // Jetstream
-        return redirect()
-            ->route('profile.show')
-            ->dangerBanner($error);
+                ->withErrors(['callback' => $error]),
+            default => redirect()
+                ->route('profile.show')
+                ->dangerBanner($error),
+        };
     }
 
     private function unauthenticatedRedirectWithError(string $error): RedirectResponse
     {
-        $previousUrl = session()->get('socialstream.previous_url');
+        $previousUrl = session()->pull('socialstream.previous_url');
 
         if (Route::has('filament.admin.auth.login') && $previousUrl === route('filament.admin.auth.login')) {
             return redirect()
