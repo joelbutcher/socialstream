@@ -25,6 +25,10 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
 
         $error = $request->get('error_description');
 
+        // Because users can have multiple stacks installed for which they may wish to use
+        // Socialstream for, we will need to determine the redirect path based on a few
+        // different factors, such as the presence of Filament's auth routes etc.
+
         if (! auth()->check()) {
             return $this->unauthenticatedRedirectWithError($error);
         }

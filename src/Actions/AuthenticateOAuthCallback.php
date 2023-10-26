@@ -173,6 +173,10 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     {
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
+        // Because users can have multiple stacks installed for which they may wish to use
+        // Socialstream for, we will need to determine the redirect path based on a few
+        // different factors, such as the presence of Filament's auth routes etc.
+
         $previousUrl = session()->pull('socialstream.previous_url');
 
         return match(true) {
@@ -189,6 +193,10 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     private function redirectAuthFailed(string $error): RedirectResponse
     {
         $previousUrl = session()->pull('socialstream.previous_url');
+
+        // Because users can have multiple stacks installed for which they may wish to use
+        // Socialstream for, we will need to determine the redirect path based on a few
+        // different factors, such as the presence of Filament's auth routes etc.
 
         return redirect()->route(match (true) {
             Route::has('login') && $previousUrl === route('login') => 'login',
