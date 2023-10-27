@@ -2,6 +2,7 @@
 
 namespace JoelButcher\Socialstream\Installer\Drivers\Jetstream;
 
+use Illuminate\Filesystem\Filesystem;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
@@ -109,5 +110,8 @@ abstract class JetstreamDriver extends Driver
     protected function postInstall(string $composerBinary, InstallOptions ...$options): void
     {
         $this->ensureTeamsCompatibility(...$options);
+
+        // This action is added when actions are published, this needs to be removed
+        (new Filesystem())->delete(app_path('Actions/Socialstream/CreateUserWithTeamsFromProvider.php'));
     }
 }

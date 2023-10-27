@@ -18,7 +18,6 @@ use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use function Pest\Laravel\get;
 
 uses(WithFaker::class, RefreshDatabase::class);

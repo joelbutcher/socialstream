@@ -8,8 +8,13 @@ use App\Models\ConnectedAccount;
 use DateTimeInterface;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\Credentials;
+use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\One\User as OAuth1User;
 use Laravel\Socialite\Two\User as OAuth2User;
+
+beforeEach(function (): void {
+    Socialstream::useConnectedAccountModel(ConnectedAccount::class);
+});
 
 test('user can be created from OAuth 1.0 provider', function (): void {
     $this->migrate();

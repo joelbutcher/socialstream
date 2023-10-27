@@ -9,7 +9,7 @@
         </div>
     @endif
 
-    <x-socialstream::input-error :messages="$errors" class="text-center"/>
+    <x-socialstream::input-error :messages="$errors->get('socialstream')" class="text-center"/>
 
     <div class="grid gap-4">
         @foreach (\JoelButcher\Socialstream\Socialstream::providers() as $provider)

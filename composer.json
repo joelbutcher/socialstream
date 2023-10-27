@@ -20,6 +20,7 @@
     ],
     "require": {
         "php": "^8.1",
+        "doctrine/dbal": "^3.7",
         "illuminate/contracts": "^10",
         "laravel/prompts": "^0.1.10",
         "laravel/socialite": "^5.9",
@@ -44,18 +45,8 @@
     "autoload-dev": {
         "psr-4": {
             "JoelButcher\\Socialstream\\Tests\\": "tests/",
-            "Database\\Factories\\": [
-                "stubs/database/factories",
-                "stubs/breeze/database/factories",
-                "stubs/jetstream/database/factories",
-                "stubs/filament/database/factories"
-            ],
             "App\\": [
                 "stubs/app/",
-                "stubs/breeze/default/app/",
-                "stubs/breeze/inertia-common/app/",
-                "stubs/jetstream/app/",
-                "stubs/filament/app/",
                 "workbench/app/"
             ]
         }

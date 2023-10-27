@@ -4,7 +4,7 @@ namespace JoelButcher\Socialstream\Actions;
 
 use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +30,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      * Create a new controller instance.
      */
     public function __construct(
-        protected StatefulGuard $guard,
+        protected Guard $guard,
         protected CreatesUserFromProvider $createsUser,
         protected CreatesConnectedAccounts $createsConnectedAccounts,
         protected UpdatesConnectedAccounts $updatesConnectedAccounts

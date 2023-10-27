@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -55,52 +56,72 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Socialstream::authenticatesOAuthCallbackUsing(AuthenticateOAuthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(HandleOAuthCallbackErrors::class);
-
-        $this->configureRoutes();
+        $this->configureDefaults();
         $this->configureCommands();
-        $this->configureActions();
         $this->configureRefreshTokenResolvers();
-
-        match (true) {
-            $this->hasComposerPackage('laravel/breeze') => $this->bootLaravelBreeze(),
-            $this->hasComposerPackage('laravel/jetstream') => $this->bootLaravelJetstream(),
-            default => null,
-        };
-
-        if ($this->hasComposerPackage('filament/filament')) {
-            $this->bootFilament();
-        }
-
-        if ($this->hasComposerPackage('inertiajs/inertia-laravel')) {
-            $this->bootInertia();
-        }
+        $this->bootLaravelBreeze();
+        $this->bootLaravelJetstream();
+        $this->bootFilament();
+        $this->bootInertia();
     }
 
-    protected function configureRoutes(): void
+    /**
+     * Sets sensible package defaults if not installed alongside Jetstream, Breeze, or Filament.
+     */
+    private function configureDefaults(): void
     {
+        // Blade views / components
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'socialstream');
+
+        // Views
         if (Socialstream::$registersRoutes) {
             Route::group([
                 'namespace' => 'JoelButcher\Socialstream\Http\Controllers',
                 'domain' => config('socialstream.domain', null),
                 'prefix' => config('socialstream.prefix', config('socialstream.path')),
             ], function () {
-                $this->loadRoutesFrom(path: match (config('jetstream.stack')) {
-                    'inertia' => __DIR__.'/../routes/socialstream-inertia.php',
-                    default => __DIR__.'/../routes/socialstream.php'
-                });
+                $this->loadRoutesFrom(path: __DIR__.'/../routes/socialstream.php');
             });
         }
 
-        match (config('jetstream.stack')) {
-            'inertia' => $this->publishes([
-                __DIR__.'/../routes/socialstream-inertia.php' => base_path('routes/socialstream.php'),
-            ], 'socialstream-routes'),
-            default => $this->publishes([
-                __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
-            ], 'socialstream-routes')
-        };
+        // Models & Policies
+        Socialstream::useConnectedAccountModel(ConnectedAccount::class);
+        Gate::policy(Socialstream::connectedAccountModel(), Policies\ConnectedAccountPolicy::class);
+
+        // Actions
+        Socialstream::authenticatesOAuthCallbackUsing(AuthenticateOAuthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(HandleOAuthCallbackErrors::class);
+        Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
+        Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
+        Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
+        Socialstream::updateConnectedAccountsUsing(UpdateConnectedAccount::class);
+        Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
+        Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
+
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
+        // Config
+        $this->publishes([
+            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
+        ], 'socialstream-config');
+
+        // Migrations
+        $this->publishes([
+            __DIR__.'/../database/migrations/2022_12_21_000000_make_password_nullable_on_users_table.php' => database_path('migrations/2022_12_21_000000_make_password_nullable_on_users_table.php'),
+            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+        ], 'socialstream-migrations');
+
+        // Routes
+        $this->publishes([
+            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+        ], 'socialstream-routes');
+
+        // Actions
+        $this->publishes([
+            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
+        ], 'socialstream-actions');
     }
 
     /**
@@ -117,24 +138,6 @@ class SocialstreamServiceProvider extends ServiceProvider
             Console\UpgradeCommand::class,
             Console\CreateProviderCommand::class,
         ]);
-    }
-
-    /**
-     * Configure the default actions used by Socialstream.
-     */
-    public function configureActions(): void
-    {
-        Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
-        Socialstream::createUsersFromProviderUsing(match (true) {
-            $this->hasComposerPackage('laravel/jetstream') => Jetstream::hasTeamFeatures()
-                ? CreateUserWithTeamsFromProvider::class
-                : CreateUserFromProvider::class,
-            default => CreateUserFromProvider::class,
-        });
-        Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);
-        Socialstream::updateConnectedAccountsUsing(UpdateConnectedAccount::class);
-        Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
-        Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
     }
 
     /**
@@ -155,19 +158,75 @@ class SocialstreamServiceProvider extends ServiceProvider
     }
 
     /**
+     * Boot the services required for Laravel Breeze.
+     */
+    protected function bootLaravelBreeze(): void
+    {
+        if (! $this->hasComposerPackage('laravel/breeze') || ! $this->app->runningInConsole()) {
+            return;
+        }
+
+        // Routes
+        if (class_exists('\App\Providers\VoltServiceProvider')) {
+            return;
+        } elseif (class_exists('\App\Http\Middleware\HandleInertiaRequests')) {
+            $this->publishes(paths: [
+                __DIR__.'/../stubs/breeze/inertia-common/routes/auth.php' => base_path('routes/auth.php'),
+                __DIR__.'/../stubs/breeze/inertia-common/routes/web.php' => base_path('routes/web.php'),
+            ], groups: 'socialstream-routes');
+        } elseif (class_exists('\App\Http\Controllers\ProfileController')) {
+            $this->publishes(paths: [
+                __DIR__.'/../stubs/breeze/default/routes/auth.php' => base_path('routes/auth.php'),
+                __DIR__.'/../stubs/breeze/default/routes/web.php' => base_path('routes/web.php'),
+            ], groups: 'socialstream-routes');
+        }
+
+        // Migrations
+        $this->publishes([
+            __DIR__.'/../database/migrations/2014_10_12_000000_create_breeze_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
+            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+        ], 'socialstream-migrations');
+    }
+
+    /**
      * Boot the services required for Laravel Jetstream.
      */
     protected function bootLaravelJetstream(): void
     {
+        if (! $this->hasComposerPackage('laravel/jetstream') || ! class_exists(Jetstream::class)) {
+            return;
+        }
+
         Socialstream::setUserPasswordsUsing(SetUserPassword::class);
+        Socialstream::createUsersFromProviderUsing(match(Jetstream::hasTeamFeatures()) {
+            true => CreateUserWithTeamsFromProvider::class,
+            false => CreateUserFromProvider::class,
+        });
+
+        if (Socialstream::$registersRoutes) {
+            Route::group([
+                'namespace' => 'JoelButcher\Socialstream\Http\Controllers',
+                'domain' => config('socialstream.domain', null),
+                'prefix' => config('socialstream.prefix', config('socialstream.path')),
+            ], function () {
+                $this->loadRoutesFrom(path: match (config('jetstream.stack')) {
+                    'inertia' => __DIR__.'/../routes/socialstream-inertia.php',
+                    default => __DIR__.'/../routes/socialstream.php'
+                });
+            });
+        }
+
+
         if (! $this->app->runningInConsole()) {
             return;
         }
 
         // Config
-        $this->publishes([
-            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
-        ], 'socialstream-config');
+        if (config('jetstream.stack') === 'inertia') {
+            $this->publishes([
+                __DIR__.'/../routes/socialstream-inertia.php' => base_path('routes/socialstream.php'),
+            ], 'socialstream-routes');
+        }
 
         // Actions
         $this->publishes(array_merge([
@@ -185,54 +244,11 @@ class SocialstreamServiceProvider extends ServiceProvider
     }
 
     /**
-     * Boot the services required for Laravel Breeze.
-     */
-    protected function bootLaravelBreeze(): void
-    {
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
-
-        // Config
-        $this->publishes([
-            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
-        ], 'socialstream-config');
-
-        // Actions
-        $this->publishes([
-            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
-        ], 'socialstream-actions');
-
-        // Migrations
-        $this->publishes([
-            __DIR__.'/../database/migrations/2014_10_12_000000_create_breeze_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
-        ], 'socialstream-migrations');
-
-        // Breeze's Livewire stack uses Laravel Volt with PHP classes in the blade files...
-        if (class_exists('\App\Providers\VoltServiceProvider')) {
-            return;
-        } elseif (class_exists('\App\Http\Middleware\HandleInertiaRequests')) {
-            $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/inertia-common/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__.'/../stubs/breeze/inertia-common/routes/web.php' => base_path('routes/web.php'),
-            ], groups: 'socialstream-routes');
-        } elseif (class_exists('\App\Http\Controllers\ProfileController')) {
-            $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/default/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__.'/../stubs/breeze/default/routes/web.php' => base_path('routes/web.php'),
-            ], groups: 'socialstream-routes');
-        }
-    }
-
-    /**
      * Boot the services required for Filament.
      */
     protected function bootFilament(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/filament/views', 'socialstream');
-
-        if (! $this->app->runningInConsole()) {
+        if (! $this->hasComposerPackage('filament/filament') || ! $this->app->runningInConsole()) {
             return;
         }
 
@@ -254,7 +270,7 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         // Views
         $this->publishes([
-            __DIR__.'/../resources/filament/views' => base_path('resources/views/vendor/socialstream'),
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/socialstream'),
         ], 'socialstream-views');
     }
 
@@ -263,6 +279,10 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootInertia(): void
     {
+        if (! $this->hasComposerPackage('inertiajs/inertia-laravel')) {
+            return;
+        }
+
         $kernel = $this->app->make(Kernel::class);
 
         $kernel->appendMiddlewareToGroup('web', ShareInertiaData::class);
