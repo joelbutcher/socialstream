@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Actions;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,12 +34,12 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
 
         $previousUrl = session()->pull('socialstream.previous_url');
 
-        return match(true) {
+        return match (true) {
             Route::has('filament.home') && $previousUrl === route('filament.home') => redirect()
                 ->route('filament.home')
                 ->withErrors((new MessageBag)->add('socialstream', $error)),
             $this->hasComposerPackage('laravel/breeze') => redirect()
-                ->route(match(true) {
+                ->route(match (true) {
                     Route::has('profile.show') => 'profile.show',
                     Route::has('profile.edit') => 'profile.edit',
                     Route::has('profile') => 'profile',

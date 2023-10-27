@@ -180,7 +180,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 
         $previousUrl = session()->pull('socialstream.previous_url');
 
-        return match(true) {
+        return match (true) {
             Route::has('filament.auth.login') && $previousUrl === route('filament.auth.login') => redirect()
                 ->route('admin'),
             $this->hasComposerPackage('laravel/breeze') => redirect()
