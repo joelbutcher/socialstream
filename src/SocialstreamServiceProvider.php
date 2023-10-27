@@ -178,7 +178,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelJetstream(): void
     {
-        if ($this->hasComposerPackage('laravel/jetstream') || ! class_exists(Jetstream::class)) {
+        if (! $this->hasComposerPackage('laravel/jetstream') || ! class_exists(Jetstream::class)) {
             return;
         }
 
