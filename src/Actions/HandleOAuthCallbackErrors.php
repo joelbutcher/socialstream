@@ -44,7 +44,7 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
                     Route::has('profile.edit') => 'profile.edit',
                     Route::has('profile') => 'profile',
                 })
-                ->withErrors(['callback' => $error]),
+                ->withErrors(['socialstream' => $error]),
             default => redirect()
                 ->route('profile.show')
                 ->dangerBanner($error),
