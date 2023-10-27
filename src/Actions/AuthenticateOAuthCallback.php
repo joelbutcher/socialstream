@@ -2,6 +2,7 @@
 
 namespace JoelButcher\Socialstream\Actions;
 
+use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;

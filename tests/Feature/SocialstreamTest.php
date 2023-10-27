@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
@@ -94,7 +95,7 @@ test('users can register', function (): void {
 
     $response = get('http://localhost/oauth/github/callback');
 
-    $response->assertRedirect('/home');
+    $response->assertRedirect(RouteServiceProvider::HOME);
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
@@ -145,7 +146,7 @@ test('existing users can login', function (): void {
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
+        ->assertRedirect(RouteServiceProvider::HOME);
 
     $this->assertAuthenticated();
 });
@@ -216,7 +217,7 @@ test('new users can register from login page', function (): void {
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
+        ->assertRedirect(RouteServiceProvider::HOME);
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('connected_accounts', [
@@ -261,7 +262,7 @@ test('users can login on registration', function (): void {
     session()->put('socialstream.previous_url', route('register'));
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
+        ->assertRedirect(RouteServiceProvider::HOME);
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('connected_accounts', [
@@ -296,7 +297,7 @@ it('generates missing emails', function (): void {
     session()->put('socialstream.previous_url', route('register'));
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
+        ->assertRedirect(RouteServiceProvider::HOME);
 
     $user = User::first();
 

@@ -8,6 +8,7 @@ use JoelButcher\Socialstream\Actions\HandleOAuthCallbackErrors;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\JetstreamServiceProvider;
+use Livewire\LivewireServiceProvider;
 
 abstract class JetstreamTestCase extends TestCase
 {
@@ -26,7 +27,7 @@ abstract class JetstreamTestCase extends TestCase
     {
         return array_merge(
             parent::getPackageProviders($app),
-            [JetstreamServiceProvider::class, FortifyServiceProvider::class]
+            [LivewireServiceProvider::class, JetstreamServiceProvider::class, FortifyServiceProvider::class]
         );
     }
 }

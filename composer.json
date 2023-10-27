@@ -53,7 +53,8 @@
                 "stubs/breeze/default/app/",
                 "stubs/breeze/inertia-common/app/",
                 "stubs/jetstream/app/",
-                "stubs/filament/app/"
+                "stubs/filament/app/",
+                "workbench/app/"
             ]
         }
     },
