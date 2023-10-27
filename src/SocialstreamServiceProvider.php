@@ -166,6 +166,21 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
+        // Routes
+        if (class_exists('\App\Providers\VoltServiceProvider')) {
+            return;
+        } elseif (class_exists('\App\Http\Middleware\HandleInertiaRequests')) {
+            $this->publishes(paths: [
+                __DIR__.'/../stubs/breeze/inertia-common/routes/auth.php' => base_path('routes/auth.php'),
+                __DIR__.'/../stubs/breeze/inertia-common/routes/web.php' => base_path('routes/web.php'),
+            ], groups: 'socialstream-routes');
+        } elseif (class_exists('\App\Http\Controllers\ProfileController')) {
+            $this->publishes(paths: [
+                __DIR__.'/../stubs/breeze/default/routes/auth.php' => base_path('routes/auth.php'),
+                __DIR__.'/../stubs/breeze/default/routes/web.php' => base_path('routes/web.php'),
+            ], groups: 'socialstream-routes');
+        }
+
         // Migrations
         $this->publishes([
             __DIR__.'/../database/migrations/2014_10_12_000000_create_breeze_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
@@ -211,21 +226,6 @@ class SocialstreamServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../routes/socialstream-inertia.php' => base_path('routes/socialstream.php'),
             ], 'socialstream-routes');
-        }
-
-        // Routes
-        if (class_exists('\App\Providers\VoltServiceProvider')) {
-            return;
-        } elseif (class_exists('\App\Http\Middleware\HandleInertiaRequests')) {
-            $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/inertia-common/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__.'/../stubs/breeze/inertia-common/routes/web.php' => base_path('routes/web.php'),
-            ], groups: 'socialstream-routes');
-        } elseif (class_exists('\App\Http\Controllers\ProfileController')) {
-            $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/default/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__.'/../stubs/breeze/default/routes/web.php' => base_path('routes/web.php'),
-            ], groups: 'socialstream-routes');
         }
 
         // Actions
