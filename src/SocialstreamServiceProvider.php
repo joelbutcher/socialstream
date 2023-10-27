@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
@@ -55,6 +56,9 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Socialstream::useConnectedAccountModel(ConnectedAccount::class);
+        Gate::policy(Socialstream::connectedAccountModel(), Policies\ConnectedAccountPolicy::class);
+
         Socialstream::authenticatesOAuthCallbackUsing(AuthenticateOAuthCallback::class);
         Socialstream::handlesOAuthCallbackErrorsUsing(HandleOAuthCallbackErrors::class);
 
