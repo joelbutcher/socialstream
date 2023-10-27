@@ -1,6 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.0.3...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.1.0...5.x)
+
+## [v5.1.0](https://github.com/joelbutcher/socialstream/compare/v5.0.3...v5.1.0) - 2023-10-27
+
+### What's Changed
+
+- [5.x] Fix Filament with other Stacks by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/306
+- [5.x] Standalone Socialstream 🚀 by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/307
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.0.3...v5.1.0
 
 ## [v5.0.3](https://github.com/joelbutcher/socialstream/compare/v5.0.2...v5.0.3) - 2023-10-25
 
