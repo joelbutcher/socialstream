@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Filament;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\ViewErrorBag;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Socialstream;
 
@@ -24,7 +25,7 @@ class SocialstreamPlugin implements Plugin
         $panel->renderHook('panels::auth.login.form.after', function () {
             return Socialstream::show() ?
                 view(config('socialstream.component', 'socialstream::components.socialstream'), [
-                    'errors' => session('errors')?->get('socialstream') ?? [],
+                    'errors' => session('errors') ?? new ViewErrorBag(),
                 ]) : '';
         });
     }
