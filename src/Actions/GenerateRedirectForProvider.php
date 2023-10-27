@@ -13,6 +13,11 @@ class GenerateRedirectForProvider implements GeneratesProviderRedirect
      */
     public function generate(string $provider): RedirectResponse
     {
+        session()->put(
+            key: 'socialstream.previous_url',
+            value: url()->previous(),
+        );
+
         return Socialite::driver($provider)->redirect();
     }
 }

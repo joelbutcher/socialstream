@@ -20,6 +20,7 @@
     ],
     "require": {
         "php": "^8.1",
+        "illuminate/contracts": "^10",
         "laravel/prompts": "^0.1.10",
         "laravel/socialite": "^5.9",
         "webmozart/assert": "^1.11"
@@ -28,6 +29,7 @@
         "laravel/breeze": "^1.25",
         "laravel/jetstream": "^4.0",
         "laravel/sanctum": "^3.3",
+        "livewire/livewire": "^3",
         "mockery/mockery": "^1.0",
         "orchestra/testbench": "^8.0",
         "pestphp/pest": "^2.0",
@@ -53,7 +55,8 @@
                 "stubs/breeze/default/app/",
                 "stubs/breeze/inertia-common/app/",
                 "stubs/jetstream/app/",
-                "stubs/filament/app/"
+                "stubs/filament/app/",
+                "workbench/app/"
             ]
         }
     },

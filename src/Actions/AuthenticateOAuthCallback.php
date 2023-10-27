@@ -1,12 +1,15 @@
 <?php
 
-namespace JoelButcher\Socialstream\Actions\Auth\Jetstream;
+namespace JoelButcher\Socialstream\Actions;
 
+use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
+use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
@@ -21,6 +24,8 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 {
+    use InteractsWithComposer;
+
     /**
      * Create a new controller instance.
      */
@@ -46,6 +51,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         $previousUrl = session()->get('socialstream.previous_url');
 
         if (
+            class_exists(FortifyFeatures::class) &&
             FortifyFeatures::enabled(FortifyFeatures::registration()) && ! $account &&
             (
                 $previousUrl === route('register') ||
@@ -62,27 +68,15 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         if (! Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
-            $messageBag = new MessageBag;
-            $messageBag->add(
-                'socialstream',
-                __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => Providers::name($provider)])
-            );
-
-            return redirect()->route('login')->withErrors(
-                $messageBag
+            return $this->redirectAuthFailed(
+                error: __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => Providers::name($provider)])
             );
         }
 
         if (Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
             if (Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
-                $messageBag = new MessageBag;
-                $messageBag->add(
-                    'socialstream',
-                    __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => Providers::name($provider)])
-                );
-
-                return redirect()->route('login')->withErrors(
-                    $messageBag
+                return $this->redirectAuthFailed(
+                    error: __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => Providers::name($provider)])
                 );
             }
 
@@ -138,10 +132,9 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return $this->login($user);
         }
 
-        $messageBag = new MessageBag;
-        $messageBag->add('socialstream', __('An account with that :Provider sign in already exists, please login.', ['provider' => Providers::buttonLabel($provider)]));
-
-        return redirect()->route('login')->withErrors($messageBag);
+        return $this->redirectAuthFailed(
+            __('An account with that :Provider sign in already exists, please login.', ['provider' => Providers::buttonLabel($provider)])
+        );
     }
 
     /**
@@ -177,10 +170,40 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     /**
      * Authenticate the given user and return a login response.
      */
-    protected function login(Authenticatable $user): LoginResponse
+    protected function login(Authenticatable $user): RedirectResponse|LoginResponse
     {
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-        return app(LoginResponse::class);
+        // Because users can have multiple stacks installed for which they may wish to use
+        // Socialstream for, we will need to determine the redirect path based on a few
+        // different factors, such as the presence of Filament's auth routes etc.
+
+        $previousUrl = session()->pull('socialstream.previous_url');
+
+        return match (true) {
+            Route::has('filament.auth.login') && $previousUrl === route('filament.auth.login') => redirect()
+                ->route('admin'),
+            $this->hasComposerPackage('laravel/breeze') => redirect()
+                ->route('dashboard'),
+            $this->hasComposerPackage('laravel/jetstream') => app(LoginResponse::class),
+            default => redirect()
+                ->to(RouteServiceProvider::HOME),
+        };
+    }
+
+    private function redirectAuthFailed(string $error): RedirectResponse
+    {
+        $previousUrl = session()->pull('socialstream.previous_url');
+
+        // Because users can have multiple stacks installed for which they may wish to use
+        // Socialstream for, we will need to determine the redirect path based on a few
+        // different factors, such as the presence of Filament's auth routes etc.
+
+        return redirect()->route(match (true) {
+            Route::has('login') && $previousUrl === route('login') => 'login',
+            Route::has('register') && $previousUrl === route('register') => 'register',
+            Route::has('filament.auth.login') && $previousUrl === route('filament.auth.login') => 'filament.auth.login',
+            default => 'login',
+        })->withErrors((new MessageBag)->add('socialstream', $error));
     }
 }

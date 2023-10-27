@@ -6,18 +6,13 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\Blade\AuthenticateOAuthCallback as BreezeBladeAuthenticateOAuthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\HandleOAuthCallbackErrors as BreezeHandleOAuthCallbackErrors;
-use JoelButcher\Socialstream\Actions\Auth\Breeze\Livewire\AuthenticateOAuthCallback as BreezeLivewireAuthenticateOAuthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Filament\AuthenticateOAuthCallback as FilamentAuthenticateOAuthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Filament\HandleOAuthCallbackErrors as FilamentHandleOAuthCallbackErrors;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\AuthenticateOAuthCallback as JetstreamAuthenticateOAuthCallback;
-use JoelButcher\Socialstream\Actions\Auth\Jetstream\HandleOAuthCallbackErrors as JetstreamHandleOAuthCallbackErrors;
+use JoelButcher\Socialstream\Actions\AuthenticateOAuthCallback;
 use JoelButcher\Socialstream\Actions\CreateConnectedAccount;
 use JoelButcher\Socialstream\Actions\CreateUserFromProvider;
 use JoelButcher\Socialstream\Actions\CreateUserWithTeamsFromProvider;
 use JoelButcher\Socialstream\Actions\GenerateRedirectForProvider;
 use JoelButcher\Socialstream\Actions\HandleInvalidState;
+use JoelButcher\Socialstream\Actions\HandleOAuthCallbackErrors;
 use JoelButcher\Socialstream\Actions\ResolveSocialiteUser;
 use JoelButcher\Socialstream\Actions\SetUserPassword;
 use JoelButcher\Socialstream\Actions\UpdateConnectedAccount;
@@ -60,6 +55,9 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Socialstream::authenticatesOAuthCallbackUsing(AuthenticateOAuthCallback::class);
+        Socialstream::handlesOAuthCallbackErrorsUsing(HandleOAuthCallbackErrors::class);
+
         $this->configureRoutes();
         $this->configureCommands();
         $this->configureActions();
@@ -68,9 +66,12 @@ class SocialstreamServiceProvider extends ServiceProvider
         match (true) {
             $this->hasComposerPackage('laravel/breeze') => $this->bootLaravelBreeze(),
             $this->hasComposerPackage('laravel/jetstream') => $this->bootLaravelJetstream(),
-            $this->hasComposerPackage('filament/filament') => $this->bootFilament(),
             default => null,
         };
+
+        if ($this->hasComposerPackage('filament/filament')) {
+            $this->bootFilament();
+        }
 
         if ($this->hasComposerPackage('inertiajs/inertia-laravel')) {
             $this->bootInertia();
@@ -159,9 +160,6 @@ class SocialstreamServiceProvider extends ServiceProvider
     protected function bootLaravelJetstream(): void
     {
         Socialstream::setUserPasswordsUsing(SetUserPassword::class);
-        Socialstream::authenticatesOAuthCallbackUsing(JetstreamAuthenticateOAuthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(JetstreamHandleOAuthCallbackErrors::class);
-
         if (! $this->app->runningInConsole()) {
             return;
         }
@@ -191,12 +189,6 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelBreeze(): void
     {
-        Socialstream::handlesOAuthCallbackErrorsUsing(BreezeHandleOAuthCallbackErrors::class);
-        Socialstream::authenticatesOAuthCallbackUsing(match (true) {
-            class_exists('\App\Providers\VoltServiceProvider') => BreezeLivewireAuthenticateOAuthCallback::class,
-            default => BreezeBladeAuthenticateOAuthCallback::class,
-        });
-
         if (! $this->app->runningInConsole()) {
             return;
         }
@@ -238,9 +230,6 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootFilament(): void
     {
-        Socialstream::authenticatesOAuthCallbackUsing(FilamentAuthenticateOAuthCallback::class);
-        Socialstream::handlesOAuthCallbackErrorsUsing(FilamentHandleOAuthCallbackErrors::class);
-
         $this->loadViewsFrom(__DIR__.'/../resources/filament/views', 'socialstream');
 
         if (! $this->app->runningInConsole()) {
