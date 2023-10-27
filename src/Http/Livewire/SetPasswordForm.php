@@ -4,10 +4,13 @@ namespace JoelButcher\Socialstream\Http\Livewire;
 
 use Illuminate\View\View;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
+use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
 
 class SetPasswordForm extends Component
 {
+    use InteractsWithBanner;
+
     /**
      * The component's state.
      *
@@ -32,7 +35,7 @@ class SetPasswordForm extends Component
             'password_confirmation' => '',
         ];
 
-        session()->flash('flash.banner', __('Your password has been set.'));
+        $this->banner(__('Your password has been set.'));
 
         redirect()->route('profile.show');
     }

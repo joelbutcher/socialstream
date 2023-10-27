@@ -22,7 +22,7 @@ trait SetsProfilePhotoFromUrl
 
             $this->updateProfilePhoto(new UploadedFile($file, $name));
         } else {
-            session()->flash('flash.banner', 'Unable to retrive image');
+            session()->flash('flash.banner', 'Unable to retrieve image');
             session()->flash('flash.bannerStyle', 'danger');
         }
     }
