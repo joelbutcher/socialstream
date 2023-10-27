@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.1.0...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.1.1...5.x)
+
+## [v5.1.1](https://github.com/joelbutcher/socialstream/compare/v5.1.0...v5.1.1) - 2023-10-27
+
+### What's Changed
+
+- [5.x] Fix filament error bag by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/308
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.1.0...v5.1.1
 
 ## [v5.1.0](https://github.com/joelbutcher/socialstream/compare/v5.0.3...v5.1.0) - 2023-10-27
 
