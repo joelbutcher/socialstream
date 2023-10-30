@@ -20,6 +20,7 @@ use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Features as FortifyFeatures;
+use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
@@ -97,25 +98,39 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      */
     protected function alreadyAuthenticated(Authenticatable $user, ?ConnectedAccount $account, string $provider, ProviderUser $providerAccount): RedirectResponse
     {
+        // Get the route
+        $route = match(true) {
+            Route::has('filament.admin.home') => route('filament.admin.home'),
+            Route::has('filament.home') => route('filament.home'),
+            $this->hasComposerPackage('laravel/breeze') => match(true) {
+                Route::has('profile.show') => route('profile.show'),
+                Route::has('profile.edit') => route('profile.edit'),
+                Route::has('profile') => route('profile'),
+            },
+            Route::has('profile.show') => route('profile.show'),
+            Route::has('dashboard') => route('dashboard'),
+            Route::has('home') => route('home'),
+            default => RouteServiceProvider::HOME
+        };
+
         // Connect the account to the user.
         if (! $account) {
             $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
 
-            return redirect()->route('profile.show')->banner(
-                __('You have successfully connected :Provider to your account.', ['provider' => Providers::name($provider)])
-            );
+            $status = __('You have successfully connected :Provider to your account.', ['provider' => Providers::name($provider)]);
+
+            return class_exists(Jetstream::class)
+                ? redirect()->to($route)->banner($status)
+                : redirect()->to($route)->with('status', $status);
         }
 
-        if ($account->user_id !== $user->id) {
-            return redirect()->route('profile.show')->dangerBanner(
-                __('This :Provider sign in account is already associated with another user. Please log in with that user or connect a different :Provider account.', ['provider' => Providers::buttonLabel($provider)])
-            );
-        }
+        $error = $account->user_id !== $user->id
+            ? __('This :Provider sign in account is already associated with another user. Please log in with that user or connect a different :Provider account.', ['provider' => Providers::buttonLabel($provider)])
+            : __('This :Provider sign in account is already associated with your user.', ['provider' => Providers::buttonLabel($provider)]);
 
-        // Account already connected
-        return redirect()->route('profile.show')->dangerBanner(
-            __('This :Provider sign in account is already associated with your user.', ['provider' => Providers::buttonLabel($provider)])
-        );
+        return class_exists(Jetstream::class)
+            ? redirect()->to($route)->dangerBanner($error)
+            : redirect()->to($route)->withErrors((new MessageBag)->add('socialstream', $error));
     }
 
     /**
