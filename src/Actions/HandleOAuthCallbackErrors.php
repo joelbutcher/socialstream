@@ -35,6 +35,9 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
         $previousUrl = session()->pull('socialstream.previous_url');
 
         return match (true) {
+            Route::has('filament.admin.home') && $previousUrl === route('filament.admin.home') => redirect()
+                ->route('filament.admin.home')
+                ->withErrors((new MessageBag)->add('socialstream', $error)),
             Route::has('filament.home') && $previousUrl === route('filament.home') => redirect()
                 ->route('filament.home')
                 ->withErrors((new MessageBag)->add('socialstream', $error)),
