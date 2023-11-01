@@ -1,6 +1,16 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.1.2...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.2.0...5.x)
+
+## [v5.2.0](https://github.com/joelbutcher/socialstream/compare/v5.1.2...v5.2.0) - 2023-11-01
+
+### What's Changed
+
+- [5.x] Run tests on PHP 8.3 by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/310
+- [5.x] Align breeze livewire stacks by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/311
+- [5.x] RTL support by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/312
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.1.2...v5.2.0
 
 ## [v5.1.2](https://github.com/joelbutcher/socialstream/compare/v5.1.1...v5.1.2) - 2023-10-30
 
