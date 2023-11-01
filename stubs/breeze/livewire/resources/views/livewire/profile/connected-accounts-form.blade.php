@@ -1,18 +1,23 @@
 <?php
 
-use Livewire\Attributes\Rule;
+use Illuminate\Support\Facades\Auth;
+
 use Livewire\Volt\Component;
 
 new class extends Component
 {
-    #[Rule(['required', 'string', 'current_password'])]
     public string $password = '';
 
+    /**
+     * Delete the given connected account for the currently authenticated user.
+     */
     public function removeAccount(string|int $id): void
     {
-        $this->validate();
+        $this->validate([
+            'password' => ['required', 'string', 'current_password']
+        ]);
 
-        auth()->user()->connectedAccounts()
+        Auth::user()->connectedAccounts()
             ->where('id', $id)
             ->delete();
 
@@ -37,14 +42,14 @@ new class extends Component
         @foreach (JoelButcher\Socialstream\Socialstream::providers() as $provider)
             @php
                 $account = null;
-                $account = auth()->user()->connectedAccounts->where('provider', $provider['id'])->first();
+                $account = Auth::user()->connectedAccounts->where('provider', $provider['id'])->first();
             @endphp
 
             <x-connected-account :provider="$provider" created-at="{{ $account?->created_at->diffForHumans() ?? null }}">
                 <x-slot name="action">
                     @if (! is_null($account))
                         <div class="flex items-center space-x-6">
-                            @if ((auth()->user()->connectedAccounts->count() > 1 || ! is_null(auth()->user()->getAuthPassword())))
+                            @if ((Auth::user()->connectedAccounts->count() > 1 || ! is_null(Auth::user()->getAuthPassword())))
                                 <x-danger-button
                                         x-data=""
                                         x-on:click.prevent="$dispatch('open-modal', 'confirm-connected-account-deletion')"
