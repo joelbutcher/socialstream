@@ -1,11 +1,11 @@
 @props(['provider', 'createdAt' => null])
 
 <div>
-    <div class="pl-3 flex items-center justify-between">
+    <div class="ps-3 flex items-center justify-between">
         <div class="flex items-center">
             <x-socialstream-icons.provider-icon :provider="$provider['id']" class="h-6 w-6" />
 
-            <div class="ml-2">
+            <div class="ms-2">
                 <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
                     {{ __($provider['name']) }}
                 </div>

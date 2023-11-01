@@ -17,7 +17,7 @@ const props = defineProps({
     <div>
         <div class="px-3 flex items-center justify-between">
             <div class="flex items-center">
-                <ProviderIcon :provider="provider" classes="h-6 w-6 mr-2"/>
+                <ProviderIcon :provider="provider" classes="h-6 w-6 me-2"/>
 
                 <div class="ml-2">
                     <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
