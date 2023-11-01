@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -16,12 +17,12 @@ $setPassword = function () {
     try {
         $validated = $this->validate();
     } catch (ValidationException $e) {
-        $this->reset('current_password', 'password', 'password_confirmation');
+        $this->reset('password', 'password_confirmation');
 
         throw $e;
     }
 
-    auth()->user()->update([
+    Auth::::user()->update([
         'password' => Hash::make($validated['password']),
     ]);
 
