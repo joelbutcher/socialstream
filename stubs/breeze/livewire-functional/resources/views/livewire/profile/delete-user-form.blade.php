@@ -1,5 +1,8 @@
 <?php
 
+use App\Livewire\Actions\Logout;
+use Illuminate\Support\Facades\Auth;
+
 use function Livewire\Volt\rules;
 use function Livewire\Volt\state;
 
@@ -7,16 +10,13 @@ state(['password' => '']);
 
 rules(['password' => ['required', 'string', 'current_password']]);
 
-$deleteUser = function () {
+$deleteUser = function (Logout $logout) {
     $this->validate();
 
-    $user = tap(auth()->user(), fn () => auth()->logout());
+    $user = tap(Auth::user(), $logout(...));
 
     $user->connectedAccounts->each->delete();
     $user->delete();
-
-    session()->invalidate();
-    session()->regenerateToken();
 
     $this->redirect('/', navigate: true);
 };
