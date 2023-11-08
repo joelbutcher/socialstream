@@ -40,4 +40,9 @@ abstract class TestCase extends BaseTestCase
             'redirect' => 'https://example.test/oauth/github/callback',
         ]);
     }
+
+    protected function migrate(): void
+    {
+        $this->artisan('migrate', ['--database' => 'testbench'])->run();
+    }
 }
