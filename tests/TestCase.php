@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Tests;
 
-use Illuminate\Support\Facades\Config;
 use JoelButcher\Socialstream\SocialstreamServiceProvider;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Mockery;
@@ -10,19 +9,10 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Config::set('services.github', [
-            'client_id' => 'github-client-id',
-            'client_secret' => 'github-client-secret',
-            'redirect' => 'https://example.test/oauth/github/callback',
-        ]);
-    }
-
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         Mockery::close();
     }
 
@@ -43,10 +33,11 @@ abstract class TestCase extends BaseTestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
-    }
 
-    protected function migrate(): void
-    {
-        $this->artisan('migrate', ['--database' => 'testbench'])->run();
+        $app['config']->set('services.github', [
+            'client_id' => 'github-client-id',
+            'client_secret' => 'github-client-secret',
+            'redirect' => 'https://example.test/oauth/github/callback',
+        ]);
     }
 }
