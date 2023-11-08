@@ -99,10 +99,10 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     protected function alreadyAuthenticated(Authenticatable $user, ?ConnectedAccount $account, string $provider, ProviderUser $providerAccount): RedirectResponse
     {
         // Get the route
-        $route = match(true) {
+        $route = match (true) {
             Route::has('filament.admin.home') => route('filament.admin.home'),
             Route::has('filament.home') => route('filament.home'),
-            $this->hasComposerPackage('laravel/breeze') => match(true) {
+            $this->hasComposerPackage('laravel/breeze') => match (true) {
                 Route::has('profile.show') => route('profile.show'),
                 Route::has('profile.edit') => route('profile.edit'),
                 Route::has('profile') => route('profile'),

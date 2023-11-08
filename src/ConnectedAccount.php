@@ -13,8 +13,8 @@ use JoelButcher\Socialstream\Events\ConnectedAccountUpdated;
 class ConnectedAccount extends Model
 {
     use HasFactory;
-    use HasTimestamps;
     use HasOAuth2Tokens;
+    use HasTimestamps;
 
     /**
      * The attributes that are mass assignable.
