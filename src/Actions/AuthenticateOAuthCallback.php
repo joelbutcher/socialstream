@@ -125,8 +125,8 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         $error = $account->user_id !== $user->id
-            ? __('This :Provider sign in account is already associated with another user. Please log in with that user or connect a different :Provider account.', ['provider' => Providers::buttonLabel($provider)])
-            : __('This :Provider sign in account is already associated with your user.', ['provider' => Providers::buttonLabel($provider)]);
+            ? __('This :Provider sign in account is already associated with another user. Please log in with that user or connect a different :Provider account.', ['provider' => Providers::name($provider)])
+            : __('This :Provider sign in account is already associated with your user.', ['provider' => Providers::name($provider)]);
 
         return class_exists(Jetstream::class)
             ? redirect()->to($route)->dangerBanner($error)
