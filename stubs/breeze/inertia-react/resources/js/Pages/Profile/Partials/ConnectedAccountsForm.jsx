@@ -53,13 +53,15 @@ export default function ConnectedAccountsForm({ className = '', hasPassword, pro
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Connected Accounts</h2>
 
                 <p className="max-w-xl mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    You are free to connect any social accounts to your profile and may remove any connected accounts at
-                    any time. If you feel any of your connected accounts have been compromised, you should disconnect
-                    them immediately and change your password.
+                    Connect your social media accounts to enable Sign In with OAuth.
                 </p>
             </header>
 
-            <div className="mt-5 space-y-6">
+            <div className="p-4 bg-red-500/10 dark:bg-red-500/5 text-red-500 border-l-4 border-red-600 dark:border-red-700 rounded font-medium text-sm">
+                If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.
+            </div>
+
+            <div className="space-y-6 mt-6">
                 {providers.map((provider) => {
                     const connectedAccount = connectedAccounts
                         .filter((account) => account.provider === provider.id)

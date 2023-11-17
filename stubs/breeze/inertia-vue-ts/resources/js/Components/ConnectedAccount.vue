@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, defineProps} from 'vue';
+import {defineProps} from 'vue';
 import ProviderIcon from '@/Components/SocialstreamIcons/ProviderIcon.vue';
 import {Provider} from '@/types';
 

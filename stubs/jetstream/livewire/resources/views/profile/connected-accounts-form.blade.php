@@ -4,23 +4,15 @@
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Manage and remove your connected accounts.') }}
+        {{ __('Connect your social media accounts to enable Sign In with OAuth.') }}
     </x-slot>
 
     <x-slot name="content">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            @if (count($this->accounts) == 0)
-                {{ __('You have no connected accounts.') }}
-            @else
-                {{ __('Your connected accounts.') }}
-            @endif
-        </h3>
-
-        <div class="mt-3 max-w-xl text-sm text-gray-600 dark:text-gray-400">
-            {{ __('You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.') }}
+        <div class="p-4 bg-red-500/10 dark:bg-red-500/5 text-red-500 border-l-4 border-red-600 dark:border-red-700 rounded font-medium text-sm">
+            {{ __('If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.') }}
         </div>
 
-        <div class="mt-5 space-y-6">
+        <div class="space-y-6 mt-6">
             @foreach ($this->providers as $provider)
                 @php
                     $account = null;
