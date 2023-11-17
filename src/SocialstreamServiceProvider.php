@@ -198,7 +198,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         }
 
         Socialstream::setUserPasswordsUsing(SetUserPassword::class);
-        Socialstream::createUsersFromProviderUsing(match(Jetstream::hasTeamFeatures()) {
+        Socialstream::createUsersFromProviderUsing(match (Jetstream::hasTeamFeatures()) {
             true => CreateUserWithTeamsFromProvider::class,
             false => CreateUserFromProvider::class,
         });
@@ -215,7 +215,6 @@ class SocialstreamServiceProvider extends ServiceProvider
                 });
             });
         }
-
 
         if (! $this->app->runningInConsole()) {
             return;

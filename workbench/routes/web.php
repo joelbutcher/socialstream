@@ -7,3 +7,11 @@ Route::group(['middleware' => config('socialstream.middleware', ['web'])], funct
     Route::get('/oauth/{provider}', [OAuthController::class, 'redirect'])->name('oauth.redirect');
     Route::match(['get', 'post'], '/oauth/{provider}/callback', [OAuthController::class, 'callback'])->name('oauth.callback');
 });
+
+Route::post('/login', function () {
+    return 'login';
+})->name('login');
+
+Route::post('/register', function () {
+    return 'register';
+})->name('register');

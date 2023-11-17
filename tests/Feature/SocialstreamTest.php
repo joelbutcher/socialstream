@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Tests\Feature;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -18,9 +17,10 @@ use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use function Pest\Laravel\get;
 
-uses(WithFaker::class, RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 it('redirects users', function (): void {
     $response = get('http://localhost/oauth/github');
@@ -74,7 +74,7 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
 test('users can register', function (): void {
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
             'email' => 'joel@socialstream.dev',
@@ -114,7 +114,7 @@ test('existing users can login', function (): void {
 
     $user->connectedAccounts()->create([
         'provider' => 'github',
-        'provider_id' => $githubId = $this->faker->numerify('########'),
+        'provider_id' => $githubId = fake()->numerify('########'),
         'email' => 'joel@socialstream.dev',
         'token' => Str::random(64),
     ]);
@@ -162,7 +162,7 @@ test('authenticated users can link to provider', function (): void {
 
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
             'email' => 'joel@socialstream.dev',
@@ -199,7 +199,7 @@ test('new users can register from login page', function (): void {
 
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
             'email' => 'joel@socialstream.dev',
@@ -242,7 +242,7 @@ test('users can login on registration', function (): void {
 
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
             'email' => 'joel@socialstream.dev',
@@ -278,7 +278,7 @@ it('generates missing emails', function (): void {
 
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
             'avatar' => null,
