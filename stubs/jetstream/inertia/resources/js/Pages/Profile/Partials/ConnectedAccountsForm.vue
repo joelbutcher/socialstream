@@ -65,25 +65,16 @@ const closeModal = () => {
         </template>
 
         <template #description>
-            Manage and remove your connected accounts.
+           Connect your social media accounts to enable Sign In with OAuth.
         </template>
 
         <template #content>
-            <h3 class="text-lg font-medium text-gray-900"
-                v-if="$page.props.socialstream.connectedAccounts.length === 0">
-                You have no connected accounts.
-            </h3>
-            <h3 class="text-lg font-medium text-gray-900" v-else>
-                Your connected accounts.
-            </h3>
+           <div class="p-4 bg-red-500/10 dark:bg-red-500/5 text-red-500 border-l-4 border-red-600 dark:border-red-700 rounded font-medium text-sm">
+              If you feel any of your connected accounts have been compromised, you should disconnect them
+              immediately and change your password.
+           </div>
 
-            <div class="mt-3 ax-w-xl text-sm text-gray-600">
-                You are free to connect any social accounts to your profile and may remove any connected accounts at any
-                time. If you feel any of your connected accounts have been compromised, you should disconnect them
-                immediately and change your password.
-            </div>
-
-            <div class="mt-5 space-y-6">
+            <div class="space-y-6 mt-6">
                 <div v-for="(provider) in $page.props.socialstream.providers" :key="provider">
                     <ConnectedAccount :provider="provider"
                                       :created-at="getAccountForProvider(provider)?.created_at">

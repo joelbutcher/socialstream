@@ -32,13 +32,17 @@ new class extends Component
         </h2>
 
         <p class="max-w-xl mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.') }}
+            {{ __('Connect your social media accounts to enable Sign In with OAuth.') }}
         </p>
     </header>
 
     <x-input-error :messages="$errors->get('socialstream')" class="mt-2" />
 
-    <div class="mt-5 space-y-6">
+    <div class="p-4 bg-red-500/10 dark:bg-red-500/5 text-red-500 border-l-4 border-red-600 dark:border-red-700 rounded font-medium text-sm">
+        {{ __('If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.') }}
+    </div>
+
+    <div class="space-y-6 mt-6">
         @foreach (JoelButcher\Socialstream\Socialstream::providers() as $provider)
             @php
                 $account = null;
