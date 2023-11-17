@@ -1,6 +1,20 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.2.0...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.3.0...5.x)
+
+## [v5.3.0](https://github.com/joelbutcher/socialstream/compare/v5.2.0...v5.3.0) - 2023-11-17
+
+### What's Changed
+
+- [5.x] Use provider names in error messages by [@SRWieZ](https://github.com/SRWieZ) in https://github.com/joelbutcher/socialstream/pull/315
+- [5.x] Update design and copy for connected accounts form by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/316
+- [5.x] fix: duplicate route names by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/313
+
+### New Contributors
+
+- [@SRWieZ](https://github.com/SRWieZ) made their first contribution in https://github.com/joelbutcher/socialstream/pull/315
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.2.0...v5.3.0
 
 ## [v5.2.0](https://github.com/joelbutcher/socialstream/compare/v5.1.2...v5.2.0) - 2023-11-01
 
