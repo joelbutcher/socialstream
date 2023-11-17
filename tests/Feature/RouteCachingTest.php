@@ -16,7 +16,7 @@ uses(RefreshDatabase::class);
 
 it('caches routes and redirects to provider', function () {
     $this->defineCacheRoutes(file_get_contents(
-        __DIR__.'/../../routes/socialstream.php'
+        __DIR__.'/../../workbench/routes/web.php'
     ));
 
     get('/oauth/github')
@@ -25,7 +25,7 @@ it('caches routes and redirects to provider', function () {
 
 it('caches routes and authenticates via GET', function () {
     $this->defineCacheRoutes(file_get_contents(
-        __DIR__.'/../../routes/socialstream.php'
+        __DIR__.'/../../workbench/routes/web.php'
     ));
 
     $user = (new SocialiteUser())
@@ -53,7 +53,7 @@ it('caches routes and authenticates via GET', function () {
 
 it('caches routes and authenticates via POST', function () {
     $this->defineCacheRoutes(file_get_contents(
-        __DIR__.'/../../routes/socialstream.php'
+        __DIR__.'/../../workbench/routes/web.php'
     ));
 
     $user = (new SocialiteUser())
