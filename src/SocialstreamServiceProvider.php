@@ -30,7 +30,6 @@ use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Livewire;
-use Livewire\LivewireManager;
 
 class SocialstreamServiceProvider extends ServiceProvider
 {
@@ -43,11 +42,9 @@ class SocialstreamServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
 
-        if(config('jetstream.stack') === 'livewire' && class_exists(LivewireManager::class)) {
-            $this->app->afterResolving(LivewireManager::class, function () {
-                Livewire::component('profile.set-password-form', SetPasswordForm::class);
-                Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
-            });
+        if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
+            Livewire::component('profile.set-password-form', SetPasswordForm::class);
+            Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
         }
     }
 
