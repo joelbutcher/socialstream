@@ -43,8 +43,10 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
 
         if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
-            Livewire::component('profile.set-password-form', SetPasswordForm::class);
-            Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
+            $this->app->afterResolving(Livewire::class, function () {
+                Livewire::component('profile.set-password-form', SetPasswordForm::class);
+                Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
+            });
         }
     }
 
