@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.3.0...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.3.1...5.x)
+
+## [v5.3.1](https://github.com/joelbutcher/socialstream/compare/v5.3.0...v5.3.1) - 2023-11-21
+
+### What's Changed
+
+- [5.x] Fix Livewire component registration by [@SRWieZ](https://github.com/SRWieZ) in https://github.com/joelbutcher/socialstream/pull/317
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.3.0...v5.3.1
 
 ## [v5.3.0](https://github.com/joelbutcher/socialstream/compare/v5.2.0...v5.3.0) - 2023-11-17
 
