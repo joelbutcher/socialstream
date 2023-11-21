@@ -6,7 +6,6 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Compilers\BladeCompiler;
 use JoelButcher\Socialstream\Actions\AuthenticateOAuthCallback;
 use JoelButcher\Socialstream\Actions\CreateConnectedAccount;
 use JoelButcher\Socialstream\Actions\CreateUserFromProvider;
@@ -42,13 +41,6 @@ class SocialstreamServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
-
-        $this->app->afterResolving(BladeCompiler::class, function () {
-            if (config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
-                Livewire::component('profile.set-password-form', SetPasswordForm::class);
-                Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
-            }
-        });
     }
 
     /**
@@ -63,6 +55,11 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->bootLaravelJetstream();
         $this->bootFilament();
         $this->bootInertia();
+        
+        if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
+            Livewire::component('profile.set-password-form', SetPasswordForm::class);
+            Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
+        }
     }
 
     /**
