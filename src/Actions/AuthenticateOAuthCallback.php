@@ -148,7 +148,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         return $this->redirectAuthFailed(
-            __('An account with that :Provider sign in already exists, please login.', ['provider' => Providers::buttonLabel($provider)])
+            __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => Providers::buttonLabel($provider)])
         );
     }
 
