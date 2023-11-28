@@ -52,12 +52,10 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         $previousUrl = session()->get('socialstream.previous_url');
 
         if (
-            class_exists(FortifyFeatures::class) &&
-            FortifyFeatures::enabled(FortifyFeatures::registration()) && ! $account &&
-            (
-                $previousUrl === route('register') ||
-                (Features::hasCreateAccountOnFirstLoginFeatures() && $previousUrl === route('login'))
-            )
+            class_exists(FortifyFeatures::class) 
+            && FortifyFeatures::enabled(FortifyFeatures::registration()) 
+            && ! $account 
+            && ($previousUrl === route('register') || Features::hasCreateAccountOnFirstLoginFeatures())
         ) {
             $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
@@ -72,18 +70,6 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return $this->redirectAuthFailed(
                 error: __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => Providers::name($provider)])
             );
-        }
-
-        if (Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
-            if (Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->exists()) {
-                return $this->redirectAuthFailed(
-                    error: __('An account with that email address already exists. Please login to connect your :Provider account.', ['provider' => Providers::name($provider)])
-                );
-            }
-
-            $user = $this->createsUser->create($provider, $providerAccount);
-
-            return $this->login($user);
         }
 
         $user = $account->user;
