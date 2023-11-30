@@ -54,3 +54,106 @@ test('new users can register from login page', function (): void {
         'email' => 'joel@socialstream.dev',
     ]);
 });
+
+
+test('new users can register from random page', function (): void {
+    Config::set('socialstream.features', [
+        Features::createAccountOnFirstLogin(),
+    ]);
+
+    $this->assertDatabaseEmpty('users');
+    $this->assertDatabaseEmpty('connected_accounts');
+
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => $githubId = fake()->numerify('########'),
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
+
+    $provider = Mockery::mock(GithubProvider::class);
+    $provider->shouldReceive('user')->once()->andReturn($user);
+
+    session()->put('socialstream.previous_url', '/random');
+
+    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+
+    get('http://localhost/oauth/github/callback')
+        ->assertRedirect(RouteServiceProvider::HOME);
+
+    $this->assertAuthenticated();
+    $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
+    $this->assertDatabaseHas('connected_accounts', [
+        'provider' => 'github',
+        'provider_id' => $githubId,
+        'email' => 'joel@socialstream.dev',
+    ]);
+});
+
+test('new users cannot register from login page without feature enabled', function (): void {
+    $this->assertDatabaseEmpty('users');
+    $this->assertDatabaseEmpty('connected_accounts');
+
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => $githubId = fake()->numerify('########'),
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
+
+    $provider = Mockery::mock(GithubProvider::class);
+    $provider->shouldReceive('user')->once()->andReturn($user);
+
+    session()->put('socialstream.previous_url', route('login'));
+
+    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+
+    $response = get('http://localhost/oauth/github/callback');
+
+    $this->assertGuest();
+    $response->assertRedirect(route('login'));
+    $response->assertSessionHasErrors();
+});
+
+test('new users cannot register from random page without feature enabled', function (): void {
+    $this->assertDatabaseEmpty('users');
+    $this->assertDatabaseEmpty('connected_accounts');
+
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => $githubId = fake()->numerify('########'),
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
+
+    $provider = Mockery::mock(GithubProvider::class);
+    $provider->shouldReceive('user')->once()->andReturn($user);
+
+    session()->put('socialstream.previous_url', '/random');
+
+    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+
+    $response = get('http://localhost/oauth/github/callback');
+
+    $this->assertGuest();
+    $response->assertRedirect(route('login'));
+    $response->assertSessionHasErrors();
+});
