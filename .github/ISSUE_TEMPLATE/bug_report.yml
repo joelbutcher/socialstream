@@ -2,14 +2,14 @@ name: Bug report
 description: Report a problem you're experiencing
 labels: bug,unconfirmed,low priority
 body:
-- type: markdown
-  attributes:
-  value: |
-      Before opening a bug report, please search the existing issues (both open and closed).
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a bug report, please search the existing issues (both open and closed).
 
-      ---
+        ---
 
-      Thank you for taking the time to file a bug report. To address this bug as fast as possible, we need some information.
+        Thank you for taking the time to file a bug report. To address this bug as fast as possible, we need some information.
 - type: dropdown
   id: stack
   attributes:
