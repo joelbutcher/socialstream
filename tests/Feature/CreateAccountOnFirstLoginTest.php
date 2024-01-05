@@ -55,9 +55,9 @@ test('new users can register from login page', function (): void {
     ]);
 });
 
-
 test('new users can register from random page', function (): void {
     Config::set('socialstream.features', [
+        Features::globalLogin(),
         Features::createAccountOnFirstLogin(),
     ]);
 
@@ -151,9 +151,9 @@ test('new users cannot register from random page without feature enabled', funct
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    $response = get('http://localhost/oauth/github/callback');
+    get('http://localhost/oauth/github/callback')
+        ->assertRedirect(route('login'))
+        ->assertSessionHasErrors(['socialstream' => 'This action is unauthorized.']);
 
     $this->assertGuest();
-    $response->assertRedirect(route('login'));
-    $response->assertSessionHasErrors();
 });

@@ -11,7 +11,7 @@ use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
-use Laravel\Fortify\Contracts\LoginResponse;
+use JoelButcher\Socialstream\Contracts\SocialstreamResponse;
 use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
@@ -42,7 +42,7 @@ class OAuthController extends Controller
     /**
      * Attempt to log the user in via the provider user returned from Socialite.
      */
-    public function callback(Request $request, string $provider): Response|RedirectResponse|LoginResponse
+    public function callback(Request $request, string $provider): SocialstreamResponse|RedirectResponse|Response
     {
         $redirect = $this->errorHandler->handle($request);
 

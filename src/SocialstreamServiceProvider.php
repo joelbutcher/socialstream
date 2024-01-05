@@ -20,6 +20,12 @@ use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
+use JoelButcher\Socialstream\Http\Responses\OAuthOauthLoginFailedResponse;
+use JoelButcher\Socialstream\Http\Responses\OAuthLoginResponse;
+use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkedResponse;
+use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkFailedResponse;
+use JoelButcher\Socialstream\Http\Responses\OAuthRegisterFailedResponse;
+use JoelButcher\Socialstream\Http\Responses\OAuthRegisterResponse;
 use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\GithubOAuth2RefreshResolver;
@@ -41,6 +47,22 @@ class SocialstreamServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
+
+        $this->registerResponseBindings();
+    }
+
+    /**
+     * Register the response bindings.
+     */
+    protected function registerResponseBindings(): void
+    {
+        $this->app->singleton(Contracts\OAuthLoginResponse::class, OAuthLoginResponse::class);
+        $this->app->singleton(Contracts\OAuthLoginFailedResponse::class, OAuthOauthLoginFailedResponse::class);
+        $this->app->singleton(Contracts\OAuthProviderLinkedResponse::class, OAuthProviderLinkedResponse::class);
+        $this->app->singleton(Contracts\OAuthProviderLinkFailedResponse::class, OAuthProviderLinkFailedResponse::class);
+        $this->app->singleton(Contracts\OAuthLoginFailedResponse::class, OAuthOauthLoginFailedResponse::class);
+        $this->app->singleton(Contracts\OAuthRegisterResponse::class, OAuthRegisterResponse::class);
+        $this->app->singleton(Contracts\OAuthRegisterFailedResponse::class, OAuthRegisterFailedResponse::class);
     }
 
     /**
@@ -55,7 +77,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->bootLaravelJetstream();
         $this->bootFilament();
         $this->bootInertia();
-        
+
         if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
             Livewire::component('profile.set-password-form', SetPasswordForm::class);
             Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);

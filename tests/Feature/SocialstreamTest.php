@@ -144,6 +144,8 @@ test('existing users can login', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
+    session()->put('socialstream.previous_url', route('login'));
+
     get('http://localhost/oauth/github/callback')
         ->assertRedirect(RouteServiceProvider::HOME);
 

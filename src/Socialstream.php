@@ -114,7 +114,15 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Bitbucket provider..
+     * Get a completion redirect path for a specific feature.
+     */
+    public static function redirects(string $redirect, $default = null)
+    {
+        return config('socialstream.redirects.'.$redirect) ?? $default ?? config('socialstream.home');
+    }
+
+    /**
+     * Determine if the application has support for the Bitbucket provider.
      */
     public static function hasBitbucketSupport(): bool
     {
@@ -122,7 +130,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Facebook provider..
+     * Determine if the application has support for the Facebook provider.
      */
     public static function hasFacebookSupport(): bool
     {
@@ -130,7 +138,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Gitlab provider..
+     * Determine if the application has support for the Gitlab provider.
      */
     public static function hasGitlabSupport(): bool
     {
@@ -138,7 +146,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Github provider..
+     * Determine if the application has support for the Github provider.
      */
     public static function hasGithubSupport(): bool
     {
@@ -146,7 +154,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Google provider..
+     * Determine if the application has support for the Google provider.
      */
     public static function hasGoogleSupport(): bool
     {
@@ -186,7 +194,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Twitter OAuth 1.0 provider..
+     * Determine if the application has support for the Twitter OAuth 1.0 provider.
      */
     public static function hasTwitterOAuth1Support(): bool
     {
@@ -194,7 +202,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Twitter OAuth 2.0 provider..
+     * Determine if the application has support for the Twitter OAuth 2.0 provider.
      */
     public static function hasTwitterOAuth2Support(): bool
     {

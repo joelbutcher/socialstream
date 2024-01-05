@@ -30,8 +30,17 @@ class Features
     }
 
     /**
+     * Determine if the application supports social login
+     * authentication from pages other than "/login".
+     */
+    public static function hasGlobalLoginFeatures(): bool
+    {
+        return static::enabled(static::globalLogin());
+    }
+
+    /**
      * Determine if the application supports logging into existing
-     * accounts when registering with a provider who's email address
+     * accounts when registering with a provider whose email address
      * is already registered.
      */
     public static function hasLoginOnRegistrationFeatures(): bool
@@ -77,6 +86,11 @@ class Features
     public static function createAccountOnFirstLogin(): string
     {
         return 'create-account-on-first-login';
+    }
+
+    public static function globalLogin(): string
+    {
+        return 'global-login';
     }
 
     /**
