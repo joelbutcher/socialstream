@@ -52,9 +52,9 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         $previousUrl = session()->get('socialstream.previous_url');
 
         if (
-            class_exists(FortifyFeatures::class) 
-            && FortifyFeatures::enabled(FortifyFeatures::registration()) 
-            && ! $account 
+            class_exists(FortifyFeatures::class)
+            && FortifyFeatures::enabled(FortifyFeatures::registration())
+            && ! $account
             && ($previousUrl === route('register') || Features::hasCreateAccountOnFirstLoginFeatures())
         ) {
             $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
@@ -66,11 +66,16 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return $this->register($provider, $providerAccount);
         }
 
-        if (! Features::hasCreateAccountOnFirstLoginFeatures() && ! $account) {
-            return $this->redirectAuthFailed(
-                error: __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => Providers::name($provider)])
-            );
+        if (! $account) {
+            if (! Features::hasCreateAccountOnFirstLoginFeatures()) {
+                return $this->redirectAuthFailed(
+                    error: __('An account with this :Provider sign in was not found. Please register or try a different sign in method.', ['provider' => Providers::name($provider)])
+                );
+            }
+
+            return $this->register($provider, $providerAccount);
         }
+
 
         $user = $account->user;
 
