@@ -3,31 +3,38 @@
 namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
 
+use function Illuminate\Filesystem\join_paths;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
 uses(RefreshDatabase::class);
 
-it('caches routes and redirects to provider', function () {
-    $this->defineCacheRoutes(file_get_contents(
-        __DIR__.'/../../workbench/routes/web.php'
-    ));
+beforeEach(function () {
+    $files = (new Filesystem());
+    $files->cleanDirectory($this->app->basePath('routes'));
+    if($files->exists($this->app->bootstrapPath(join_paths('cache', 'routes-v7.php')))) {
+        $files->delete($this->app->bootstrapPath(join_paths('cache', 'routes-v7.php')));
+    }
 
+    $this->defineCacheRoutes(file_get_contents(
+        __DIR__ . '/../../routes/socialstream.php',
+    ));
+});
+
+it('caches routes and redirects to provider', function () {
     get('/oauth/github')
         ->assertRedirect();
 });
 
 it('caches routes and authenticates via GET', function () {
-    $this->defineCacheRoutes(file_get_contents(
-        __DIR__.'/../../workbench/routes/web.php'
-    ));
-
     $user = (new SocialiteUser())
         ->map([
             'id' => fake()->numerify('########'),
@@ -52,10 +59,6 @@ it('caches routes and authenticates via GET', function () {
 });
 
 it('caches routes and authenticates via POST', function () {
-    $this->defineCacheRoutes(file_get_contents(
-        __DIR__.'/../../workbench/routes/web.php'
-    ));
-
     $user = (new SocialiteUser())
         ->map([
             'id' => fake()->numerify('########'),

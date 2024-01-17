@@ -8,7 +8,7 @@ use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\OAuthLoginFailedResponse as OAuthLoginFailedResponseContract;
 use JoelButcher\Socialstream\Socialstream;
 
-class OAuthOAuthLoginFailedResponse implements OAuthLoginFailedResponseContract
+class OAuthLoginFailedResponse implements OAuthLoginFailedResponseContract
 {
     use InteractsWithComposer;
 

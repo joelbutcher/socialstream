@@ -4,21 +4,14 @@ namespace JoelButcher\Socialstream\Tests\Unit;
 
 use App\Actions\Socialstream\CreateConnectedAccount;
 use App\Actions\Socialstream\CreateUserFromProvider;
-use App\Models\ConnectedAccount;
 use DateTimeInterface;
 use Illuminate\Support\Str;
+use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\Credentials;
-use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\One\User as OAuth1User;
 use Laravel\Socialite\Two\User as OAuth2User;
 
-beforeEach(function (): void {
-    Socialstream::useConnectedAccountModel(ConnectedAccount::class);
-});
-
 test('user can be created from OAuth 1.0 provider', function (): void {
-    $this->migrate();
-
     $providerUser = new OAuth1User;
     $providerUser->id = '1234567890';
     $providerUser->name = 'Joel Butcher';
@@ -32,6 +25,7 @@ test('user can be created from OAuth 1.0 provider', function (): void {
     $this->assertEquals($providerUser->email, $user->email);
 
     $connectedAccount = $user->connectedAccounts->first();
+
     $this->assertInstanceOf(ConnectedAccount::class, $connectedAccount);
     $this->assertEquals($providerUser->id, $connectedAccount->provider_id);
 
@@ -44,8 +38,6 @@ test('user can be created from OAuth 1.0 provider', function (): void {
 });
 
 test('user can be created from OAuth 2.0 provider', function (): void {
-    $this->migrate();
-
     $providerUser = new OAuth2User;
     $providerUser->id = '1234567890';
     $providerUser->name = 'Joel Butcher';

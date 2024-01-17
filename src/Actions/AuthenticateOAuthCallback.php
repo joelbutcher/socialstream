@@ -5,7 +5,6 @@ namespace JoelButcher\Socialstream\Actions;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
