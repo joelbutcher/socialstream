@@ -48,7 +48,8 @@
             "App\\": [
                 "stubs/app/",
                 "workbench/app/"
-            ]
+            ],
+            "Database\\Factories\\": "workbench/database/factories/"
         }
     },
     "extra": {

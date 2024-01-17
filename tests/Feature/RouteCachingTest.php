@@ -4,19 +4,29 @@ namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
 
+use function Illuminate\Filesystem\join_paths;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->app->make(Kernel::class)->call('route:clear');
+    $files = (new Filesystem());
+    $files->cleanDirectory($this->app->basePath('routes'));
+    if($files->exists($this->app->bootstrapPath(join_paths('cache', 'routes-v7.php')))) {
+        $files->delete($this->app->bootstrapPath(join_paths('cache', 'routes-v7.php')));
+    }
+
+    $this->defineCacheRoutes(file_get_contents(
+        __DIR__ . '/../../routes/socialstream.php',
+    ));
 });
 
 it('caches routes and redirects to provider', function () {

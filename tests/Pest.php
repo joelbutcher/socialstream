@@ -1,9 +1,7 @@
 <?php
 
-use JoelButcher\Socialstream\Tests\JetstreamTestCase;
-use JoelButcher\Socialstream\Tests\TestCase;
+use JoelButcher\Socialstream\Tests\OrchestraTestCase;
 
-uses(TestCase::class)->in('Unit');
-uses(JetstreamTestCase::class)->in('Feature');
+uses(OrchestraTestCase::class)->in('Feature', 'Unit');
 
 uses()->compact();

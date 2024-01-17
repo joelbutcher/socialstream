@@ -2,20 +2,22 @@
 
 namespace JoelButcher\Socialstream\Events;
 
-use App\Models\ConnectedAccount;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Laravel\Socialite\Contracts\User as ProviderUser;
 
-abstract class ConnectedAccountEvent
+class OAuthLoginFailed
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public mixed $connectedAccount)
-    {
+    public function __construct(
+        public string $provider,
+        public ProviderUser $providerAccount,
+    ) {
         //
     }
 }
