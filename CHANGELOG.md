@@ -1,6 +1,17 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.3.2...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.4.0...5.x)
+
+## [v5.4.0](https://github.com/joelbutcher/socialstream/compare/v5.3.2...v5.4.0) - 2024-01-17
+
+### What's Changed
+
+* [5.x] Update github templates by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/319
+* [5.x] New maintainer GH actions by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/320
+* [5.x] fix route caching CI error by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/327
+* [5.x] New "Global Login" feature and fix auth redirects by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/325
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.3.2...v5.4.0
 
 ## [v5.3.2](https://github.com/joelbutcher/socialstream/compare/v5.3.1...v5.3.2) - 2023-12-01
 
