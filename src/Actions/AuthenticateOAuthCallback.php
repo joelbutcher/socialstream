@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Actions;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
@@ -56,12 +57,16 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return $this->linkProvider($provider, $providerAccount);
         }
 
-        if (session()->get('socialstream.previous_url') === route('register')) {
+        if (
+            Route::has('register') &&
+            session()->get('socialstream.previous_url') === route('register')
+        ) {
             return $this->register($provider, $providerAccount);
         }
 
         if (
             !Features::hasGlobalLoginFeatures() &&
+            Route::has('login') &&
             session()->get('socialstream.previous_url') !== route('login')
         ) {
             event(new OAuthLoginFailed($provider, $providerAccount));
