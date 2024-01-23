@@ -19,8 +19,12 @@ trait RefreshesOAuth2Tokens
      *
      * @throws GuzzleException
      */
-    public function refreshToken(ConnectedAccount $connectedAccount): RefreshedCredentials
+    public function refreshToken($connectedAccount): RefreshedCredentials
     {
+        if(!$connectedAccount instanceof ConnectedAccount) {
+            throw new \RuntimeException('Given parameter must be of type ConnectedAccount.');
+        }
+
         if (is_null($connectedAccount->refresh_token)) {
             throw new \RuntimeException('A valid refresh token is required.');
         }
