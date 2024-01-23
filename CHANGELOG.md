@@ -1,6 +1,19 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.4.0...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.4.1...5.x)
+
+## [v5.4.1](https://github.com/joelbutcher/socialstream/compare/v5.4.0...v5.4.1) - 2024-01-23
+
+### What's Changed
+
+* [5.x] fix undefined route in filament by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/328
+* [5.x] fix: remove typehint to be compatible with Socialite AbstractProvider by [@okaufmann](https://github.com/okaufmann) in https://github.com/joelbutcher/socialstream/pull/330
+
+### New Contributors
+
+* [@okaufmann](https://github.com/okaufmann) made their first contribution in https://github.com/joelbutcher/socialstream/pull/330
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.4.0...v5.4.1
 
 ## [v5.4.0](https://github.com/joelbutcher/socialstream/compare/v5.3.2...v5.4.0) - 2024-01-17
 
