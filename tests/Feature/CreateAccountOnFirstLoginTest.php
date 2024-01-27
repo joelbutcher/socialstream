@@ -153,7 +153,7 @@ test('new users cannot register from random page without feature enabled', funct
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect(route('login'))
-        ->assertSessionHasErrors(['socialstream' => 'This action is unauthorized.']);
+        ->assertSessionHasErrors(['socialstream' => 'We could not find your account. Please register to create an account.']);
 
     $this->assertGuest();
 });
