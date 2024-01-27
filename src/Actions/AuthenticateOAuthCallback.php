@@ -53,35 +53,19 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      */
     public function authenticate(string $provider, ProviderUser $providerAccount): SocialstreamResponse|RedirectResponse
     {
-        if (auth()->check()) {
-            return $this->linkProvider($provider, $providerAccount);
-        }
-
-        if (
-            Route::has('register') &&
-            session()->get('socialstream.previous_url') === route('register')
-        ) {
-            return $this->register($provider, $providerAccount);
-        }
-
-        if (
-            !Features::hasGlobalLoginFeatures() &&
-            Route::has('login') &&
-            session()->get('socialstream.previous_url') !== route('login')
-        ) {
-            event(new OAuthLoginFailed($provider, $providerAccount));
-
-            $this->flashError(
-                'This action is unauthorized.'
-            );
-
-            return app(OAuthLoginFailedResponse::class);
+        // User authenticated... Trying to link a new provider
+        if ($user = auth()->user()) {
+            return $this->linkProvider($user, $provider, $providerAccount);
         }
 
         $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
+        // User is not registered yet...
         if (! $user) {
-            if (Features::hasCreateAccountOnFirstLoginFeatures()) {
+            if (
+                (Route::has('register') && session()->get('socialstream.previous_url') === route('register'))
+                || Features::hasCreateAccountOnFirstLoginFeatures() && (session()->get('socialstream.previous_url') === route('login') || Features::hasGlobalLoginFeatures())
+            ) {
                 return $this->register($provider, $providerAccount);
             }
 
@@ -94,8 +78,28 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return app(OAuthLoginFailedResponse::class);
         }
 
+        $account = $this->findAccount($provider, $providerAccount);
+
+        // User provider account is not linked...
+        if (! $account) {
+            if (Features::hasLoginOnRegistrationFeatures()) {
+                $account = $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
+
+                return $this->login($user, $account, $provider, $providerAccount);
+            }
+
+            event(new OAuthRegistrationFailed($provider, $account, $providerAccount));
+
+            $this->flashError(
+                __('An account already exists for that email address. Please login to connect your :provider account.', ['provider' => Providers::name($provider)]),
+            );
+
+            return app(OAuthRegisterFailedResponse::class);
+        }
+
         return $this->login(
             $user,
+            $account,
             $provider,
             $providerAccount
         );
@@ -106,66 +110,21 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      */
     protected function register(string $provider, ProviderUser $providerAccount): SocialstreamResponse
     {
-        $account = $this->findAccount($provider, $providerAccount);
-        $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
+        $user = $this->createsUser->create($provider, $providerAccount);
 
-        if (! $user && !$account) {
-            $user = $this->createsUser->create($provider, $providerAccount);
+        $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-            $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
+        event(new NewOAuthRegistration($user, $provider, $providerAccount));
 
-            event(new NewOAuthRegistration($user, $provider, $providerAccount));
-
-            return app(OAuthRegisterResponse::class);
-        }
-
-        if ($user && !Features::hasLoginOnRegistrationFeatures()) {
-            event(new OAuthRegistrationFailed($provider, $account, $providerAccount));
-
-            $this->flashError(
-                __('An account already exists for that email address. Please login to connect your :provider account.', ['provider' => Providers::name($provider)]),
-            );
-
-            return app(OAuthRegisterFailedResponse::class);
-        }
-
-        $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
-
-        return $this->login(
-            $user,
-            $provider,
-            $providerAccount,
-        );
+        return app(OAuthRegisterResponse::class);
     }
 
     /**
      * Authenticate the given user and return a login response.
      */
-    protected function login(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    protected function login(Authenticatable $user, mixed $account, string $provider, ProviderUser $providerAccount): SocialstreamResponse
     {
-        $account = $this->findAccount($provider, $providerAccount);
-
-        if ($account) {
-            $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
-
-            $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
-
-            event(new OAuthLogin($user, $provider, $account, $providerAccount));
-
-            return app(OAuthLoginResponse::class);
-        }
-
-        if (! Features::hasCreateAccountOnFirstLoginFeatures()) {
-            event(new OAuthLoginFailed($provider, $providerAccount));
-
-            $this->flashError(
-                __('We could not find your account. Please register to create an account.'),
-            );
-
-            return app(OAuthLoginFailedResponse::class);
-        }
-
-        $account = $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
+        $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
 
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
@@ -177,9 +136,8 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     /**
      * Attempt to link the provider to the authenticated user.
      */
-    private function linkProvider(string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    private function linkProvider(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
     {
-        $user = auth()->user();
         $account = $this->findAccount($provider, $providerAccount);
 
         // Account exists
