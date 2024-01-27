@@ -69,6 +69,8 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
                 return $this->register($provider, $providerAccount);
             }
 
+            event(new OAuthLoginFailed($provider, $providerAccount));
+
             $this->flashError(
                 __('We could not find your account. Please register to create an account.'),
             );
