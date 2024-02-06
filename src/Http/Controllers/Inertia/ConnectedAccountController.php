@@ -5,8 +5,9 @@ namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Laravel\Fortify\Actions\ConfirmPassword;
 use JoelButcher\Socialstream\Socialstream;
 
 class ConnectedAccountController extends Controller
@@ -14,15 +15,15 @@ class ConnectedAccountController extends Controller
     /**
      * Delete a connected account.
      */
-    public function destroy(Request $request, string|int $id): RedirectResponse
+    public function destroy(Request $request, StatefulGuard $guard, string|int $id): RedirectResponse
     {
-        $request->validateWithBag('connectedAccountRemoval', [
-            'password' => ['required', 'current_password'],
-        ]);
+        $confirmed = app(ConfirmPassword::class)(
+            $guard, $request->user(), $request->password
+        );
 
-        if (! Hash::check($request->password, $request->user()->getAuthPassword())) {
+        if (! $confirmed) {
             throw ValidationException::withMessages([
-                'password' => [__('This password does not match our records.')],
+                'password' => __('The password is incorrect.'),
             ]);
         }
 
