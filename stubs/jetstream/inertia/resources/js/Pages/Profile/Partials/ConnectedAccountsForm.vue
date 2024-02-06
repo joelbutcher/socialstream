@@ -41,7 +41,6 @@ const confirmRemoveAccount = (id) => {
 };
 
 const removeAccount = () => {
-    console.log(accountId);
     form.delete(route('connected-accounts.destroy', { id: accountId.value }), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
