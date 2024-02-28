@@ -22,7 +22,7 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
             return null;
         }
 
-        $error = $request->get('error_description');
+        $error = $request->get('error_description', $request->get('error'));
 
         // Because users can have multiple stacks installed for which they may wish to use
         // Socialstream for, we will need to determine the redirect path based on a few
