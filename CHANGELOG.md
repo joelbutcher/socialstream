@@ -1,6 +1,21 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.4.1...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.4.2...5.x)
+
+## [v5.4.2](https://github.com/joelbutcher/socialstream/compare/v5.4.1...v5.4.2) - 2024-03-05
+
+### What's Changed
+
+* [5.x] Fix user being able to link account without loginOnRegistration() by [@miguilimzero](https://github.com/miguilimzero) in https://github.com/joelbutcher/socialstream/pull/332
+* [5.x] Fix password error not showing in Inertia when disconnecting an account by [@miguilimzero](https://github.com/miguilimzero) in https://github.com/joelbutcher/socialstream/pull/333
+* [5.x] Improve Google callback error compatibility by [@cheehau](https://github.com/cheehau) in https://github.com/joelbutcher/socialstream/pull/336
+* remove dependency on `RouteServiceProvider` in package config by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/commit/6a9da8db48f72868e9a88fd604e5a68c034fc3d1
+
+### New Contributors
+
+* [@cheehau](https://github.com/cheehau) made their first contribution in https://github.com/joelbutcher/socialstream/pull/336
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.4.1...v5.4.2
 
 ## [v5.4.1](https://github.com/joelbutcher/socialstream/compare/v5.4.0...v5.4.1) - 2024-01-23
 
