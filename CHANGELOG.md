@@ -1,6 +1,18 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.4.2...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.5.1...5.x)
+
+## [v5.5.1](https://github.com/joelbutcher/socialstream/compare/v5.4.2...v5.5.1) - 2024-03-05
+
+### What's Changed
+
+* [5.x] Fix removed cancel modal toggle action by [@Philrobots](https://github.com/Philrobots) in https://github.com/joelbutcher/socialstream/pull/338
+
+### New Contributors
+
+* [@Philrobots](https://github.com/Philrobots) made their first contribution in https://github.com/joelbutcher/socialstream/pull/338
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.4.2...v5.5.1
 
 ## [v5.4.2](https://github.com/joelbutcher/socialstream/compare/v5.4.1...v5.4.2) - 2024-03-05
 
