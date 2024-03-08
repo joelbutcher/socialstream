@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.5.1...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.5.2...5.x)
+
+## [v5.5.2](https://github.com/joelbutcher/socialstream/compare/v5.5.1...v5.5.2) - 2024-03-08
+
+### What's Changed
+
+* [5.x]: Allow HandlesInvalidState to return an instance of RedirectResponse by [@Philrobots](https://github.com/Philrobots) in https://github.com/joelbutcher/socialstream/pull/340
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.5.1...v5.5.2
 
 ## [v5.5.1](https://github.com/joelbutcher/socialstream/compare/v5.4.2...v5.5.1) - 2024-03-05
 
