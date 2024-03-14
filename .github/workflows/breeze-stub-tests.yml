@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ 8.1, 8.2, 8.3 ]
-        laravel: [ 10 ]
+        php: [ 8.2, 8.3 ]
+        laravel: [ 11 ]
         stack: [ blade, livewire, "livewire-functional", react, vue, react-ts, vue-ts ]
         tester: [ phpunit, pest ]
 
@@ -48,7 +48,6 @@ jobs:
         run: |
           composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install breeze ${{ matrix.stack == 'vue-ts' && 'vue' || matrix.stack == 'react-ts' && 'react' || matrix.stack }} \
-          --teams \
           --dark \
           --api \
           --verification \

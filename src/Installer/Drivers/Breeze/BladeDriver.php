@@ -19,8 +19,9 @@ class BladeDriver extends BreezeDriver
     protected static function directoriesToCreateForStack(): array
     {
         return [
+            app_path('Http/Controllers/Auth'),
             resource_path('views/auth'),
-            resource_path('views/profile'),
+            resource_path('views/profile/partials'),
         ];
     }
 

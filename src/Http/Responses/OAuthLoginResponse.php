@@ -32,7 +32,7 @@ class OAuthLoginResponse implements LoginResponseContract
                 ->route('dashboard'),
             $this->hasComposerPackage('laravel/jetstream') => app(FortifyLoginResponse::class),
             default => redirect()
-                ->to(RouteServiceProvider::HOME),
+                ->to(route('dashboard', absolute: false)),
         };
     }
 

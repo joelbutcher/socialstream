@@ -25,7 +25,7 @@ beforeEach(function () {
     }
 
     $this->defineCacheRoutes(file_get_contents(
-        __DIR__ . '/../../routes/socialstream.php',
+        __DIR__ . '/../../routes/inertia.php',
     ));
 });
 
@@ -55,7 +55,7 @@ it('caches routes and authenticates via GET', function () {
 
     session()->put('socialstream.previous_url', route('register'));
 
-    get('oauth/github/callback')->assertRedirect(RouteServiceProvider::HOME);
+    get('oauth/github/callback')->assertRedirect('/dashboard');
 });
 
 it('caches routes and authenticates via POST', function () {
@@ -79,5 +79,5 @@ it('caches routes and authenticates via POST', function () {
 
     session()->put('socialstream.previous_url', route('register'));
 
-    post('oauth/github/callback')->assertRedirect(RouteServiceProvider::HOME);
+    post('oauth/github/callback')->assertRedirect('/dashboard');
 });

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use JoelButcher\Socialstream\Providers;
 use Laravel\Socialite\Facades\Socialite;
@@ -65,7 +64,7 @@ class SocialstreamRegistrationTest extends TestCase
         $response = $this->get("/oauth/$socialiteProvider/callback");
 
         $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
+        $response->assertRedirect(route('dashboard', absolute: false));
     }
 
     /**

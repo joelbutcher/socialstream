@@ -32,7 +32,7 @@ class OAuthRegisterResponse implements RegisterResponseContract
                 ->route('dashboard'),
             $this->hasComposerPackage('laravel/jetstream') => app(FortifyRegisterResponse::class),
             default => redirect()
-                ->to(RouteServiceProvider::HOME),
+                ->to(route('dashboard', absolute: false)),
         };
     }
 }

@@ -3,6 +3,8 @@
 namespace JoelButcher\Socialstream\Installer\Drivers\Jetstream;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
@@ -20,6 +22,20 @@ abstract class JetstreamDriver extends Driver
      * Specify the stack used by this installer.
      */
     abstract protected static function stack(): JetstreamInstallStack;
+
+    /**
+     * Copy the Socialstream routes.
+     */
+    protected function installRoutes(): static
+    {
+        $stack = static::stack()->value;
+
+        copy(__DIR__.'/../../../../routes/'.$stack.'.php', base_path('routes/socialstream.php'));
+
+        File::append(base_path('routes/web.php'), data: "require __DIR__.'/socialstream.php';");
+
+        return $this;
+    }
 
     /**
      * Check for, and install Laravel Jetstream, if required.

@@ -24,13 +24,20 @@ enum InstallOptions: string
         ];
     }
 
-    public static function breezeOptions(): array
+    public static function breezeOptions(BreezeInstallStack $stack): array
     {
-        return [
+        $default = [
             self::DarkMode,
             self::Pest,
-            self::ServerSideRendering,
-            self::TypeScript,
         ];
+
+        return match ($stack) {
+            BreezeInstallStack::Vue,
+            BreezeInstallStack::React => array_merge([
+                self::ServerSideRendering,
+                self::TypeScript,
+            ], $default),
+            default => $default,
+        };
     }
 }

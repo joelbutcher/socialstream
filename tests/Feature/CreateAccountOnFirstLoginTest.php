@@ -44,7 +44,7 @@ test('new users can register from login page', function (): void {
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect(RouteServiceProvider::HOME);
+        ->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
@@ -85,7 +85,7 @@ test('new users can register from random page', function (): void {
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect(RouteServiceProvider::HOME);
+        ->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);

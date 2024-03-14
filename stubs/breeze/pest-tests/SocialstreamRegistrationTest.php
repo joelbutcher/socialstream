@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use JoelButcher\Socialstream\Providers;
 use Laravel\Socialite\Facades\Socialite;
@@ -67,7 +66,7 @@ test('users can register using socialite providers', function (string $socialite
     $response = get("/oauth/$socialiteProvider/callback");
 
     $this->assertAuthenticated();
-    $response->assertRedirect(RouteServiceProvider::HOME);
+    $response->assertRedirect(route('dashboard', absolute: false));
 })->with([
     [Providers::bitbucket()],
     [Providers::facebook()],

@@ -71,6 +71,8 @@ class SocialstreamServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configurePublishing();
+        $this->configureRoutes();
         $this->configureCommands();
         $this->configureRefreshTokenResolvers();
         $this->bootLaravelBreeze();
@@ -85,29 +87,15 @@ class SocialstreamServiceProvider extends ServiceProvider
     }
 
     /**
-     * Sets sensible package defaults if not installed alongside Jetstream, Breeze, or Filament.
+     * Sets sensible package defaults.
      */
     private function configureDefaults(): void
     {
-        // Blade views / components
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'socialstream');
 
-        // Views
-        if (Socialstream::$registersRoutes) {
-            Route::group([
-                'namespace' => 'JoelButcher\Socialstream\Http\Controllers',
-                'domain' => config('socialstream.domain', null),
-                'prefix' => config('socialstream.prefix', config('socialstream.path')),
-            ], function () {
-                $this->loadRoutesFrom(path: __DIR__.'/../routes/socialstream.php');
-            });
-        }
-
-        // Models & Policies
         Socialstream::useConnectedAccountModel(ConnectedAccount::class);
         Gate::policy(Socialstream::connectedAccountModel(), Policies\ConnectedAccountPolicy::class);
 
-        // Actions
         Socialstream::authenticatesOAuthCallbackUsing(AuthenticateOAuthCallback::class);
         Socialstream::handlesOAuthCallbackErrorsUsing(HandleOAuthCallbackErrors::class);
         Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
@@ -116,31 +104,51 @@ class SocialstreamServiceProvider extends ServiceProvider
         Socialstream::updateConnectedAccountsUsing(UpdateConnectedAccount::class);
         Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
         Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
+    }
 
+    /**
+     * Configure publishing for the package.
+     */
+    private function configurePublishing(): void
+    {
         if (! $this->app->runningInConsole()) {
             return;
         }
 
-        // Config
         $this->publishes([
             __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
         ], 'socialstream-config');
 
-        // Migrations
-        $this->publishes([
-            __DIR__.'/../database/migrations/2022_12_21_000000_make_password_nullable_on_users_table.php' => database_path('migrations/2022_12_21_000000_make_password_nullable_on_users_table.php'),
-            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+        $this->publishesMigrations([
+            __DIR__.'/../database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000001_make_password_nullable_on_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
 
-        // Routes
         $this->publishes([
             __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
         ], 'socialstream-routes');
 
-        // Actions
         $this->publishes([
             __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
         ], 'socialstream-actions');
+    }
+
+    /**
+     * Configure the routes offered by the application.
+     */
+    private function configureRoutes(): void
+    {
+        if (! Socialstream::$registersRoutes) {
+            return;
+        }
+
+        Route::group([
+            'namespace' => 'JoelButcher\Socialstream\Http\Controllers',
+            'domain' => config('socialstream.domain'),
+            'prefix' => config('socialstream.prefix', config('socialstream.path')),
+        ], function () {
+            $this->loadRoutesFrom(path: __DIR__.'/../routes/'.config('jetstream.stack', 'livewire').'.php');
+        });
     }
 
     /**
@@ -185,25 +193,23 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
-        // Routes
         if (class_exists('\App\Providers\VoltServiceProvider')) {
             return;
-        } elseif (class_exists('\App\Http\Middleware\HandleInertiaRequests')) {
+        }
+
+        if ($this->hasComposerPackage('inertiajs/inertia-laravel')) {
             $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/inertia-common/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__.'/../stubs/breeze/inertia-common/routes/web.php' => base_path('routes/web.php'),
+                __DIR__.'/../stubs/breeze/inertia/routes/socialstream.php' => base_path('routes/socialstream.php'),
             ], groups: 'socialstream-routes');
-        } elseif (class_exists('\App\Http\Controllers\ProfileController')) {
+        } else {
             $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/default/routes/auth.php' => base_path('routes/auth.php'),
-                __DIR__.'/../stubs/breeze/default/routes/web.php' => base_path('routes/web.php'),
+                __DIR__.'/../stubs/breeze/default/routes/socialstream.php' => base_path('routes/socialstream.php'),
             ], groups: 'socialstream-routes');
         }
 
-        // Migrations
-        $this->publishes([
-            __DIR__.'/../database/migrations/2014_10_12_000000_create_breeze_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+        $this->publishesMigrations([
+            __DIR__.'/../database/migrations/0001_01_01_000000_create_breeze_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
     }
 
@@ -225,13 +231,10 @@ class SocialstreamServiceProvider extends ServiceProvider
         if (Socialstream::$registersRoutes) {
             Route::group([
                 'namespace' => 'JoelButcher\Socialstream\Http\Controllers',
-                'domain' => config('socialstream.domain', null),
+                'domain' => config('socialstream.domain'),
                 'prefix' => config('socialstream.prefix', config('socialstream.path')),
             ], function () {
-                $this->loadRoutesFrom(path: match (config('jetstream.stack')) {
-                    'inertia' => __DIR__.'/../routes/socialstream-inertia.php',
-                    default => __DIR__.'/../routes/socialstream.php'
-                });
+                $this->loadRoutesFrom(path: __DIR__.'/../routes/'.config('jetstream.stack').'.php');
             });
         }
 
@@ -239,14 +242,12 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
-        // Config
         if (config('jetstream.stack') === 'inertia') {
             $this->publishes([
-                __DIR__.'/../routes/socialstream-inertia.php' => base_path('routes/socialstream.php'),
+                __DIR__.'/../routes/inertia.php' => base_path('routes/socialstream.php'),
             ], 'socialstream-routes');
         }
 
-        // Actions
         $this->publishes(array_merge([
             __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
             __DIR__.'/../stubs/app/Actions/Jetstream/DeleteUser.php' => app_path('Actions/Jetstream/DeleteUser.php'),
@@ -254,10 +255,9 @@ class SocialstreamServiceProvider extends ServiceProvider
             __DIR__.'/../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php' => app_path('Actions/Socialstream/CreateUserFromProvider.php'),
         ] : []), 'socialstream-actions');
 
-        // Migrations
-        $this->publishes([
-            __DIR__.'/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+        $this->publishesMigrations([
+            __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
     }
 
@@ -270,23 +270,19 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
-        // Config
         $this->publishes([
             __DIR__.'/../config/filament.php' => config_path('socialstream.php'),
         ], 'socialstream-config');
 
-        // Actions
         $this->publishes([
             __DIR__.'/../stubs/app/Actions/Socialstream' => app_path('Actions/Socialstream'),
         ], 'socialstream-actions');
 
-        // Migrations
-        $this->publishes([
-            __DIR__.'/../database/migrations/2014_10_12_000000_create_users_table.php' => database_path('migrations/2014_10_12_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php' => database_path('migrations/2020_12_22_000000_create_connected_accounts_table.php'),
+        $this->publishesMigrations([
+            __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
 
-        // Views
         $this->publishes([
             __DIR__.'/../resources/views' => base_path('resources/views/vendor/socialstream'),
         ], 'socialstream-views');
