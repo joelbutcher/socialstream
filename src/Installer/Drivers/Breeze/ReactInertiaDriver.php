@@ -21,6 +21,7 @@ class ReactInertiaDriver extends BreezeDriver
             resource_path('js/Pages/Auth'),
             resource_path('js/Pages/Profile'),
             resource_path('js/Pages/Profile/Partials'),
+            resource_path('js/types'),
         ];
     }
 
@@ -30,8 +31,8 @@ class ReactInertiaDriver extends BreezeDriver
     protected function copyAppFiles(): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/ConnectedAccountController.php', app_path('Http/Controllers/Auth/ConnectedAccountController.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/inertia-common/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/inertia-common/app/Http/Controllers/ProfileController.php', app_path('Http/Controllers/ProfileController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/inertia/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/inertia/app/Http/Controllers/ProfileController.php', app_path('Http/Controllers/ProfileController.php'));
 
         return $this;
     }

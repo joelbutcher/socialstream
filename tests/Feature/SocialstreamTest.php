@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
@@ -93,7 +92,7 @@ test('users can register', function (): void {
 
     $response = get('http://localhost/oauth/github/callback');
 
-    $response->assertRedirect(RouteServiceProvider::HOME);
+    $response->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
@@ -146,7 +145,7 @@ test('existing users can login', function (): void {
     session()->put('socialstream.previous_url', route('login'));
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect(RouteServiceProvider::HOME);
+        ->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
 });

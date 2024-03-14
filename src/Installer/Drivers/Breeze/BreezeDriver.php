@@ -2,6 +2,8 @@
 
 namespace JoelButcher\Socialstream\Installer\Drivers\Breeze;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
@@ -32,7 +34,7 @@ abstract class BreezeDriver extends Driver
 
         spin(function () use ($options, $composerBinary) {
             if (! $this->hasComposerPackage('laravel/breeze')) {
-                $this->requireComposerPackages(['laravel/breeze:^1.26'], $composerBinary);
+                $this->requireComposerPackages(['laravel/breeze:^2.0'], $composerBinary);
             }
 
             (new Process([
@@ -42,7 +44,7 @@ abstract class BreezeDriver extends Driver
                 static::stack()->value,
                 "--composer=$composerBinary",
                 ...collect($options)->reject(
-                    fn (InstallOptions $option) => ! in_array($option, InstallOptions::breezeOptions()),
+                    fn (InstallOptions $option) => ! in_array($option, InstallOptions::breezeOptions(static::stack())),
                 )->map(
                     fn (InstallOptions $option) => "--$option->value",
                 ),
@@ -55,6 +57,26 @@ abstract class BreezeDriver extends Driver
         }, message: 'Installing Laravel Breeze: '.static::stack()->label().'...');
 
         \Laravel\Prompts\info('Laravel Breeze has been installed successfully!');
+    }
+
+    /**
+     * Copy the Socialstream routes.
+     */
+    protected function installRoutes(): static
+    {
+        $folder = Str::of(match(static::stack()) {
+            BreezeInstallStack::Blade,
+            BreezeInstallStack::Livewire,
+            BreezeInstallStack::FunctionalLivewire => 'livewire',
+            BreezeInstallStack::Vue,
+            BreezeInstallStack::React, => 'inertia',
+        })->lower()->toString();
+
+        copy(__DIR__.'/../../../../stubs/breeze/default/routes/socialstream.php', base_path('routes/socialstream.php'));
+
+        File::append(base_path('routes/web.php'), data: "require __DIR__.'/socialstream.php';");
+
+        return $this;
     }
 
     /**

@@ -41,7 +41,7 @@ it('generates missing emails', function (): void {
     session()->put('socialstream.previous_url', route('register'));
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect(RouteServiceProvider::HOME);
+        ->assertRedirect('/dashboard');
 
     $user = User::first();
 

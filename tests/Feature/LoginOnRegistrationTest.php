@@ -52,7 +52,7 @@ test('users can login on registration', function (): void {
     session()->put('socialstream.previous_url', route('register'));
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect(RouteServiceProvider::HOME);
+        ->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('connected_accounts', [

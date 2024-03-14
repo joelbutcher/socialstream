@@ -1,0 +1,15 @@
+providers:
+  - Laravel\Fortify\FortifyServiceProvider
+  - Laravel\Jetstream\JetstreamServiceProvider
+  - Livewire\LivewireServiceProvider
+  - Laravel\Socialite\SocialiteServiceProvider
+  - JoelButcher\Socialstream\SocialstreamServiceProvider
+
+migrations:
+  - database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php
+  - database/migrations/0001_01_01_000002_create_connected_accounts_table.php
+  - vendor/laravel/fortify/database/migrations
+  - vendor/laravel/jetstream/database/migrations
+
+workbench:
+  install: false
