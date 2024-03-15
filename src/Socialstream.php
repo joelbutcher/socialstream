@@ -20,7 +20,7 @@ use RuntimeException;
 
 class Socialstream
 {
-    public const VERSION = '5.0.0';
+    public const VERSION = '6.0.0';
 
     /**
      * Determines if the application is using Socialstream.
