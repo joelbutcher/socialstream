@@ -1,6 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.5.2...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.0...6.x)
+
+## [v6.0.0](https://github.com/joelbutcher/socialstream/compare/v5.5.2...v6.0.0) - 2024-03-15
+
+### What's Changed
+
+* L11 support by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/341
+* Prepare v6 for release by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/342
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.5.2...v6.0.0
 
 ## [v5.5.2](https://github.com/joelbutcher/socialstream/compare/v5.5.1...v5.5.2) - 2024-03-08
 
