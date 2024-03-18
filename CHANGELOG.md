@@ -1,6 +1,8 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.0...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.1...6.x)
+
+## [v6.0.1](https://github.com/joelbutcher/socialstream/compare/v6.0.0...v6.0.1) - 2024-03-18
 
 ## [v6.0.0](https://github.com/joelbutcher/socialstream/compare/v5.5.2...v6.0.0) - 2024-03-15
 
