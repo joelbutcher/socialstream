@@ -20,7 +20,6 @@
     ],
     "require": {
         "php": "^8.2",
-        "doctrine/dbal": "^4.0",
         "illuminate/contracts": "^11.0",
         "laravel/prompts": "^0.1.10",
         "laravel/socialite": "^5.12",
