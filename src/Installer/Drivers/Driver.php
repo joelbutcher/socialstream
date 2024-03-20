@@ -135,9 +135,6 @@ abstract class Driver
      */
     protected function installServiceProviders(): static
     {
-        copy(__DIR__.'/../../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
-        copy(__DIR__.'/../../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
-
         ServiceProvider::addProviderToBootstrapFile('App\Providers\SocialstreamServiceProvider');
 
         return $this;
