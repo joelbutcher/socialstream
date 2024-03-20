@@ -115,7 +115,6 @@ abstract class JetstreamDriver extends Driver
         copy(__DIR__.'/../../../../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', app_path('Actions/Jetstream/DeleteUser.php'));
         copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
         copy(__DIR__.'/../../../../stubs/jetstream/app/Models/UserWithTeams.php', app_path('Models/User.php'));
-        copy(__DIR__.'/../../../../stubs/app/Providers/TeamsAuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
 
         return $this;
     }
