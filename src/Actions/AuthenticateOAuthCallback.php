@@ -68,8 +68,16 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         // Determine if the user can be registered and register them if so.
-        if (! $account && !$user && $this->canRegister()) {
+        if ($this->canRegister($user, $account)) {
             return $this->register($provider, $providerAccount);
+        }
+        
+        if (
+            (Features::hasCreateAccountOnFirstLoginFeatures() &&
+            session()->get('socialstream.previous_url') === route('login')) ||
+            Features::hasGlobalLoginFeatures()
+        ) {
+            // @TODO
         }
 
         // User does not exist, return an errored response
@@ -205,16 +213,26 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         ));
     }
 
-    private function canRegister(): bool
+    private function canRegister(mixed $user, mixed $account): bool
     {
-        if (Route::has('register') && session()->get('socialstream.previous_url') === route('register')) {
-            return true;
-        }
-
-        if (! Features::hasCreateAccountOnFirstLoginFeatures()) {
+        // User exists, they need to log in.
+        if (! is_null($user)) {
             return false;
         }
-
-        return session()->get('socialstream.previous_url') === route('login') || Features::hasGlobalLoginFeatures();
+        
+        // No user exists for the given email, but connect account found there
+        // will be a user associated with this connected account, we should
+        // return here and check if they user can be authenticated instead.
+        if(! is_null($account)) {
+            return false;
+        }
+        
+        // No user or account found, we now should check if the routes support registration
+        
+        if (! Route::has('register')) {
+            return false;
+        }
+        
+        return session()->get('socialstream.previous_url') === route('register');
     }
 }
