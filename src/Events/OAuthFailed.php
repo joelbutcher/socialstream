@@ -7,10 +7,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
-/**
- * @deprecated in v7, use OAuthFailed instead.
- */
-class OAuthLoginFailed
+class OAuthFailed
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

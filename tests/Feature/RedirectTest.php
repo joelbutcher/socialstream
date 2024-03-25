@@ -112,41 +112,5 @@ it('can configure a login failed redirect', function () {
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('foo')
-        ->assertSessionHasErrors(['socialstream' => 'We could not find your account. Please register to create an account.']);
-});
-
-it('can configure a register failed redirect', function () {
-    Config::set('socialstream.redirects.registration-failed', '/foo');
-    Route::get('foo', fn () => throw ValidationException::withMessages([
-        'foo' => 'failed',
-    ]));
-
-    User::create([
-        'name' => 'Joel Butcher',
-        'email' => 'joel@socialstream.dev',
-        'password' => Hash::make('password'),
-    ]);
-
-    $user = (new SocialiteUser())
-        ->map([
-            'id' => fake()->numerify('########'),
-            'nickname' => 'joel',
-            'name' => 'Joel',
-            'email' => 'joel@socialstream.dev',
-            'avatar' => null,
-            'avatar_original' => null,
-        ])
-        ->setToken('user-token')
-        ->setRefreshToken('refresh-token')
-        ->setExpiresIn(3600);
-
-    $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
-
-    session()->put('socialstream.previous_url', route('register'));
-
-    get('http://localhost/oauth/github/callback')
-        ->assertRedirect('foo')
-        ->assertSessionHasErrors(['socialstream' => 'An account already exists for that email address. Please login to connect your GitHub account.']);
+        ->assertSessionHasErrors('socialstream');
 });

@@ -12,20 +12,18 @@ use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-use JoelButcher\Socialstream\Contracts\OAuthLoginFailedResponse;
+use JoelButcher\Socialstream\Contracts\OAuthFailedResponse;
 use JoelButcher\Socialstream\Contracts\OAuthLoginResponse;
 use JoelButcher\Socialstream\Contracts\OAuthProviderLinkedResponse;
 use JoelButcher\Socialstream\Contracts\OAuthProviderLinkFailedResponse;
-use JoelButcher\Socialstream\Contracts\OAuthRegisterFailedResponse;
 use JoelButcher\Socialstream\Contracts\OAuthRegisterResponse;
 use JoelButcher\Socialstream\Contracts\SocialstreamResponse;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Events\NewOAuthRegistration;
+use JoelButcher\Socialstream\Events\OAuthFailed;
 use JoelButcher\Socialstream\Events\OAuthLogin;
-use JoelButcher\Socialstream\Events\OAuthLoginFailed;
 use JoelButcher\Socialstream\Events\OAuthProviderLinked;
 use JoelButcher\Socialstream\Events\OAuthProviderLinkFailed;
-use JoelButcher\Socialstream\Events\OAuthRegistrationFailed;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
@@ -64,49 +62,47 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
         if ($account && $user) {
-            return $this->login($user, $account, $provider, $providerAccount);
+            return $this->login(
+                user: $user,
+                account: $account,
+                provider: $provider,
+                providerAccount: $providerAccount
+            );
         }
 
-        // Determine if the user can be registered and register them if so.
         if ($this->canRegister($user, $account)) {
             return $this->register($provider, $providerAccount);
         }
-        
-        if (
-            (Features::hasCreateAccountOnFirstLoginFeatures() &&
-            session()->get('socialstream.previous_url') === route('login')) ||
-            Features::hasGlobalLoginFeatures()
-        ) {
-            // @TODO
-        }
 
-        // User does not exist, return an errored response
-        // instructing the user to register with the app.
-        if (! $user) {
-            event(new OAuthLoginFailed($provider, $providerAccount));
-
-            $this->flashError(
-                __('We could not find your account. Please register to create an account.'),
+        if (! $user && $account && $account->user) {
+            $this->login(
+                user: $account->user,
+                account: $account,
+                provider: $provider,
+                providerAccount: $providerAccount
             );
-
-            return app(OAuthLoginFailedResponse::class);
         }
 
-        // Account does not exist, but a user does, check to see if the features
-        // allow creating a new connected account for the provider
-        if (! $account && Features::authenticatesExistingUnlinkedUsers()) {
-            $account = $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
-
-            return $this->login($user, $account, $provider, $providerAccount);
+        if ($user && Features::authenticatesExistingUnlinkedUsers()) {
+            return $this->login(
+                user: $user,
+                account: $this->createsConnectedAccounts->create(
+                    user: $user,
+                    provider: $provider,
+                    providerUser: $providerAccount,
+                ),
+                provider: $provider,
+                providerAccount: $providerAccount
+            );
         }
 
-        event(new OAuthRegistrationFailed($provider, $account, $providerAccount));
+        event(new OAuthFailed($provider, $providerAccount));
 
         $this->flashError(
             __('An account already exists for that email address. Please login to connect your :provider account.', ['provider' => Providers::name($provider)]),
         );
 
-        return app(OAuthRegisterFailedResponse::class);
+        return app(OAuthFailedResponse::class);
     }
 
     /**
@@ -213,26 +209,23 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         ));
     }
 
+    /**
+     * Determine if we can register a new user.
+     */
     private function canRegister(mixed $user, mixed $account): bool
     {
-        // User exists, they need to log in.
-        if (! is_null($user)) {
+        if (! is_null($user) || !is_null($account)) {
             return false;
         }
-        
-        // No user exists for the given email, but connect account found there
-        // will be a user associated with this connected account, we should
-        // return here and check if they user can be authenticated instead.
-        if(! is_null($account)) {
-            return false;
+
+        if (Route::has('register') && session()->get('socialstream.previous_url') === route('register')) {
+            return true;
         }
-        
-        // No user or account found, we now should check if the routes support registration
-        
-        if (! Route::has('register')) {
-            return false;
+
+        if (session()->get('socialstream.previous_url') !== route('login')) {
+            return Features::hasGlobalLoginFeatures();
         }
-        
-        return session()->get('socialstream.previous_url') === route('register');
+
+        return Features::hasCreateAccountOnFirstLoginFeatures();
     }
 }

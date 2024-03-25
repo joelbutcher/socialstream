@@ -96,7 +96,7 @@ test('users cannot login on registration without feature enabled', function (): 
 
     $this->assertGuest();
     $response->assertRedirect(route('register'));
-    $response->assertSessionHasErrors();
+    $response->assertSessionHasErrors('socialstream');
 });
 
 test('users cannot login on registration from random route without feature enabled (but globalLogin + createAccountOnFirstLogin)', function (): void {
