@@ -52,13 +52,13 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     public function authenticate(string $provider, ProviderUser $providerAccount): SocialstreamResponse|RedirectResponse
     {
         if ($user = auth()->user()) {
-            return $this->linkProvider($user, $provider, $providerAccount);
+            return $this->link($user, $provider, $providerAccount);
         }
 
         // The user is not authenticated, we will attempt to resolve the user
         // and provider account. If we find both, and the enabled features
         // allow for it, we will attempt to authenticate the user.
-        $account = $this->findAccount($provider, $providerAccount);
+        $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
         $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
         if ($account && $user) {
@@ -139,9 +139,9 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      * If a connected account associated with the provider already exists,
      * and is linked to another user, we will return an error.
      */
-    private function linkProvider(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    private function link(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
     {
-        $account = $this->findAccount($provider, $providerAccount);
+        $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
 
         if ($account && $user?->id !== $account->user_id) {
             event(new OAuthProviderLinkFailed($user, $provider, $account, $providerAccount));
@@ -164,14 +164,6 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         );
 
         return app(OAuthProviderLinkedResponse::class);
-    }
-
-    /**
-     * Find an existing connected account for the given provider and provider id.
-     */
-    private function findAccount(string $provider, ProviderUser $providerAccount): mixed
-    {
-        return Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
     }
 
     /**
