@@ -6,6 +6,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -53,7 +54,7 @@ it('caches routes and authenticates via GET', function () {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     get('oauth/github/callback')->assertRedirect('/dashboard');
 });
@@ -77,7 +78,7 @@ it('caches routes and authenticates via POST', function () {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     post('oauth/github/callback')->assertRedirect('/dashboard');
 });

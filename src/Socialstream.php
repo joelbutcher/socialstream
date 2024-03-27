@@ -254,7 +254,7 @@ class Socialstream
     }
 
     /**
-     * Find a connected account instance fot a given provider and provider ID.
+     * Find a connected account instance for a given provider and provider ID.
      */
     public static function findConnectedAccountForProviderAndId(string $provider, string $providerId): mixed
     {

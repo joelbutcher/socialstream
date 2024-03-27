@@ -6,18 +6,21 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
-use JoelButcher\Socialstream\Contracts\OAuthLoginFailedResponse as OAuthLoginFailedResponseContract;
+use JoelButcher\Socialstream\Contracts\OAuthLoginFailedResponse as OAuthFailedResponseContract;
 use JoelButcher\Socialstream\Socialstream;
 
-/**
- * @deprecated in v7, use OAuthFailedResponse instead.
- */
-class OAuthLoginFailedResponse implements OAuthLoginFailedResponseContract
+class OAuthFailedResponse implements OAuthFailedResponseContract
 {
     use InteractsWithComposer;
 
     public function toResponse($request): RedirectResponse
     {
+        if (Route::has('register') && Session::get(key: 'socialstream.previous_url') === route('register')) {
+            Session::forget(keys: 'socialstream.previous_url');
+
+            return redirect()->to('register');
+        }
+
         return Socialstream::redirects('login-failed')
             ? redirect()->intended(Socialstream::redirects('login-failed'))
             : $this->defaultResponse();

@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Features;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
@@ -49,7 +50,7 @@ test('users can login on registration', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('/dashboard');
@@ -90,13 +91,13 @@ test('users cannot login on registration without feature enabled', function (): 
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     $response = get('http://localhost/oauth/github/callback');
 
     $this->assertGuest();
     $response->assertRedirect(route('register'));
-    $response->assertSessionHasErrors();
+    $response->assertSessionHasErrors('socialstream');
 });
 
 test('users cannot login on registration from random route without feature enabled (but globalLogin + createAccountOnFirstLogin)', function (): void {
@@ -132,7 +133,7 @@ test('users cannot login on registration from random route without feature enabl
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', '/random');
+    Session::put('socialstream.previous_url', '/random');
 
     $response = get('http://localhost/oauth/github/callback');
 

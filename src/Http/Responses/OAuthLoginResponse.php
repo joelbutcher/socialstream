@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Http\Responses;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\OAuthLoginResponse as LoginResponseContract;
 use JoelButcher\Socialstream\Socialstream;
@@ -23,7 +24,7 @@ class OAuthLoginResponse implements LoginResponseContract
 
     private function defaultResponse(): RedirectResponse|FortifyLoginResponse
     {
-        $previousUrl = session()->pull('socialstream.previous_url');
+        $previousUrl = Session::pull('socialstream.previous_url');
 
         return match (true) {
             Route::has('filament.auth.login') && $previousUrl === route('filament.auth.login') => redirect()

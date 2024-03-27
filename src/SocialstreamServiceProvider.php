@@ -20,11 +20,10 @@ use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
-use JoelButcher\Socialstream\Http\Responses\OAuthLoginFailedResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthLoginResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkedResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkFailedResponse;
-use JoelButcher\Socialstream\Http\Responses\OAuthRegisterFailedResponse;
+use JoelButcher\Socialstream\Http\Responses\OAuthFailedResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthRegisterResponse;
 use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOAuth2RefreshResolver;
@@ -57,12 +56,10 @@ class SocialstreamServiceProvider extends ServiceProvider
     protected function registerResponseBindings(): void
     {
         $this->app->singleton(Contracts\OAuthLoginResponse::class, OAuthLoginResponse::class);
-        $this->app->singleton(Contracts\OAuthLoginFailedResponse::class, OAuthLoginFailedResponse::class);
         $this->app->singleton(Contracts\OAuthProviderLinkedResponse::class, OAuthProviderLinkedResponse::class);
         $this->app->singleton(Contracts\OAuthProviderLinkFailedResponse::class, OAuthProviderLinkFailedResponse::class);
-        $this->app->singleton(Contracts\OAuthLoginFailedResponse::class, OAuthLoginFailedResponse::class);
         $this->app->singleton(Contracts\OAuthRegisterResponse::class, OAuthRegisterResponse::class);
-        $this->app->singleton(Contracts\OAuthRegisterFailedResponse::class, OAuthRegisterFailedResponse::class);
+        $this->app->singleton(Contracts\OAuthFailedResponse::class, OAuthFailedResponse::class);
     }
 
     /**

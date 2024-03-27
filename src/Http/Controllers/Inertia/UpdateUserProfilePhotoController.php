@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Session;
 
 class UpdateUserProfilePhotoController extends Controller
 {
@@ -21,7 +22,7 @@ class UpdateUserProfilePhotoController extends Controller
         if (is_callable([$user, 'setProfilePhotoFromUrl']) && isset($account->avatar_path)) {
             $user->setProfilePhotoFromUrl($account->avatar_path);
 
-            session()->flash('flash.banner', __('Profile photo updated'));
+            Session::flash('flash.banner', __('Profile photo updated'));
         }
 
         return back(303);

@@ -12,7 +12,7 @@ class OAuthProviderLinkFailedResponse implements OAuthProviderLinkFailedResponse
     public function toResponse($request): RedirectResponse
     {
         if (class_exists(Jetstream::class)) {
-            return redirect()->to('profile.show');
+            return redirect()->route('profile.show');
         }
 
         return Socialstream::redirects('provider-link-failed')
