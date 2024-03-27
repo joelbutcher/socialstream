@@ -188,3 +188,44 @@ test('authenticated users can link to provider', function (): void {
         'email' => 'joel@socialstream.dev',
     ]);
 });
+
+test('users can be authenticated with the same provider if they change the email associated with their user', function () {
+    $user = User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.com',
+        'password' => Hash::make('password'),
+    ]);
+
+    $user->connectedAccounts()->create([
+        'provider' => 'github',
+        'provider_id' => $githubId = fake()->numerify('########'),
+        'name' => 'Joel',
+        'email' => 'joel@socialstream.dev',
+        'token' => Str::random(64),
+    ]);
+
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => $githubId,
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
+
+    $provider = Mockery::mock(GithubProvider::class);
+    $provider->shouldReceive('user')->once()->andReturn($user);
+
+    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+
+    session()->put('socialstream.previous_url', route('login'));
+
+    get('http://localhost/oauth/github/callback')
+        ->assertRedirect('/dashboard');
+
+    $this->assertAuthenticated();
+});

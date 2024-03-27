@@ -75,7 +75,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         if (! $user && $account && $account->user) {
-            $this->login(
+            return $this->login(
                 user: $account->user,
                 account: $account,
                 provider: $provider,
