@@ -56,9 +56,6 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return $this->link($user, $provider, $providerAccount);
         }
 
-        // The user is not authenticated, we will attempt to resolve the user
-        // and provider account. If we find both, and the enabled features
-        // allow for it, we will attempt to authenticate the user.
         $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
         $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
@@ -137,8 +134,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     /**
      * Attempt to link the provider to the authenticated user.
      *
-     * If a connected account associated with the provider already exists,
-     * and is linked to another user, we will return an error.
+     * Attempt to link the provider with the authenticated user.
      */
     private function link(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
     {
