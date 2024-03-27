@@ -3,6 +3,7 @@
 namespace tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Providers;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Socialite\Facades\Socialite;
@@ -64,7 +65,7 @@ class SocialstreamRegistrationTest extends TestCase
 
         Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);
 
-        session()->put('socialstream.previous_url', route('register'));
+        Session::put('socialstream.previous_url', route('register'));
 
         $response = $this->get("/oauth/$socialiteProvider/callback");
 

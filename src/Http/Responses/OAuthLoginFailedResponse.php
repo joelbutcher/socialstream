@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Http\Responses;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\OAuthLoginFailedResponse as OAuthLoginFailedResponseContract;
 use JoelButcher\Socialstream\Socialstream;
@@ -24,7 +25,7 @@ class OAuthLoginFailedResponse implements OAuthLoginFailedResponseContract
 
     private function defaultResponse(): RedirectResponse
     {
-        $previousUrl = session()->pull('socialstream.previous_url');
+        $previousUrl = Session::pull('socialstream.previous_url');
 
         return redirect()->to(match (true) {
             Route::has('filament.auth.login') && $previousUrl === route('filament.auth.login') => 'filament.auth.login',

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Features;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
@@ -38,7 +39,7 @@ it('generates missing emails', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('/dashboard');

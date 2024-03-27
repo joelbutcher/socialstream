@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Providers;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User;
@@ -61,7 +62,7 @@ test('users can register using socialite providers', function (string $socialite
 
     Socialite::shouldReceive('driver')->once()->with($socialiteProvider)->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     $response = get("/oauth/$socialiteProvider/callback");
 

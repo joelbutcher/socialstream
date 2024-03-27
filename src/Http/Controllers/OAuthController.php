@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
@@ -34,7 +35,7 @@ class OAuthController extends Controller
      */
     public function redirect(string $provider, GeneratesProviderRedirect $generator): SymfonyRedirectResponse
     {
-        session()->put('socialstream.previous_url', back()->getTargetUrl());
+        Session::put('socialstream.previous_url', back()->getTargetUrl());
 
         return $generator->generate($provider);
     }

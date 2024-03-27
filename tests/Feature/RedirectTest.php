@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
@@ -52,7 +53,7 @@ it('can configure a login redirect', function () {
     $provider->shouldReceive('user')->once()->andReturn($user);
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('login'));
+    Session::put('socialstream.previous_url', route('login'));
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('foo');
@@ -79,7 +80,7 @@ it('can configure a register redirect', function () {
     $provider->shouldReceive('user')->once()->andReturn($user);
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('foo');
@@ -108,7 +109,7 @@ it('can configure a login failed redirect', function () {
     $provider->shouldReceive('user')->once()->andReturn($user);
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('login'));
+    Session::put('socialstream.previous_url', route('login'));
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('foo')

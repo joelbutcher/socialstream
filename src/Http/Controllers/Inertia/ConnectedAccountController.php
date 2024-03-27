@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Laravel\Fortify\Actions\ConfirmPassword;
@@ -32,7 +33,7 @@ class ConnectedAccountController extends Controller
             ->where('user_id', $request->user()->id)
             ->delete();
 
-        session()->flash('flash.banner', __('Account removed'));
+        Session::flash('flash.banner', __('Account removed'));
 
         return back()->with('status', 'connected-account-removed');
     }

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
@@ -172,13 +173,13 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     private function flashStatus(string $status): void
     {
         if (class_exists(Jetstream::class)) {
-            session()->flash('flash.banner', $status);
-            session()->flash('flash.bannerStyle', 'success');
+            Session::flash('flash.banner', $status);
+            Session::flash('flash.bannerStyle', 'success');
 
             return;
         }
 
-        session()->flash('status', $status);
+        Session::flash('status', $status);
     }
 
     /**
@@ -188,14 +189,14 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     {
         if (auth()->check()) {
             if (class_exists(Jetstream::class)) {
-                session()->flash('flash.banner', $error);
-                session()->flash('flash.bannerStyle', 'danger');
+                Session::flash('flash.banner', $error);
+                Session::flash('flash.bannerStyle', 'danger');
 
                 return;
             }
         }
 
-        session()->flash('errors', (new ViewErrorBag())->put(
+        Session::flash('errors', (new ViewErrorBag())->put(
             'default',
             new MessageBag(['socialstream' => $error])
         ));
@@ -210,11 +211,11 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return false;
         }
 
-        if (Route::has('register') && session()->get('socialstream.previous_url') === route('register')) {
+        if (Route::has('register') && Session::get('socialstream.previous_url') === route('register')) {
             return true;
         }
 
-        if (session()->get('socialstream.previous_url') !== route('login')) {
+        if (Session::get('socialstream.previous_url') !== route('login')) {
             return Features::hasGlobalLoginFeatures();
         }
 

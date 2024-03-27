@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Socialstream;
@@ -88,7 +89,7 @@ test('users can register', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     $response = get('http://localhost/oauth/github/callback');
 
@@ -142,7 +143,7 @@ test('existing users can login', function (): void {
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('login'));
+    Session::put('socialstream.previous_url', route('login'));
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('/dashboard');
@@ -222,7 +223,7 @@ test('users can be authenticated with the same provider if they change the email
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('login'));
+    Session::put('socialstream.previous_url', route('login'));
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('/dashboard');

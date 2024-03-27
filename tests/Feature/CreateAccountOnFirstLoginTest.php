@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Tests\Feature;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Features;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
@@ -39,7 +40,7 @@ test('new users can register from login page', function (): void {
     $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
-    session()->put('socialstream.previous_url', route('login'));
+    Session::put('socialstream.previous_url', route('login'));
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
@@ -80,7 +81,7 @@ test('new users can register from random page', function (): void {
     $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
-    session()->put('socialstream.previous_url', '/random');
+    Session::put('socialstream.previous_url', '/random');
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
@@ -116,7 +117,7 @@ test('new users cannot register from login page without feature enabled', functi
     $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
-    session()->put('socialstream.previous_url', route('login'));
+    Session::put('socialstream.previous_url', route('login'));
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
@@ -147,7 +148,7 @@ test('new users cannot register from random page without feature enabled', funct
     $provider = Mockery::mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
-    session()->put('socialstream.previous_url', '/random');
+    Session::put('socialstream.previous_url', '/random');
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 

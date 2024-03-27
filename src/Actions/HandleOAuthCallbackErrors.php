@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Actions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
@@ -32,7 +33,7 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
             return $this->unauthenticatedRedirectWithError($error);
         }
 
-        $previousUrl = session()->pull('socialstream.previous_url');
+        $previousUrl = Session::pull('socialstream.previous_url');
 
         return match (true) {
             Route::has('filament.admin.home') && $previousUrl === route('filament.admin.home') => redirect()
@@ -56,7 +57,7 @@ class HandleOAuthCallbackErrors implements HandlesOAuthCallbackErrors
 
     private function unauthenticatedRedirectWithError(string $error): RedirectResponse
     {
-        $previousUrl = session()->pull('socialstream.previous_url');
+        $previousUrl = Session::pull('socialstream.previous_url');
 
         if (Route::has('filament.admin.auth.login') && $previousUrl === route('filament.admin.auth.login')) {
             return redirect()
