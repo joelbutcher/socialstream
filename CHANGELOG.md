@@ -1,6 +1,17 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.1...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.2...6.x)
+
+## [v6.0.2](https://github.com/joelbutcher/socialstream/compare/v6.0.1...v6.0.2) - 2024-04-01
+
+### What's Changed
+
+* [6.x] Remove import to stop compiler warnings in ConnectedAccount.vue by [@miguilimzero](https://github.com/miguilimzero) in https://github.com/joelbutcher/socialstream/pull/348
+* [6.x] Use framework Password validation rule by [@miguilimzero](https://github.com/miguilimzero) in https://github.com/joelbutcher/socialstream/pull/349
+* [6.x] Fix authenticating existing users if the underlying users email has been changed by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/351
+* [6.x] Remove webmozart/assert package by [@miguilimzero](https://github.com/miguilimzero) in https://github.com/joelbutcher/socialstream/pull/352
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.0.1...v6.0.2
 
 ## [v6.0.1](https://github.com/joelbutcher/socialstream/compare/v6.0.0...v6.0.1) - 2024-03-18
 
