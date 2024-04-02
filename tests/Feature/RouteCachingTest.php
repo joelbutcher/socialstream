@@ -3,16 +3,15 @@
 namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Providers\RouteServiceProvider;
-use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Mockery;
 
 use function Illuminate\Filesystem\join_paths;
 use function Pest\Laravel\get;
+use function Pest\Laravel\mock;
 use function Pest\Laravel\post;
 
 uses(RefreshDatabase::class);
@@ -48,7 +47,7 @@ it('caches routes and authenticates via GET', function () {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -72,7 +71,7 @@ it('caches routes and authenticates via POST', function () {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);

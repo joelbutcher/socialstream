@@ -4,6 +4,8 @@ namespace JoelButcher\Socialstream\Tests;
 
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use JoelButcher\Socialstream\SocialstreamServiceProvider;
+use JoelButcher\Socialstream\Tests\Fixtures\User;
+use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\JetstreamServiceProvider;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Orchestra\Testbench\Concerns\WithWorkbench;
@@ -13,12 +15,7 @@ abstract class OrchestraTestCase extends BaseTestCase
 {
     use LazilyRefreshDatabase, WithWorkbench;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function getEnvironmentSetUp($app): void
+    protected function defineEnvironment($app): void
     {
         $app['migrator']->path(__DIR__.'/../database/migrations/2022_12_21_000000_make_password_nullable_on_users_table.php');
         $app['migrator']->path(__DIR__.'/../database/migrations/2020_12_22_000000_create_connected_accounts_table.php');
@@ -37,6 +34,8 @@ abstract class OrchestraTestCase extends BaseTestCase
             'client_secret' => 'github-client-secret',
             'redirect' => 'https://example.test/oauth/github/callback',
         ]);
+
+        Jetstream::useUserModel(User::class);
     }
 
     protected function getPackageProviders($app): array

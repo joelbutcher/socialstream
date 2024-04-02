@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\User;
 use App\Models\ConnectedAccount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
+use JoelButcher\Socialstream\Tests\Fixtures\User;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -48,7 +48,7 @@ it('can configure a login redirect', function () {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
@@ -75,7 +75,7 @@ it('can configure a register redirect', function () {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
@@ -104,7 +104,7 @@ it('can configure a login failed redirect', function () {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 
@@ -140,7 +140,7 @@ it('can configure a register failed redirect', function () {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
 

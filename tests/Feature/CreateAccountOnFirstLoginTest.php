@@ -9,9 +9,9 @@ use JoelButcher\Socialstream\Features;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Mockery;
 
 use function Pest\Laravel\get;
+use function Pest\Laravel\mock;
 
 uses(RefreshDatabase::class);
 
@@ -36,7 +36,7 @@ test('new users can register from login page', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     session()->put('socialstream.previous_url', route('login'));
@@ -77,7 +77,7 @@ test('new users can register from random page', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     session()->put('socialstream.previous_url', '/random');
@@ -113,7 +113,7 @@ test('new users cannot register from login page without feature enabled', functi
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     session()->put('socialstream.previous_url', route('login'));
@@ -144,7 +144,7 @@ test('new users cannot register from random page without feature enabled', funct
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     session()->put('socialstream.previous_url', '/random');
