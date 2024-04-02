@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.5.2...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.5.3...5.x)
+
+## [v5.5.3](https://github.com/joelbutcher/socialstream/compare/v5.5.2...v5.5.3) - 2024-04-02
+
+### What's Changed
+
+* [5.x] Bugfix redirect on OAuth Link Failed by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/354
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.0.2...v5.5.3
 
 ## [v5.5.2](https://github.com/joelbutcher/socialstream/compare/v5.5.1...v5.5.2) - 2024-03-08
 
