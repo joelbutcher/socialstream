@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Tests\Feature;
 
-use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
@@ -11,13 +10,14 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Socialstream;
+use JoelButcher\Socialstream\Tests\Fixtures\User;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Mockery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use function Pest\Laravel\get;
+use function Pest\Laravel\mock;
 
 uses(RefreshDatabase::class);
 
@@ -84,7 +84,7 @@ test('users can register', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -138,7 +138,7 @@ test('existing users can login', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
@@ -174,7 +174,7 @@ test('authenticated users can link to provider', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
+    $provider = mock(GithubProvider::class);
     $provider->shouldReceive('user')->once()->andReturn($user);
 
     Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
