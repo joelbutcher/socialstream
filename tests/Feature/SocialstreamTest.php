@@ -189,3 +189,54 @@ test('authenticated users can link to provider', function (): void {
         'email' => 'joel@socialstream.dev',
     ]);
 });
+
+test('linking and already linked provider fails', function () {
+    // Arrange - existing user with account linked
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.com',
+        'password' => Hash::make('password'),
+    ]));
+
+    $provider = mock(GithubProvider::class);
+    $provider->shouldReceive('user')->andReturn((new SocialiteUser())
+        ->map([
+            'id' => $githubId = fake()->numerify('########'),
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600));
+
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
+
+    get('http://localhost/oauth/github/callback');
+
+    $this->assertAuthenticated();
+    $this->assertDatabaseHas('connected_accounts', [
+        'provider' => 'github',
+        'provider_id' => $githubId,
+        'email' => 'joel@socialstream.dev',
+    ]);
+
+    // Arrange - new user
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
+
+    // Act
+    get('http://localhost/oauth/github/callback')
+        ->assertRedirectToRoute('profile.show')
+        ->assertSessionHas([
+            'flash' => [
+                'banner' => 'It looks like this GitHub account is used by another user. Please log in.',
+                'bannerStyle' => 'danger'
+            ]
+        ]);
+});
