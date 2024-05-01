@@ -22,7 +22,7 @@ $setPassword = function () {
         throw $e;
     }
 
-    Auth::::user()->update([
+    Auth::user()->update([
         'password' => Hash::make($validated['password']),
     ]);
 
