@@ -53,6 +53,7 @@ abstract class Driver
             ->ensureDirectoriesExist(array_merge(static::directoriesToCreateForStack(), [
                 app_path('Actions/Socialstream'),
                 app_path('Policies'),
+                app_path('Providers'),
             ]))
             ->installServiceProviders()
             ->installRoutes()
@@ -135,6 +136,8 @@ abstract class Driver
      */
     protected function installServiceProviders(): static
     {
+        copy(__DIR__.'/../../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
+
         ServiceProvider::addProviderToBootstrapFile('App\Providers\SocialstreamServiceProvider');
 
         return $this;
