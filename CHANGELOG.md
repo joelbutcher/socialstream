@@ -1,6 +1,19 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.2...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.3...6.x)
+
+## [v6.0.3](https://github.com/joelbutcher/socialstream/compare/v6.0.2...v6.0.3) - 2024-05-18
+
+### What's Changed
+
+* [6.x] Fix syntax error in breeze livewire-functional set-password-form by [@MagnanGG](https://github.com/MagnanGG) in https://github.com/joelbutcher/socialstream/pull/355
+* [6.x] Publish service provider by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/357
+
+### New Contributors
+
+* [@MagnanGG](https://github.com/MagnanGG) made their first contribution in https://github.com/joelbutcher/socialstream/pull/355
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.0.2...v6.0.3
 
 ## [v6.0.2](https://github.com/joelbutcher/socialstream/compare/v6.0.1...v6.0.2) - 2024-04-01
 
