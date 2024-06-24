@@ -65,6 +65,7 @@ abstract class JetstreamDriver extends Driver
                     fn (InstallOptions $option) => "--$option->value",
                 ),
                 '--quiet',
+                '--no-interaction'
             ], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) {
