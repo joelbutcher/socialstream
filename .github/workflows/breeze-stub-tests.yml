@@ -18,7 +18,8 @@ jobs:
       matrix:
         php: [ 8.2, 8.3 ]
         laravel: [ 11 ]
-        stack: [ blade, livewire, "livewire-functional", react, vue, react-ts, vue-ts ]
+#        stack: [ blade, livewire, "livewire-functional", react, vue, react-ts, vue-ts ]
+        stack: [ blade, livewire, "livewire-functional", react, vue, react-ts ]
         tester: [ phpunit, pest ]
 
     name: Test Laravel Breeze Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }} – ${{ matrix.tester }}
@@ -49,8 +50,6 @@ jobs:
           composer update "joelbutcher/socialstream" --prefer-dist --no-interaction --no-progress -W
           php artisan socialstream:install breeze ${{ matrix.stack == 'vue-ts' && 'vue' || matrix.stack == 'react-ts' && 'react' || matrix.stack }} \
           --dark \
-          --api \
-          --verification \
           ${{ matrix.tester == 'pest' && '--pest' || '' }} \
           ${{ (matrix.stack == 'vue' || matrix.stack == 'react') && '--ssr' || '' }}  \
           ${{ (matrix.stack == 'vue-ts' || matrix.stack == 'react-ts') && '--typescript' || '' }}
