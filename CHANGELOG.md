@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.3...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.4...6.x)
+
+## [v6.0.4](https://github.com/joelbutcher/socialstream/compare/v6.0.3...v6.0.4) - 2024-06-24
+
+### What's Changed
+
+* [6.x] - [fix] install command not installing Laravel Jetstream and failing by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/359
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.0.3...v6.0.4
 
 ## [v6.0.3](https://github.com/joelbutcher/socialstream/compare/v6.0.2...v6.0.3) - 2024-05-18
 
