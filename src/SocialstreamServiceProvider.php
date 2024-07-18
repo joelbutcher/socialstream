@@ -186,7 +186,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
-        if (class_exists('\App\Providers\VoltServiceProvider')) {
+        if (! class_exists('\App\Providers\VoltServiceProvider')) {
             return;
         }
 
