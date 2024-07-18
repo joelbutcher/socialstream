@@ -200,7 +200,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             ], groups: 'socialstream-routes');
         }
 
-        $this->publishesMigrations([
+        $this->publishes([
             __DIR__.'/../database/migrations/0001_01_01_000000_create_breeze_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000001_make_password_nullable_on_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
