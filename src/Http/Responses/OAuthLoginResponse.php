@@ -6,6 +6,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\OAuthLoginResponse as LoginResponseContract;
 use JoelButcher\Socialstream\Socialstream;
@@ -13,6 +14,7 @@ use Laravel\Fortify\Contracts\LoginResponse as FortifyLoginResponse;
 
 class OAuthLoginResponse implements LoginResponseContract
 {
+    use ConfirmsFilament;
     use InteractsWithComposer;
 
     public function toResponse($request): RedirectResponse
@@ -24,11 +26,8 @@ class OAuthLoginResponse implements LoginResponseContract
 
     private function defaultResponse(): RedirectResponse|FortifyLoginResponse
     {
-        $previousUrl = Session::pull('socialstream.previous_url');
-
         return match (true) {
-            Route::has('filament.auth.login') && $previousUrl === route('filament.auth.login') => redirect()
-                ->route('admin'),
+            $this->usesFilament() && $this->hasFilamentAuthRoutes() => redirect()->to('/'),
             $this->hasComposerPackage('laravel/breeze') => redirect()
                 ->route('dashboard'),
             $this->hasComposerPackage('laravel/jetstream') => app(FortifyLoginResponse::class),
