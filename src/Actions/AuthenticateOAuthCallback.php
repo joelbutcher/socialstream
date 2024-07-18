@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
+use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
@@ -33,6 +34,7 @@ use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 {
+    use ConfirmsFilament;
     use InteractsWithComposer;
 
     /**
@@ -207,11 +209,15 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return false;
         }
 
+        if ($this->usesFilament()) {
+            return $this->hasFilamentAuthRoutes();
+        }
+
         if (Route::has('register') && Session::get('socialstream.previous_url') === route('register')) {
             return true;
         }
 
-        if (Session::get('socialstream.previous_url') !== route('login')) {
+        if (Route::has('login') && Session::get('socialstream.previous_url') !== route('login')) {
             return Features::hasGlobalLoginFeatures();
         }
 
