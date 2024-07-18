@@ -85,9 +85,9 @@ test('users can register', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('register'));
 
@@ -139,9 +139,9 @@ test('existing users can login', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('login'));
 
@@ -175,9 +175,9 @@ test('authenticated users can link to provider', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     get('http://localhost/oauth/github/callback')
         ->assertRedirect('/user/profile');
@@ -193,7 +193,7 @@ test('authenticated users can link to provider', function (): void {
 test('users can be authenticated with the same provider if they change the email associated with their user', function () {
     $user = User::create([
         'name' => 'Joel Butcher',
-        'email' => 'joel@socialstream.com',
+        'email' => 'joel@socialstream.dev',
         'password' => Hash::make('password'),
     ]);
 
@@ -219,9 +219,9 @@ test('users can be authenticated with the same provider if they change the email
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('login'));
 

@@ -9,10 +9,14 @@ use App\Actions\Socialstream\HandleInvalidState;
 use App\Actions\Socialstream\ResolveSocialiteUser;
 use App\Actions\Socialstream\UpdateConnectedAccount;
 use Illuminate\Support\ServiceProvider;
+use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Fortify;
 
 class SocialstreamServiceProvider extends ServiceProvider
 {
+    use ConfirmsFilament;
+
     /**
      * Register any application services.
      */
@@ -26,6 +30,10 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->usesFilament()) {
+            Fortify::$registersRoutes = false;
+        }
+
         Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
         Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
         Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);

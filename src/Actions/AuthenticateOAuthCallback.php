@@ -3,8 +3,10 @@
 namespace JoelButcher\Socialstream\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
@@ -29,6 +31,11 @@ use JoelButcher\Socialstream\Events\OAuthProviderLinkFailed;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Actions\CanonicalizeUsername;
+use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
+use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Features as FortifyFeatures;
+use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
@@ -41,7 +48,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      * Create a new controller instance.
      */
     public function __construct(
-        protected Guard $guard,
+        protected StatefulGuard $guard,
         protected CreatesUserFromProvider $createsUser,
         protected CreatesConnectedAccounts $createsConnectedAccounts,
         protected UpdatesConnectedAccounts $updatesConnectedAccounts
@@ -122,15 +129,41 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     /**
      * Authenticate the given user and return a login response.
      */
-    protected function login(Authenticatable $user, mixed $account, string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    protected function login(Authenticatable $user, mixed $account, string $provider, ProviderUser $providerAccount): SocialstreamResponse|RedirectResponse
     {
         $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
 
-        $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
+        return tap(
+            $this->loginPipeline(request(), $user)->then(fn () => app(OAuthLoginResponse::class)),
+            fn () => event(new OAuthLogin($user, $provider, $account, $providerAccount)),
+        );
+    }
 
-        event(new OAuthLogin($user, $provider, $account, $providerAccount));
+    protected function loginPipeline(Request $request, Authenticatable $user): Pipeline
+    {
+        if (Fortify::$authenticateThroughCallback) {
+            return (new Pipeline(app()))->send($request)->through(array_filter(
+                call_user_func(Fortify::$authenticateThroughCallback, $request)
+            ));
+        }
 
-        return app(OAuthLoginResponse::class);
+        if (is_array(config('fortify.pipelines.login'))) {
+            return (new Pipeline(app()))->send($request)->through(array_filter(
+                config('fortify.pipelines.login')
+            ));
+        }
+
+        return (new Pipeline(app()))->send($request)->through(array_filter([
+            config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
+            config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
+            FortifyFeatures::enabled(FortifyFeatures::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
+            function ($request, $next) use ($user) {
+                $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
+
+                return $next($request);
+            },
+            PrepareAuthenticatedSession::class,
+        ]));
     }
 
     /**
@@ -205,7 +238,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      */
     private function canRegister(mixed $user, mixed $account): bool
     {
-        if (! is_null($user) || !is_null($account)) {
+        if (! is_null($user) || ! is_null($account)) {
             return false;
         }
 

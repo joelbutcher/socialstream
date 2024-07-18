@@ -2,6 +2,7 @@
 
 namespace JoelButcher\Socialstream\Installer\Drivers\Filament;
 
+use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
@@ -13,20 +14,11 @@ use function Laravel\Prompts\warning;
 
 class FilamentDriver extends Driver
 {
-    protected function postInstall(string $composerBinary, InstallOptions ...$options): void
+    protected function publishFortify($outputStyle): void
     {
-        $appConfig = file_get_contents(config_path('app.php'));
+        parent::publishFortify($outputStyle);
 
-        file_put_contents(config_path('app.php'), str_replace(<<<'PHP'
-        /*
-         * Package Service Providers...
-         */
-PHP.PHP_EOL, <<<PHP
-        /*
-         * Package Service Providers...
-         */
-        JoelButcher\Socialstream\Filament\SocialstreamPanelProvider::class,
-PHP.PHP_EOL, $appConfig));
+        $this->replaceInFile("'views' => true,", "'views' => false,", config_path('fortify.php'));
     }
 
     protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
@@ -68,6 +60,16 @@ PHP.PHP_EOL, $appConfig));
 
         copy(__DIR__.'/../../../../stubs/filament/app/Models/User.php', app_path('Models/User.php'));
         copy(__DIR__.'/../../../../stubs/filament/database/factories/UserFactory.php', database_path('factories/UserFactory.php'));
+
+        return $this;
+    }
+
+    /** Copy and install the relevant service providers. */
+    protected function installServiceProviders(): static
+    {
+        parent::installServiceProviders();
+
+        ServiceProvider::addProviderToBootstrapFile('JoelButcher\Socialstream\Filament\SocialstreamPanelProvider');
 
         return $this;
     }

@@ -4,7 +4,6 @@ namespace JoelButcher\Socialstream\Installer\Drivers\Jetstream;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;

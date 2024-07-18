@@ -8,5 +8,6 @@ return [
     'providers' => [
         // Providers::github(),
     ],
-    'component' => 'socialstream::components.socialstream',
+    'components' => 'socialstream::components.socialstream',
+    'filament-route' => 'filament.admin.pages.dashboard',
 ];

@@ -83,13 +83,19 @@ abstract class Driver
         spin(callback: function () {
             $outputStyle = new BufferedOutput;
 
+            $this->publishFortify($outputStyle);
+
             (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config', '--force'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations'], base_path()))
+            (new Filesystem())->delete([
+                database_path('migrations/0001_01_01_000000_create_users_table.php')
+            ]);
+
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations', '--force'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
@@ -109,6 +115,22 @@ abstract class Driver
         }, message: 'Publishing config, migration and route files');
 
         return $this;
+    }
+
+    /** Publish the underlying Laravel Fortify config files. */
+    protected function publishFortify($outputStyle): void
+    {
+        (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=fortify-config', '--force'], base_path()))
+            ->setTimeout(null)
+            ->run(function ($type, $output) use ($outputStyle) {
+                $outputStyle->write($output);
+            });
+
+        (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=fortify-migrations', '--force'], base_path()))
+            ->setTimeout(null)
+            ->run(function ($type, $output) use ($outputStyle) {
+                $outputStyle->write($output);
+            });
     }
 
     /**
@@ -281,11 +303,9 @@ abstract class Driver
         return $process;
     }
 
-    /**
-     * Get the path to the appropriate PHP binary.
-     */
-    protected function phpBinary(): string
+    /** Replace a given string within a given file. */
+    protected function replaceInFile($search, $replace, $path)
     {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
     }
 }

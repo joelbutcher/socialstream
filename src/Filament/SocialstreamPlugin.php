@@ -28,6 +28,15 @@ class SocialstreamPlugin implements Plugin
                     'errors' => session('errors') ?? new ViewErrorBag(),
                 ]) : '';
         });
+
+        if ($panel->hasRegistration()) {
+            $panel->renderHook('panels::auth.register.form.after', function () {
+                return Socialstream::show() ?
+                    view(config('socialstream.component', 'socialstream::components.socialstream'), [
+                        'errors' => session('errors') ?? new ViewErrorBag(),
+                    ]) : '';
+            });
+        }
     }
 
     public function boot(Panel $panel): void

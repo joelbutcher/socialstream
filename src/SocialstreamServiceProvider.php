@@ -33,6 +33,7 @@ use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
+use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Livewire;
 
@@ -72,9 +73,9 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->configureRoutes();
         $this->configureCommands();
         $this->configureRefreshTokenResolvers();
+        $this->bootFilament();
         $this->bootLaravelBreeze();
         $this->bootLaravelJetstream();
-        $this->bootFilament();
         $this->bootInertia();
 
         if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
@@ -204,7 +205,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             ], groups: 'socialstream-routes');
         }
 
-        $this->publishesMigrations([
+        $this->publishes([
             __DIR__.'/../database/migrations/0001_01_01_000000_create_breeze_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
@@ -252,7 +253,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             __DIR__.'/../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php' => app_path('Actions/Socialstream/CreateUserFromProvider.php'),
         ] : []), 'socialstream-actions');
 
-        $this->publishesMigrations([
+        $this->publishes([
             __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
@@ -275,7 +276,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             __DIR__.'/../stubs/app/Actions/Socialstream' => app_path('Actions/Socialstream'),
         ], 'socialstream-actions');
 
-        $this->publishesMigrations([
+        $this->publishes([
             __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');

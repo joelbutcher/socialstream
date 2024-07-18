@@ -21,6 +21,7 @@
     "require": {
         "php": "^8.2",
         "illuminate/contracts": "^11.0",
+        "laravel/fortify": "^1.21",
         "laravel/prompts": "^0.1.10",
         "laravel/socialite": "^5.12",
         "paragonie/constant_time_encoding": "^2.7"
@@ -34,7 +35,6 @@
         "orchestra/testbench": "^9.0",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.2",
-        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.5"
     },
     "autoload": {

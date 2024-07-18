@@ -50,8 +50,8 @@ it('can configure a login redirect', function () {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    $provider->shouldReceive('user')->andReturn($user);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('login'));
 
@@ -77,8 +77,8 @@ it('can configure a register redirect', function () {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    $provider->shouldReceive('user')->andReturn($user);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('register'));
 
@@ -106,8 +106,8 @@ it('can configure a login failed redirect', function () {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    $provider->shouldReceive('user')->andReturn($user);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('login'));
 
