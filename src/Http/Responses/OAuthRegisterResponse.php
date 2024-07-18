@@ -27,7 +27,7 @@ class OAuthRegisterResponse implements RegisterResponseContract
     private function defaultResponse(): RedirectResponse|FortifyRegisterResponse
     {
         return match (true) {
-            $this->usesFilament() && $this->hasFilamentAuthRoutes() => redirect()->to('/'),
+            $this->usesFilament() && $this->hasFilamentAuthRoutes() => redirect()->route('filament.home'),
             $this->hasComposerPackage('laravel/breeze') => redirect()
                 ->route('dashboard'),
             $this->hasComposerPackage('laravel/jetstream') => app(FortifyRegisterResponse::class),
