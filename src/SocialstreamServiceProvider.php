@@ -73,9 +73,9 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->configureRoutes();
         $this->configureCommands();
         $this->configureRefreshTokenResolvers();
-        $this->bootFilament();
         $this->bootLaravelBreeze();
         $this->bootLaravelJetstream();
+        $this->bootFilament();
         $this->bootInertia();
 
         if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
@@ -205,7 +205,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             ], groups: 'socialstream-routes');
         }
 
-        $this->publishes([
+        $this->publishesMigrations([
             __DIR__.'/../database/migrations/0001_01_01_000000_create_breeze_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
