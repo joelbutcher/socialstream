@@ -10,6 +10,7 @@ use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -43,6 +44,9 @@ abstract class Driver
         //
     }
 
+    /**
+     * Install the stack with the given options
+     */
     public function install(string $composerBinary = 'global', InstallOptions ...$options): void
     {
         $this->ensureDependenciesAreInstalled($composerBinary, ...$options);
@@ -83,17 +87,13 @@ abstract class Driver
         spin(callback: function () {
             $outputStyle = new BufferedOutput;
 
-            $this->publishFortify($outputStyle);
+            $this->configureFortify($outputStyle);
 
             (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config', '--force'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
-
-            (new Filesystem())->delete([
-                database_path('migrations/0001_01_01_000000_create_users_table.php')
-            ]);
 
             (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations', '--force'], base_path()))
                 ->setTimeout(null)
@@ -118,19 +118,9 @@ abstract class Driver
     }
 
     /** Publish the underlying Laravel Fortify config files. */
-    protected function publishFortify($outputStyle): void
+    protected function configureFortify(OutputInterface $outputStyle): void
     {
-        (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=fortify-config', '--force'], base_path()))
-            ->setTimeout(null)
-            ->run(function ($type, $output) use ($outputStyle) {
-                $outputStyle->write($output);
-            });
-
-        (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=fortify-migrations', '--force'], base_path()))
-            ->setTimeout(null)
-            ->run(function ($type, $output) use ($outputStyle) {
-                $outputStyle->write($output);
-            });
+        //
     }
 
     /**

@@ -7,6 +7,7 @@ use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\spin;
@@ -14,9 +15,25 @@ use function Laravel\Prompts\warning;
 
 class FilamentDriver extends Driver
 {
-    protected function publishFortify($outputStyle): void
+    protected function configureFortify(OutputInterface $outputStyle): void
     {
-        parent::publishFortify($outputStyle);
+        (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=fortify-config', '--force'], base_path()))
+            ->setTimeout(null)
+            ->run(function ($type, $output) use ($outputStyle) {
+                $outputStyle->write($output);
+            });
+
+        (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=fortify-migrations', '--force'], base_path()))
+            ->setTimeout(null)
+            ->run(function ($type, $output) use ($outputStyle) {
+                $outputStyle->write($output);
+            });
+
+        (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=fortify-support', '--force'], base_path()))
+            ->setTimeout(null)
+            ->run(function ($type, $output) use ($outputStyle) {
+                $outputStyle->write($output);
+            });
 
         $this->replaceInFile("'views' => true,", "'views' => false,", config_path('fortify.php'));
     }
@@ -51,9 +68,6 @@ class FilamentDriver extends Driver
         \Laravel\Prompts\info('Filament Admin Panel has been installed successfully!');
     }
 
-    /**
-     * Copy the Socialstream models and their factories to the base "app" directory.
-     */
     protected function copyModelsAndFactories(): static
     {
         parent::copyModelsAndFactories();
@@ -64,7 +78,6 @@ class FilamentDriver extends Driver
         return $this;
     }
 
-    /** Copy and install the relevant service providers. */
     protected function installServiceProviders(): static
     {
         parent::installServiceProviders();
@@ -74,9 +87,6 @@ class FilamentDriver extends Driver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream test files to the apps "tests" directory for the given test runner.
-     */
     protected function copyTests(TestRunner $testRunner): static
     {
         copy(from: match ($testRunner) {

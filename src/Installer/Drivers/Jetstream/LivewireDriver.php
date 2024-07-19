@@ -8,17 +8,11 @@ use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
 
 class LivewireDriver extends JetstreamDriver
 {
-    /**
-     * Specify the stack used by this installer.
-     */
     protected static function stack(): JetstreamInstallStack
     {
         return JetstreamInstallStack::Livewire;
     }
 
-    /**
-     * Define the resource directories that should be checked for existence for the stack.
-     */
     protected static function directoriesToCreateForStack(): array
     {
         return [
@@ -29,9 +23,6 @@ class LivewireDriver extends JetstreamDriver
         ];
     }
 
-    /**
-     * Copy the auth views to the app "resources" directory for the given stack.
-     */
     public function copyAuthViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
@@ -40,9 +31,6 @@ class LivewireDriver extends JetstreamDriver
         return $this;
     }
 
-    /**
-     * Copy the profile views to the app "resources" directory for the given stack.
-     */
     public function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/profile/connected-accounts-form.blade.php', resource_path('views/profile/connected-accounts-form.blade.php'));
@@ -52,9 +40,6 @@ class LivewireDriver extends JetstreamDriver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream components to the app "resources" directory for the given stack.
-     */
     public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/jetstream/livewire/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));

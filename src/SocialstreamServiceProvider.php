@@ -186,7 +186,12 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
-        if (! class_exists('\App\Providers\VoltServiceProvider')) {
+        $this->publishes([
+            __DIR__.'/../database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000001_make_password_nullable_on_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
+        ], 'socialstream-migrations');
+
+        if (class_exists('\App\Providers\VoltServiceProvider')) {
             return;
         }
 
@@ -199,12 +204,6 @@ class SocialstreamServiceProvider extends ServiceProvider
                 __DIR__.'/../stubs/breeze/default/routes/socialstream.php' => base_path('routes/socialstream.php'),
             ], groups: 'socialstream-routes');
         }
-
-        $this->publishes([
-            __DIR__.'/../database/migrations/0001_01_01_000000_create_breeze_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000001_make_password_nullable_on_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
-        ], 'socialstream-migrations');
     }
 
     /**
@@ -250,7 +249,6 @@ class SocialstreamServiceProvider extends ServiceProvider
         ] : []), 'socialstream-actions');
 
         $this->publishes([
-            __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000001_make_password_nullable_on_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
@@ -274,7 +272,6 @@ class SocialstreamServiceProvider extends ServiceProvider
         ], 'socialstream-actions');
 
         $this->publishes([
-            __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000001_make_password_nullable_on_users_table.php'),
             __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');

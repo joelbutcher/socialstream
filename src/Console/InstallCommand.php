@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Concerns\InteractsWithNode;
 use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
@@ -12,9 +13,11 @@ use JoelButcher\Socialstream\Installer\Enums\InstallStarterKit;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
 use JoelButcher\Socialstream\Installer\InstallManager;
 use Laravel\Fortify\Features as FortifyFeatures;
+use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\Jetstream;
 use Pest\TestSuite;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -26,6 +29,7 @@ use function Laravel\Prompts\outro;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\warning;
 
+#[AsCommand(name: 'socialstream:install')]
 class InstallCommand extends Command implements PromptsForMissingInput
 {
     use InteractsWithComposer;
@@ -59,6 +63,12 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     public function handle(InstallManager $installManager): ?int
     {
+        $this->callSilent('vendor:publish', [
+            '--provider' => FortifyServiceProvider::class,
+        ]);
+
+        $this->registerFortifyServiceProvider();
+
         $installManager->driver(match (true) {
             $this->getStarterKit() === InstallStarterKit::Filament => 'filament',
             ($this->getStarterKit() === InstallStarterKit::Breeze &&
@@ -82,6 +92,18 @@ class InstallCommand extends Command implements PromptsForMissingInput
         });
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Register the Fortify service provider in the application configuration file.
+     */
+    protected function registerFortifyServiceProvider(): void
+    {
+        if (! method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
+            return;
+        }
+
+        ServiceProvider::addProviderToBootstrapFile(\App\Providers\FortifyServiceProvider::class);
     }
 
     /**

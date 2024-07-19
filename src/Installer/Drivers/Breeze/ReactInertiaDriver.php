@@ -25,9 +25,6 @@ class ReactInertiaDriver extends BreezeDriver
         ];
     }
 
-    /**
-     * Copy all the app files required for the stack.
-     */
     protected function copyAppFiles(): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/ConnectedAccountController.php', app_path('Http/Controllers/Auth/ConnectedAccountController.php'));
@@ -37,9 +34,6 @@ class ReactInertiaDriver extends BreezeDriver
         return $this;
     }
 
-    /**
-     * Copy the auth views to the app "resources" directory for the given stack.
-     */
     public function copyAuthViews(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
@@ -55,9 +49,6 @@ class ReactInertiaDriver extends BreezeDriver
         return $this;
     }
 
-    /**
-     * Copy the profile views to the app "resources" directory for the given stack.
-     */
     public function copyProfileViews(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
@@ -75,9 +66,6 @@ class ReactInertiaDriver extends BreezeDriver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream components to the app "resources" directory for the given stack.
-     */
     public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
