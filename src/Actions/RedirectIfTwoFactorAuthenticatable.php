@@ -8,7 +8,6 @@ use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable as BaseAction;
 use Laravel\Fortify\Fortify;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class RedirectIfTwoFactorAuthenticatable extends BaseAction
 {
