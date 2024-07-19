@@ -2,7 +2,9 @@
 
 namespace JoelButcher\Socialstream;
 
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -33,7 +35,6 @@ use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
-use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Livewire;
 
@@ -49,6 +50,13 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
 
         $this->registerResponseBindings();
+
+        // if there's no fortify, we need to bind a stateful guard to the container
+        if (! config('fortify.guard')) {
+            $this->app->bind(StatefulGuard::class, function () {
+                return Auth::guard(config('socialstream.guard'));
+            });
+        }
     }
 
     /**
