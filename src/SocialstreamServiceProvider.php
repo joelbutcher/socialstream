@@ -33,6 +33,7 @@ use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
+use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Livewire;
 
@@ -68,7 +69,6 @@ class SocialstreamServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
-        $this->configurePublishing();
         $this->configureRoutes();
         $this->configureCommands();
         $this->configureRefreshTokenResolvers();
@@ -104,37 +104,16 @@ class SocialstreamServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure publishing for the package.
-     */
-    private function configurePublishing(): void
-    {
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
-
-        $this->publishes([
-            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
-        ], 'socialstream-config');
-
-        $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000001_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000001_make_password_nullable_on_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
-        ], 'socialstream-migrations');
-
-        $this->publishes([
-            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
-        ], 'socialstream-routes');
-
-        $this->publishes([
-            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
-        ], 'socialstream-actions');
-    }
-
-    /**
      * Configure the routes offered by the application.
      */
     private function configureRoutes(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+            ], 'socialstream-routes');
+        }
+
         if (! Socialstream::$registersRoutes) {
             return;
         }
@@ -190,24 +169,28 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->publishes([
+            __DIR__.'/../config/socialstream.php.php' => config_path('socialstream.php'),
+        ], 'socialstream-config');
+
+        $this->publishes([
+            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
+        ], 'socialstream-actions');
+
+        $this->publishesMigrations([
+            __DIR__.'/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
+        ], 'socialstream-migrations');
+
         if (class_exists('\App\Providers\VoltServiceProvider')) {
             return;
         }
 
-        if ($this->hasComposerPackage('inertiajs/inertia-laravel')) {
-            $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/inertia/routes/socialstream.php' => base_path('routes/socialstream.php'),
-            ], groups: 'socialstream-routes');
-        } else {
-            $this->publishes(paths: [
-                __DIR__.'/../stubs/breeze/default/routes/socialstream.php' => base_path('routes/socialstream.php'),
-            ], groups: 'socialstream-routes');
-        }
-
-        $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000000_create_breeze_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
-        ], 'socialstream-migrations');
+        $this->publishes($this->hasComposerPackage('inertiajs/inertia-laravel') ? [
+            __DIR__.'/../stubs/breeze/inertia/routes/socialstream.php' => base_path('routes/socialstream.php'),
+        ] : [
+            __DIR__.'/../stubs/breeze/default/routes/socialstream.php' => base_path('routes/socialstream.php'),
+        ], groups: 'socialstream-routes');
     }
 
     /**
@@ -239,11 +222,9 @@ class SocialstreamServiceProvider extends ServiceProvider
             return;
         }
 
-        if (config('jetstream.stack') === 'inertia') {
-            $this->publishes([
-                __DIR__.'/../routes/inertia.php' => base_path('routes/socialstream.php'),
-            ], 'socialstream-routes');
-        }
+        $this->publishes([
+            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
+        ], 'socialstream-config');
 
         $this->publishes(array_merge([
             __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
@@ -253,9 +234,15 @@ class SocialstreamServiceProvider extends ServiceProvider
         ] : []), 'socialstream-actions');
 
         $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
+
+        $this->publishes(config('jetstream.stack') === 'inertia' ? [
+            __DIR__.'/../routes/inertia.php' => base_path('routes/socialstream.php'),
+        ] : [
+            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+        ], 'socialstream-routes');
     }
 
     /**
@@ -276,9 +263,13 @@ class SocialstreamServiceProvider extends ServiceProvider
         ], 'socialstream-actions');
 
         $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000000_create_users_table.php' => database_path('migrations/0001_01_01_000000_create_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000002_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000002_create_connected_accounts_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
+            __DIR__.'/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
+
+        $this->publishes([
+            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+        ], 'socialstream-routes');
 
         $this->publishes([
             __DIR__.'/../resources/views' => base_path('resources/views/vendor/socialstream'),

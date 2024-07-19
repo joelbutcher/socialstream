@@ -8,17 +8,11 @@ use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
 
 class InertiaDriver extends JetstreamDriver
 {
-    /**
-     * Specify the stack used by this installer.
-     */
     protected static function stack(): JetstreamInstallStack
     {
         return JetstreamInstallStack::Inertia;
     }
 
-    /**
-     * Define the resource directories that should be checked for existence for the stack.
-     */
     protected static function directoriesToCreateForStack(): array
     {
         return [
@@ -29,9 +23,6 @@ class InertiaDriver extends JetstreamDriver
         ];
     }
 
-    /**
-     * Copy the auth views to the app "resources" directory for the given stack.
-     */
     public function copyAuthViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Pages/Auth/Login.vue', resource_path('js/Pages/Auth/Login.vue'));
@@ -40,9 +31,6 @@ class InertiaDriver extends JetstreamDriver
         return $this;
     }
 
-    /**
-     * Copy the profile views to the app "resources" directory for the given stack.
-     */
     public function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Pages/Profile/Partials/ConnectedAccountsForm.vue', resource_path('js/Pages/Profile/Partials/ConnectedAccountsForm.vue'));
@@ -52,9 +40,6 @@ class InertiaDriver extends JetstreamDriver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream components to the app "resources" directory for the given stack.
-     */
     public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/jetstream/inertia/resources/js/Components/SocialstreamIcons', resource_path('js/Components/SocialstreamIcons'));

@@ -34,11 +34,15 @@ class Socialstream
 
     /**
      * The user model that should be used by Jetstream.
+     *
+     * @var class-string
      */
     public static string $userModel = 'App\\Models\\User';
 
     /**
      * The user model that should be used by Jetstream.
+     *
+     * @var class-string
      */
     public static string $connectedAccountModel = 'App\\Models\\ConnectedAccount';
 
@@ -81,7 +85,7 @@ class Socialstream
     /**
      * Determine whether Socialstream is enabled in the application.
      */
-    public static function enabled(callable|bool $callback = null): bool
+    public static function enabled(callable|bool|null $callback = null): bool
     {
         if (is_callable($callback)) {
             static::$enabled = $callback();

@@ -8,9 +8,6 @@ use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 
 class BladeDriver extends BreezeDriver
 {
-    /**
-     * Specify the stack used by this installer.
-     */
     protected static function stack(): BreezeInstallStack
     {
         return BreezeInstallStack::Blade;
@@ -25,9 +22,6 @@ class BladeDriver extends BreezeDriver
         ];
     }
 
-    /**
-     * Copy the auth views to the app "resources" directory for the given stack.
-     */
     public function copyAuthViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/auth/login.blade.php', resource_path('views/auth/login.blade.php'));
@@ -36,9 +30,6 @@ class BladeDriver extends BreezeDriver
         return $this;
     }
 
-    /**
-     * Copy the profile views to the app "resources" directory for the given stack.
-     */
     public function copyProfileViews(InstallOptions ...$options): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/resources/views/profile/edit.blade.php', resource_path('views/profile/edit.blade.php'));
@@ -48,9 +39,6 @@ class BladeDriver extends BreezeDriver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream components to the app "resources" directory for the given stack.
-     */
     public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         (new Filesystem)->copyDirectory(__DIR__.'/../../../../stubs/breeze/default/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));

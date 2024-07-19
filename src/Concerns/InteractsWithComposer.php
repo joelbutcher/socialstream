@@ -3,6 +3,7 @@
 namespace JoelButcher\Socialstream\Concerns;
 
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 trait InteractsWithComposer
@@ -81,5 +82,13 @@ trait InteractsWithComposer
             $dev ? ['--dev'] : [],
             $packages
         );
+    }
+
+    /**
+     * Get the path to the appropriate PHP binary.
+     */
+    protected function phpBinary(): string
+    {
+        return (new PhpExecutableFinder())->find(false) ?: 'php';
     }
 }

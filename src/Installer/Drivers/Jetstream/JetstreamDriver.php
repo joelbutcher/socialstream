@@ -4,7 +4,6 @@ namespace JoelButcher\Socialstream\Installer\Drivers\Jetstream;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
@@ -23,9 +22,6 @@ abstract class JetstreamDriver extends Driver
      */
     abstract protected static function stack(): JetstreamInstallStack;
 
-    /**
-     * Copy the Socialstream routes.
-     */
     protected function installRoutes(): static
     {
         $stack = static::stack()->value;
@@ -37,9 +33,6 @@ abstract class JetstreamDriver extends Driver
         return $this;
     }
 
-    /**
-     * Check for, and install Laravel Jetstream, if required.
-     */
     protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
     {
         if (file_exists(config_path('jetstream.php'))) {
@@ -76,9 +69,6 @@ abstract class JetstreamDriver extends Driver
         \Laravel\Prompts\info('Laravel Jetstream has been installed successfully!');
     }
 
-    /**
-     * Copy the Socialstream models to the base "app" directory.
-     */
     protected function copyModelsAndFactories(): static
     {
         parent::copyModelsAndFactories();
@@ -89,9 +79,6 @@ abstract class JetstreamDriver extends Driver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream test files to the apps "tests" directory for the stacks given test runner.
-     */
     protected function copyTests(TestRunner $testRunner): static
     {
         copy(from: match ($testRunner) {
@@ -120,9 +107,6 @@ abstract class JetstreamDriver extends Driver
         return $this;
     }
 
-    /**
-     * Execute a script to be run post-installation of the stack.
-     */
     protected function postInstall(string $composerBinary, InstallOptions ...$options): void
     {
         $this->ensureTeamsCompatibility(...$options);

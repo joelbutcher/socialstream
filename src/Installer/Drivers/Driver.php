@@ -11,7 +11,6 @@ use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\spin;
@@ -43,6 +42,9 @@ abstract class Driver
         //
     }
 
+    /**
+     * Install the stack with the given options
+     */
     public function install(string $composerBinary = 'global', InstallOptions ...$options): void
     {
         $this->ensureDependenciesAreInstalled($composerBinary, ...$options);
@@ -83,7 +85,7 @@ abstract class Driver
         spin(callback: function () {
             $outputStyle = new BufferedOutput;
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
@@ -95,13 +97,13 @@ abstract class Driver
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-routes', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-routes'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-actions', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-actions'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
@@ -281,11 +283,9 @@ abstract class Driver
         return $process;
     }
 
-    /**
-     * Get the path to the appropriate PHP binary.
-     */
-    protected function phpBinary(): string
+    /** Replace a given string within a given file. */
+    protected function replaceInFile($search, $replace, $path)
     {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
     }
 }

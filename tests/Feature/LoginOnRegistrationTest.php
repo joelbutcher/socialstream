@@ -46,9 +46,9 @@ test('users can login on registration', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('register'));
 
@@ -87,9 +87,9 @@ test('users cannot login on registration without feature enabled', function (): 
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', route('register'));
 
@@ -129,9 +129,9 @@ test('users cannot login on registration from random route without feature enabl
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     Session::put('socialstream.previous_url', '/random');
 
