@@ -1,6 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.0.4...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.0...6.x)
+
+## [v6.1.0](https://github.com/joelbutcher/socialstream/compare/v6.0.4...v6.1.0) - 2024-07-19
+
+### What's Changed
+
+* [6.x] fix: checking filament user and admin routing by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/360
+* [6.x] Various updates and fixes (incl. 2FA) by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/361
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.0.4...v6.1.0
 
 ## [v6.0.4](https://github.com/joelbutcher/socialstream/compare/v6.0.3...v6.0.4) - 2024-06-24
 
