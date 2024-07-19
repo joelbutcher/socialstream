@@ -1,6 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.0...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.1...6.x)
+
+## [v6.1.1](https://github.com/joelbutcher/socialstream/compare/v6.1.0...v6.1.1) - 2024-07-19
+
+### What's Changed
+
+* [6.x] Don't ask for tester if pest is already installed by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/363
+* [6.x] Bind stateful guard if fortify is not installed by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/362
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.0...v6.1.1
 
 ## [v6.1.0](https://github.com/joelbutcher/socialstream/compare/v6.0.4...v6.1.0) - 2024-07-19
 
