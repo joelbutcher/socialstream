@@ -115,15 +115,20 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     /**
      * Handle the registration of a new user.
      */
-    protected function register(string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    protected function register(string $provider, ProviderUser $providerAccount): SocialstreamResponse|RedirectResponse
     {
         $user = $this->createsUser->create($provider, $providerAccount);
 
-        $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
+        return tap(
+            (new Pipeline(app()))->send(request())->through(array_filter([
+                function ($request, $next) use ($user) {
+                    $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-        event(new NewOAuthRegistration($user, $provider, $providerAccount));
-
-        return app(OAuthRegisterResponse::class);
+                    return $next($request);
+                },
+            ]))->then(fn () => app(OAuthRegisterResponse::class)),
+            fn () => event(new NewOAuthRegistration($user, $provider, $providerAccount))
+        );
     }
 
     /**
