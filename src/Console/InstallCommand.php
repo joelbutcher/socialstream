@@ -63,12 +63,6 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     public function handle(InstallManager $installManager): ?int
     {
-        $this->callSilent('vendor:publish', [
-            '--provider' => FortifyServiceProvider::class,
-        ]);
-
-        $this->registerFortifyServiceProvider();
-
         $installManager->driver(match (true) {
             $this->getStarterKit() === InstallStarterKit::Filament => 'filament',
             ($this->getStarterKit() === InstallStarterKit::Breeze &&
@@ -190,7 +184,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
         if ($this->isUsingFilament()) {
-            $input->setOption('pest', select(
+            $input->setOption('pest', $this->option('pest') || select(
                 label: 'Which testing framework do you prefer?',
                 options: ['PHPUnit', 'Pest'],
                 default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
@@ -240,17 +234,17 @@ class InstallCommand extends Command implements PromptsForMissingInput
                     ]
                 ))->each(fn ($option) => $input->setOption($option, true));
             } else {
-                $input->setOption('dark', confirm(
-                    label: 'Would you like dark mode support?',
-                    default: false
-                ));
+                $input->setOption('dark', $this->option('dark') || confirm(
+                        label: 'Would you like dark mode support?',
+                        default: false
+                    ));
             }
 
-            $input->setOption('pest', select(
-                label: 'Which testing framework do you prefer?',
-                options: ['PHPUnit', 'Pest'],
-                default: $this->isUsingPest() ? 'pest' : 'phpunit'
-            ) === 'Pest');
+            $input->setOption('pest', $this->option('pest') || select(
+                    label: 'Which testing framework do you prefer?',
+                    options: ['PHPUnit', 'Pest'],
+                    default: $this->isUsingPest() ? 'pest' : 'phpunit'
+                ) === 'Pest');
         }
     }
 

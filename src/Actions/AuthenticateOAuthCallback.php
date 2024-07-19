@@ -141,6 +141,20 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 
     protected function loginPipeline(Request $request, Authenticatable $user): Pipeline
     {
+        if (! class_exists(Fortify::class)) {
+            return (new Pipeline(app()))->send($request)->through(array_filter([
+                function ($request, $next) use ($user) {
+                    $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
+
+                    if ($request->hasSession()) {
+                        $request->session()->regenerate();
+                    }
+
+                    return $next($request);
+                },
+            ]));
+        }
+
         if (Fortify::$authenticateThroughCallback) {
             return (new Pipeline(app()))->send($request)->through(array_filter(
                 call_user_func(Fortify::$authenticateThroughCallback, $request)

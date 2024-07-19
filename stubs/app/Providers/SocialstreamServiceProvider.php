@@ -30,10 +30,6 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if ($this->usesFilament()) {
-            Fortify::$registersRoutes = false;
-        }
-
         Socialstream::resolvesSocialiteUsersUsing(ResolveSocialiteUser::class);
         Socialstream::createUsersFromProviderUsing(CreateUserFromProvider::class);
         Socialstream::createConnectedAccountsUsing(CreateConnectedAccount::class);

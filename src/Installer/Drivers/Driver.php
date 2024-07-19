@@ -10,9 +10,7 @@ use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\spin;
@@ -87,27 +85,25 @@ abstract class Driver
         spin(callback: function () {
             $outputStyle = new BufferedOutput;
 
-            $this->configureFortify($outputStyle);
-
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-routes', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-routes'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-actions', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-actions'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
@@ -115,12 +111,6 @@ abstract class Driver
         }, message: 'Publishing config, migration and route files');
 
         return $this;
-    }
-
-    /** Publish the underlying Laravel Fortify config files. */
-    protected function configureFortify(OutputInterface $outputStyle): void
-    {
-        //
     }
 
     /**
