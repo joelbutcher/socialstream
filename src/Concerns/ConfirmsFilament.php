@@ -6,6 +6,7 @@ namespace JoelButcher\Socialstream\Concerns;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use JoelButcher\Socialstream\Features;
 
 trait ConfirmsFilament
 {
@@ -18,9 +19,41 @@ trait ConfirmsFilament
 
     public function hasFilamentAuthRoutes(): bool
     {
-        return (Route::has('filament.auth.login') && Session::get('socialstream.previous_url') === route('filament.auth.login')) ||
-            (Route::has('filament.admin.auth.login') && Session::get('socialstream.previous_url') === route('filament.admin.auth.login')) ||
-            (Route::has('filament.auth.register') && Session::get('socialstream.previous_url') === route('filament.auth.register')) ||
-            (Route::has('filament.admin.auth.register') && Session::get('socialstream.previous_url') === route('filament.admin.auth.register'));
+        return $this->hasFilamentLoginRoutes() || $this->hasFilamentRegistrationRoutes();
+    }
+
+    public function canRegisterUsingFilament(): bool
+    {
+        $filamentRegistrationEnabled = $this->hasFilamentRegistrationRoutes() ||
+            $this->hasFilamentLoginRoutes() && Features::hasCreateAccountOnFirstLoginFeatures();
+
+        if (! $filamentRegistrationEnabled) {
+            return false;
+        }
+
+        return $this->cameFromFilamentAuthRoute();
+    }
+
+    /** Assumes static::canRegisterUsingFilament() returns TRUE. */
+    public function cameFromFilamentAuthRoute(): bool
+    {
+        $previousRoute = Session::get('socialstream.previous_url');
+
+        return in_array($previousRoute, [
+            route('filament.auth.login'),
+            route('filament.admin.auth.login'),
+            route('filament.auth.register'),
+            route('filament.admin.auth.register'),
+        ]);
+    }
+
+    public function hasFilamentLoginRoutes(): bool
+    {
+        return Route::has('filament.auth.login') || Route::has('filament.admin.auth.login');
+    }
+
+    public function hasFilamentRegistrationRoutes(): bool
+    {
+        return Route::has('filament.auth.register') || Route::has('filament.admin.auth.register');
     }
 }
