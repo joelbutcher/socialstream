@@ -48,12 +48,11 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
      * Create a new controller instance.
      */
     public function __construct(
-        protected StatefulGuard            $guard,
-        protected CreatesUserFromProvider  $createsUser,
+        protected StatefulGuard $guard,
+        protected CreatesUserFromProvider $createsUser,
         protected CreatesConnectedAccounts $createsConnectedAccounts,
         protected UpdatesConnectedAccounts $updatesConnectedAccounts
-    )
-    {
+    ) {
         //
     }
 
@@ -85,7 +84,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 
         // If a user exists, check the features to make sure we can link unlinked existing users.
         if ($user) {
-            if (!Features::authenticatesExistingUnlinkedUsers()) {
+            if (! Features::authenticatesExistingUnlinkedUsers()) {
                 // If we cannot link, return an error asking the user to log in to link their account.
                 return $this->oauthFailed(
                     error: __('An account already exists with the same email address. Please log in to connect your :provider account.', ['provider' => Providers::name($provider)]),
@@ -108,17 +107,21 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         // If a user does not exist for the provider account, check if registration is supported.
-        if (! $this->canRegister()) {
-            // If registration is not supported, return an error.
-            return $this->oauthFailed(
-                error: __('Registration is disabled.'),
-                provider: $provider,
-                providerAccount: $providerAccount,
-            );
+        if ($this->canRegister()) {
+            // If registration is supported, register the user.
+            return $this->register($provider, $providerAccount);
         }
 
-        // Otherwise, register the user.
-        return $this->register($provider, $providerAccount);
+        // Otherwise, return an error.
+        $error = Route::has('login') && Session::get('socialstream.previous_url') === route('login')
+            ? __('Account not found, please register to create an account.')
+            : __('Registration is disabled.');
+
+        return $this->oauthFailed(
+            error: $error,
+            provider: $provider,
+            providerAccount: $providerAccount,
+        );
     }
 
     /**

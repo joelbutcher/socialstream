@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
-use JoelButcher\Socialstream\Contracts\OAuthLoginFailedResponse as OAuthFailedResponseContract;
+use JoelButcher\Socialstream\Contracts\OAuthFailedResponse as OAuthFailedResponseContract;
 use JoelButcher\Socialstream\Socialstream;
 
 class OAuthFailedResponse implements OAuthFailedResponseContract
