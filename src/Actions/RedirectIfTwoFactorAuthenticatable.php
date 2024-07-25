@@ -26,12 +26,14 @@ class RedirectIfTwoFactorAuthenticatable extends BaseAction
         $socialUser = app(ResolvesSocialiteUsers::class)
             ->resolve($request->route('provider'));
 
-        return tap(Socialstream::$userModel::where('email', $socialUser->getEmail())->first(), function ($user) use ($request, $socialUser) {
-            if (! $user || ! Socialstream::$connectedAccountModel::where('email', $socialUser->getEmail())->first()) {
-                $this->fireFailedEvent($request, $user);
+        $connectedAccount = tap(Socialstream::$connectedAccountModel::where('email', $socialUser->getEmail())->first(), function ($connectedAccount) use ($request, $socialUser) {
+            if (! $connectedAccount) {
+                $this->fireFailedEvent($request, $connectedAccount->user);
 
                 $this->throwFailedAuthenticationException($request);
             }
         });
+
+        return $connectedAccount->user;
     }
 }
