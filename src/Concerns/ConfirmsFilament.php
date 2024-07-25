@@ -39,12 +39,12 @@ trait ConfirmsFilament
     {
         $previousRoute = Session::get('socialstream.previous_url');
 
-        return in_array($previousRoute, [
-            ...Route::has('filament.auth.login') ? [route('filament.auth.login')] : [],
-            ...Route::has('filament.admin.auth.login') ? [route('filament.admin.auth.login')] : [],
-            ...Route::has('filament.auth.register') ? [route('filament.auth.register')] : [],
-            ...Route::has('filament.admin.auth.register') ? [route('filament.admin.auth.register')] : [],
-        ]);
+        return in_array($previousRoute, array_filter([
+            Route::has('filament.auth.login') ? route('filament.auth.login') : null,
+            Route::has('filament.admin.auth.login') ? route('filament.admin.auth.login') : null,
+            Route::has('filament.auth.register') ? route('filament.auth.register') : null,
+            Route::has('filament.admin.auth.register') ? route('filament.admin.auth.register') : null,
+        ]));
     }
 
     public function hasFilamentLoginRoutes(): bool
