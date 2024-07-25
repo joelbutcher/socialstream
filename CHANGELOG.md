@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.1...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.2...6.x)
+
+## [v6.1.2](https://github.com/joelbutcher/socialstream/compare/v6.1.1...v6.1.2) - 2024-07-25
+
+### What's Changed
+
+* [6x] Fix auth for users with changed emails by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/364
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.1...v6.1.2
 
 ## [v6.1.1](https://github.com/joelbutcher/socialstream/compare/v6.1.0...v6.1.1) - 2024-07-19
 
