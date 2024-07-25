@@ -292,7 +292,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return true;
         }
 
-        if (Route::has('login') && $previousRoute === route('register')) {
+        if (Route::has('login') && $previousRoute === route('login')) {
             return Features::hasCreateAccountOnFirstLoginFeatures();
         }
 
