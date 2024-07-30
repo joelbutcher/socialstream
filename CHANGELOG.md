@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.3...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.4...6.x)
+
+## [v6.1.4](https://github.com/joelbutcher/socialstream/compare/v6.1.3...v6.1.4) - 2024-07-30
+
+### What's Changed
+
+* [6.x] – Override default `EloquentUserProvider` to check $user->authPassword before checking hashes match by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/367
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.3...v6.1.4
 
 ## [v6.1.3](https://github.com/joelbutcher/socialstream/compare/v6.1.2...v6.1.3) - 2024-07-25
 
