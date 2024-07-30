@@ -18,6 +18,7 @@ use JoelButcher\Socialstream\Actions\HandleOAuthCallbackErrors;
 use JoelButcher\Socialstream\Actions\ResolveSocialiteUser;
 use JoelButcher\Socialstream\Actions\SetUserPassword;
 use JoelButcher\Socialstream\Actions\UpdateConnectedAccount;
+use JoelButcher\Socialstream\Auth\SocialstreamUserProvider;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
@@ -76,6 +77,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configureAuth();
         $this->configureDefaults();
         $this->configureRoutes();
         $this->configureCommands();
@@ -89,6 +91,14 @@ class SocialstreamServiceProvider extends ServiceProvider
             Livewire::component('profile.set-password-form', SetPasswordForm::class);
             Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
         }
+    }
+
+    private function configureAuth(): void
+    {
+        Auth::provider('eloquent', fn ($app, array $config) => new SocialstreamUserProvider(
+            hasher: $app['hash'],
+            model: $config['model']
+        ));
     }
 
     /**
