@@ -188,7 +188,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__.'/../config/socialstream.php.php' => config_path('socialstream.php'),
+            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
         ], 'socialstream-config');
 
         $this->publishes([
