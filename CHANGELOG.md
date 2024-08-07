@@ -1,6 +1,18 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.4...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.5...6.x)
+
+## [v6.1.5](https://github.com/joelbutcher/socialstream/compare/v6.1.4...v6.1.5) - 2024-08-06
+
+### What's Changed
+
+* [6.x] Fix config not publishing for Laravel Breeze by [@Supernova3339](https://github.com/Supernova3339) in https://github.com/joelbutcher/socialstream/pull/368
+
+### New Contributors
+
+* [@Supernova3339](https://github.com/Supernova3339) made their first contribution in https://github.com/joelbutcher/socialstream/pull/368
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.4...v6.1.5
 
 ## [v6.1.4](https://github.com/joelbutcher/socialstream/compare/v6.1.3...v6.1.4) - 2024-07-30
 
