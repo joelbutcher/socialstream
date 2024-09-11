@@ -20,7 +20,7 @@ class OAuthLoginResponse implements LoginResponseContract
     public function toResponse($request): RedirectResponse|FortifyLoginResponse
     {
         return match (true) {
-            $this->usesFilament() && $this->hasFilamentAuthRoutes() => redirect()->route(
+            $this->cameFromFilamentAuthRoute() && $this->usesFilament() && $this->hasFilamentAuthRoutes() => redirect()->route(
                 config('socialstream.filament-route', 'filament.admin.pages.dashboard')
             ),
             $this->hasComposerPackage('laravel/jetstream') => $this->fortifyResponse($request),
