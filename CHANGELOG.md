@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.6...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.7...6.x)
+
+## [v6.1.7](https://github.com/joelbutcher/socialstream/compare/v6.1.6...v6.1.7) - 2024-09-19
+
+### What's Changed
+
+* [6.x] fix removed auth props in Laravel Breeze support by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/371
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.6...v6.1.7
 
 ## [v6.1.6](https://github.com/joelbutcher/socialstream/compare/v6.1.5...v6.1.6) - 2024-09-11
 
