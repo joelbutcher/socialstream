@@ -14,7 +14,7 @@ use JoelButcher\Socialstream\Installer\Drivers\Jetstream\InertiaDriver;
 use JoelButcher\Socialstream\Installer\Drivers\Jetstream\LivewireDriver as JetstreamLivewireDriver;
 
 /**
- * @method Driver driver($driver = null)
+ * @method Driver driver(?string $driver = null)
  */
 class InstallManager extends Manager
 {
