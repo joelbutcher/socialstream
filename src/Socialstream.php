@@ -120,7 +120,7 @@ class Socialstream
     /**
      * Get a completion redirect path for a specific feature.
      */
-    public static function redirects(string $redirect, $default = null)
+    public static function redirects(string $redirect, mixed $default = null)
     {
         return config('socialstream.redirects.'.$redirect) ?? $default ?? config('socialstream.home');
     }
