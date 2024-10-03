@@ -11,7 +11,6 @@ use App\Actions\Socialstream\UpdateConnectedAccount;
 use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
 use JoelButcher\Socialstream\Socialstream;
-use Laravel\Fortify\Fortify;
 
 class SocialstreamServiceProvider extends ServiceProvider
 {

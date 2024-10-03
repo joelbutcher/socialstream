@@ -31,9 +31,11 @@ use JoelButcher\Socialstream\Events\OAuthProviderLinkFailed;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Actions\AttemptToAuthenticate as FortifyAttemptToAuthenticate;
 use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable as FortifyRedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
@@ -158,11 +160,10 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 
     protected function loginPipeline(Request $request, Authenticatable $user): Pipeline
     {
-        if (!class_exists(Fortify::class)) {
+        if (! class_exists(Fortify::class)) {
             return (new Pipeline(app()))->send($request)->through(array_filter([
-                function ($request, $next) use ($user) {
-                    $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
-
+                AttemptToAuthenticate::class.':'.$user->getAuthIdentifier(),
+                function ($request, $next) {
                     if ($request->hasSession()) {
                         $request->session()->regenerate();
                     }
@@ -173,26 +174,22 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         if (Fortify::$authenticateThroughCallback) {
-            return (new Pipeline(app()))->send($request)->through(array_filter(
+            return (new Pipeline(app()))->send($request)->through($this->replaceFortifyAuthPipes(array_filter(
                 call_user_func(Fortify::$authenticateThroughCallback, $request)
-            ));
+            )));
         }
 
         if (is_array(config('fortify.pipelines.login'))) {
-            return (new Pipeline(app()))->send($request)->through(array_filter(
+            return (new Pipeline(app()))->send($request)->through($this->replaceFortifyAuthPipes(array_filter(
                 config('fortify.pipelines.login')
-            ));
+            )));
         }
 
         return (new Pipeline(app()))->send($request)->through(array_filter([
             config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
             config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
             FortifyFeatures::enabled(FortifyFeatures::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
-            function ($request, $next) use ($user) {
-                $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
-
-                return $next($request);
-            },
+            AttemptToAuthenticate::class.':'.$user->getAuthIdentifier(),
             PrepareAuthenticatedSession::class,
         ]));
     }
@@ -297,5 +294,20 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         }
 
         return Features::hasCreateAccountOnFirstLoginFeatures() && Features::hasGlobalLoginFeatures();
+    }
+
+    private function replaceFortifyAuthPipes(mixed $pipes): array
+    {
+        return array_map(function ($pipe) {
+            if ($pipe === FortifyAttemptToAuthenticate::class) {
+                return AttemptToAuthenticate::class;
+            }
+
+            if ($pipe === FortifyRedirectIfTwoFactorAuthenticatable::class) {
+                return RedirectIfTwoFactorAuthenticatable::class;
+            }
+
+            return $pipe;
+        }, $pipes);
     }
 }
