@@ -8,11 +8,11 @@ use Illuminate\Auth\Events\Failed;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;
-use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable as BaseAction;
+use Laravel\Fortify\Actions\AttemptToAuthenticate as BaseAction;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\LoginRateLimiter;
 
-class RedirectIfTwoFactorAuthenticatable extends BaseAction
+class AttemptToAuthenticate extends BaseAction
 {
     public function __construct(
         StatefulGuard $guard,
@@ -20,24 +20,23 @@ class RedirectIfTwoFactorAuthenticatable extends BaseAction
         protected ResolvesSocialiteUsers $resolver
     ) {
         parent::__construct($guard, $limiter);
-
     }
 
-    protected function validateCredentials($request)
+    public function handle($request, $next, $authIdentifier = null)
     {
         if (Fortify::$authenticateUsingCallback) {
-            return tap(call_user_func(Fortify::$authenticateUsingCallback, $request), function ($user) use ($request) {
-                if (! $user) {
-                    $this->fireFailedEvent($request);
-
-                    $this->throwFailedAuthenticationException($request);
-                }
-            });
+            return $this->handleUsingCustomCallback($request, $next);
         }
 
         // Fallback to Laravel Fortify
         if (! $request->route('provider') && $request->route(Fortify::username())) {
-            return parent::validateCredentials($request);
+            return parent::handle($request, $next);
+        }
+
+        if ($authIdentifier) {
+            $this->guard->loginUsingId($authIdentifier, Socialstream::hasRememberSessionFeatures());
+
+            return $next($request);
         }
 
         $socialUser = $this->resolver->resolve($request->route('provider'));
@@ -52,6 +51,8 @@ class RedirectIfTwoFactorAuthenticatable extends BaseAction
             }
         });
 
-        return $connectedAccount->user;
+        $this->guard->login($connectedAccount->user, Socialstream::hasRememberSessionFeatures());
+
+        return $next($request);
     }
 }
