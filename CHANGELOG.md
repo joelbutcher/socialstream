@@ -1,6 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.7...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.8...6.x)
+
+## [v6.1.8](https://github.com/joelbutcher/socialstream/compare/v6.1.7...v6.1.8) - 2024-10-03
+
+### What's Changed
+
+* [6.x] Fix PHP 8.4 deprecation warnings for implicit nullable types by [@selfsimilar](https://github.com/selfsimilar) in https://github.com/joelbutcher/socialstream/pull/376
+* [6.x] fix auth when using a custom authentication pipeline in Fortify by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/379
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.7...v6.1.8
 
 ## [v6.1.7](https://github.com/joelbutcher/socialstream/compare/v6.1.6...v6.1.7) - 2024-09-19
 
