@@ -31,6 +31,7 @@ class ConnectedAccountController extends Controller
         Socialstream::connectedAccountModel()::query()
             ->where('id', $id)
             ->where('user_id', $request->user()->id)
+            ->first()
             ->delete();
 
         Session::flash('flash.banner', __('Account removed'));
