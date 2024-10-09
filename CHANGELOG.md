@@ -1,6 +1,18 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.8...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.9...6.x)
+
+## [v6.1.9](https://github.com/joelbutcher/socialstream/compare/v6.1.8...v6.1.9) - 2024-10-09
+
+### What's Changed
+
+* [6.x] retrieve the model to allow deletion to fire model events by [@ivannovak](https://github.com/ivannovak) in https://github.com/joelbutcher/socialstream/pull/381
+
+### New Contributors
+
+* [@ivannovak](https://github.com/ivannovak) made their first contribution in https://github.com/joelbutcher/socialstream/pull/381
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.8...v6.1.9
 
 ## [v6.1.8](https://github.com/joelbutcher/socialstream/compare/v6.1.7...v6.1.8) - 2024-10-03
 
