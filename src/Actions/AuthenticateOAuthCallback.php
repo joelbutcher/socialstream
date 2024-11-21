@@ -162,7 +162,11 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     {
         if (! class_exists(Fortify::class)) {
             return (new Pipeline(app()))->send($request)->through(array_filter([
-                AttemptToAuthenticate::class.':'.$user->getAuthIdentifier(),
+                function ($request, $next) use ($user) {
+                    app(StatefulGuard::class)->loginUsingId($user->getAuthIdentifier(), Socialstream::hasRememberSessionFeatures());
+
+                    return $next($request);
+                },
                 function ($request, $next) {
                     if ($request->hasSession()) {
                         $request->session()->regenerate();
