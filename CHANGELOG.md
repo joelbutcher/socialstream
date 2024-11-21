@@ -1,6 +1,19 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.9...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.10...6.x)
+
+## [v6.1.10](https://github.com/joelbutcher/socialstream/compare/v6.1.9...v6.1.10) - 2024-11-21
+
+### What's Changed
+
+* [6.x] Suport Laravel Prompts v0.3 by [@jackwh](https://github.com/jackwh) in https://github.com/joelbutcher/socialstream/pull/383
+* [6.x] fix auth pipeline when not using fortify by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/386
+
+### New Contributors
+
+* [@jackwh](https://github.com/jackwh) made their first contribution in https://github.com/joelbutcher/socialstream/pull/383
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.9...v6.1.10
 
 ## [v6.1.9](https://github.com/joelbutcher/socialstream/compare/v6.1.8...v6.1.9) - 2024-10-09
 
