@@ -122,7 +122,10 @@ class Socialstream
      */
     public static function redirects(string $redirect, mixed $default = null)
     {
-        return config('socialstream.redirects.'.$redirect) ?? $default ?? config('socialstream.home');
+        return config(
+            key: "socialstream.redirects.$redirect",
+            default: $default ?? config('socialstream.home')
+        );
     }
 
     /**

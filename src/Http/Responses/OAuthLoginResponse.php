@@ -24,7 +24,6 @@ class OAuthLoginResponse implements LoginResponseContract
                 config('socialstream.filament-route', 'filament.admin.pages.dashboard')
             ),
             $this->hasComposerPackage('laravel/jetstream') => $this->fortifyResponse($request),
-            $this->hasComposerPackage('laravel/breeze') => redirect()->route('dashboard'),
             default => $this->defaultResponse(),
         };
     }
@@ -40,6 +39,6 @@ class OAuthLoginResponse implements LoginResponseContract
     {
         return Socialstream::redirects('login')
             ? redirect()->intended(Socialstream::redirects('login'))
-            : redirect()->to(route('dashboard', absolute: false));
+            : redirect()->to(config('socialstream.home'));
     }
 }
