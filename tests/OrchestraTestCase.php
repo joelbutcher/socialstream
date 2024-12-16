@@ -16,6 +16,7 @@ abstract class OrchestraTestCase extends BaseTestCase
     {
         $app['config']->set('app.debug', true);
         $app['config']->set('database.default', 'testing');
+        $app['config']->set('cache.default', 'file');
 
         $app['config']->set('services.github', [
             'client_id' => 'github-client-id',
