@@ -6,7 +6,9 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
+use Laravel\Fortify\Features;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -19,6 +21,12 @@ use function Pest\Laravel\post;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    if (Features::enabled(Features::resetPasswords())) {
+        $features = array_flip($this->app['config']->get('fortify.features'));
+        unset($features[Features::resetPasswords()]);
+        $this->app['config']->set('fortify.features', array_flip($features));
+    }
+
     $files = (new Filesystem());
     $files->cleanDirectory($this->app->basePath('routes'));
     if($files->exists($this->app->bootstrapPath(join_paths('cache', 'routes-v7.php')))) {
