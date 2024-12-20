@@ -1,6 +1,18 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.1.11...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.0...6.x)
+
+## [v6.2.0](https://github.com/joelbutcher/socialstream/compare/v6.1.11...v6.2.0) - 2024-12-20
+
+### What's Changed
+
+* [6.x] Update Laravel Socialite documentation link by [@AbdulOmarCR](https://github.com/AbdulOmarCR) in https://github.com/joelbutcher/socialstream/pull/388
+
+### New Contributors
+
+* [@AbdulOmarCR](https://github.com/AbdulOmarCR) made their first contribution in https://github.com/joelbutcher/socialstream/pull/388
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.1.11...v6.2.0
 
 ## [v6.1.11](https://github.com/joelbutcher/socialstream/compare/v6.1.10...v6.1.11) - 2024-11-22
 
