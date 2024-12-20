@@ -65,7 +65,10 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     {
         // If the user is authenticated, link the provider to the authenticated user.
         if ($user = auth()->user()) {
-            return $this->link($user, $provider, $providerAccount);
+            // cache the provider account for 10 mins whilst the user is redirected to the confirmation screen.
+            cache()->put("socialstream.{$user->id}:$provider.provider", $providerAccount, ttl: new \DateInterval('PT10M'));
+
+            return redirect()->route('oauth.callback.prompt', $provider);
         }
 
         // Check if the user has an existing OAuth account.
@@ -198,16 +201,11 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         ]));
     }
 
-    /**
-     * Attempt to link the provider to the authenticated user.
-     *
-     * Attempt to link the provider with the authenticated user.
-     */
-    private function link(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    public function link(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
     {
         $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
 
-        if ($account && $user?->id !== $account->user_id) {
+        if ($account && $user->id !== $account->user_id) {
             event(new OAuthProviderLinkFailed($user, $provider, $account, $providerAccount));
 
             $this->flashError(
