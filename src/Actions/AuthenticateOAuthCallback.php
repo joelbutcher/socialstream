@@ -136,7 +136,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     /**
      * Attempt to link the provider to the authenticated user.
      */
-    private function linkProvider(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    public function linkProvider(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
     {
         $account = $this->findAccount($provider, $providerAccount);
 

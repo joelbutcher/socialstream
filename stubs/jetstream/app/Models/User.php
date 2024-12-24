@@ -68,7 +68,7 @@ class User extends Authenticatable
     /**
      * Get the URL to the user's profile photo.
      */
-    public function profilePhotoUrl(): Attribute
+    protected function profilePhotoUrl(): Attribute
     {
         return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
             ? Attribute::get(fn () => $this->profile_photo_path)
