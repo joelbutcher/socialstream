@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.5.3...5.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v5.6.0...5.x)
+
+## [v5.6.0](https://github.com/joelbutcher/socialstream/compare/v5.5.3...v5.6.0) - 2024-12-24
+
+### What's Changed
+
+* [5.x] confirm account link for logged in users by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/391
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v5.5.3...v5.6.0
 
 ## [v5.5.3](https://github.com/joelbutcher/socialstream/compare/v5.5.2...v5.5.3) - 2024-04-02
 
