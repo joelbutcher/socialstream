@@ -6,6 +6,7 @@ use JoelButcher\Socialstream\Providers;
 return [
     'middleware' => ['web'],
     'prompt' => 'Or Login Via',
+    'confirmation-prompt' => null,
     'providers' => [
         // Providers::github(),
     ],
