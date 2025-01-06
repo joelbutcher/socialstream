@@ -141,6 +141,7 @@ class SocialstreamServiceProvider extends ServiceProvider
             'domain' => config('socialstream.domain'),
             'prefix' => config('socialstream.prefix', config('socialstream.path')),
         ], function () {
+            $this->loadRoutesFrom(path: __DIR__.'/../routes/web.php');
             $this->loadRoutesFrom(path: __DIR__.'/../routes/'.config('jetstream.stack', 'livewire').'.php');
         });
     }

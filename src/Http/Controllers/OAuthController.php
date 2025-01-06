@@ -2,17 +2,25 @@
 
 namespace JoelButcher\Socialstream\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\ViewErrorBag;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Contracts\SocialstreamResponse;
+use JoelButcher\Socialstream\Events\OAuthProviderLinkFailed;
+use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkFailedResponse;
+use JoelButcher\Socialstream\Providers;
+use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
@@ -59,4 +67,58 @@ class OAuthController extends Controller
 
         return $this->authenticator->authenticate($provider, $providerAccount);
     }
+
+    /**
+     * Show the oauth confirmation page.
+     */
+    public function prompt(string $provider): View
+    {
+        return view('socialstream::oauth.prompt', [
+            'provider' => $provider,
+        ]);
+    }
+
+    public function confirm(string $provider): SocialstreamResponse|RedirectResponse
+    {
+        $user = auth()->user();
+        $providerAccount = cache()->pull("socialstream.{$user->id}:$provider.provider");
+
+        $result = request()->input('result');
+
+        if ($result === 'deny') {
+            event(new OAuthProviderLinkFailed($user, $provider, null, $providerAccount));
+
+            $this->flashError(
+                __('Failed to link :provider account. User denied request.', ['provider' => Providers::name($provider)]),
+            );
+
+            return app(OAuthProviderLinkFailedResponse::class);
+        }
+
+        if (!$providerAccount) {
+            throw new \DomainException(
+                message: 'Could not retrieve social provider information.'
+            );
+        }
+
+        return $this->authenticator->link($user, $provider, $providerAccount);
+    }
+
+    private function flashError(string $error): void
+    {
+        if (auth()->check()) {
+            if (class_exists(Jetstream::class)) {
+                Session::flash('flash.banner', $error);
+                Session::flash('flash.bannerStyle', 'danger');
+
+                return;
+            }
+        }
+
+        Session::flash('errors', (new ViewErrorBag())->put(
+            'default',
+            new MessageBag(['socialstream' => $error])
+        ));
+    }
+
 }
