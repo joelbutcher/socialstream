@@ -3,19 +3,13 @@
 namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Providers\RouteServiceProvider;
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
-use Laravel\Fortify\Features;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
 
-use function Illuminate\Filesystem\join_paths;
-use function Orchestra\Testbench\remote;
 use function Pest\Laravel\get;
 use function Pest\Laravel\post;
 
