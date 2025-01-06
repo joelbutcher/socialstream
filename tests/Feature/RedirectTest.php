@@ -11,9 +11,11 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use Orchestra\Testbench\Concerns\WithWorkbench;
+
 use function Pest\Laravel\get;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, WithWorkbench::class);
 
 it('can configure a login redirect', function () {
     Config::set('socialstream.redirects.login', '/foo');

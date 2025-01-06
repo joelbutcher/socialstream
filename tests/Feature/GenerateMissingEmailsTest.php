@@ -13,9 +13,11 @@ use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
 
+use Orchestra\Testbench\Concerns\WithWorkbench;
+
 use function Pest\Laravel\get;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, WithWorkbench::class);
 
 it('generates missing emails', function (): void {
     Config::set('socialstream.features', [

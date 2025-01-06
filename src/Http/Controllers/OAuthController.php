@@ -80,6 +80,10 @@ class OAuthController extends Controller
 
     public function confirm(string $provider): SocialstreamResponse|RedirectResponse
     {
+        request()->validate([
+            'result' => ['required', 'in:confirm,deny'],
+        ]);
+
         $user = auth()->user();
         $providerAccount = cache()->pull("socialstream.{$user->id}:$provider.provider");
 

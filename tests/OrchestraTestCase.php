@@ -10,7 +10,7 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class OrchestraTestCase extends BaseTestCase
 {
-    use LazilyRefreshDatabase, WithWorkbench;
+    use LazilyRefreshDatabase;
 
     protected function defineEnvironment($app): void
     {
