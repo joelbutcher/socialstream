@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Tests\Feature;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
