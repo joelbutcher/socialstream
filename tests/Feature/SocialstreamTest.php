@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -14,15 +15,18 @@ use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\Features;
+use Laravel\Fortify\Fortify;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use function Pest\Laravel\get;
+use function Pest\Laravel\post;
 
-uses(RefreshDatabase::class);
+uses(RefreshDatabase::class, WithWorkbench::class);
 
 it('redirects users', function (): void {
     $response = get('http://localhost/oauth/github');
@@ -238,7 +242,12 @@ test('authenticated users can link to provider', function (): void {
     Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/user/profile');
+        ->assertRedirect('/oauth/github/callback/prompt');
+
+    post('http://localhost/oauth/github/callback/confirm', data: [
+        'provider' => 'github',
+        'result' => 'confirm',
+    ]);
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('connected_accounts', [
@@ -287,4 +296,88 @@ test('users can be authenticated with the same provider if they change the email
         ->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
+});
+
+it('can render the prompt page', function () {
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
+
+    get('http://localhost/oauth/github/callback/prompt')
+        ->assertSee('Confirm connection of your GitHub account.');
+});
+
+it('denies an attempt to link an account', function () {
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
+
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => fake()->numerify('########'),
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
+
+    Cache::shouldReceive('pull')->andReturn($user);
+
+    post('http://localhost/oauth/github/callback/confirm', data: [
+        'provider' => 'github',
+        'result' => 'deny',
+    ])
+        ->assertRedirect('/user/profile')
+        ->assertSessionHas([
+            'flash.banner' => 'Failed to link GitHub account. User denied request.',
+            'flash.bannerStyle' => 'danger',
+        ]);
+});
+
+it('confirms an attempt to link an account', function () {
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
+
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => $githubId = fake()->numerify('########'),
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
+
+    Cache::shouldReceive('pull')->andReturn($user);
+
+    post('http://localhost/oauth/github/callback/confirm', data: [
+        'provider' => 'github',
+        'result' => 'confirm',
+    ])
+        ->assertRedirect('/user/profile')
+        ->assertSessionHas([
+            'flash.banner' => 'You have successfully linked your GitHub account.',
+            'flash.bannerStyle' => 'success',
+        ]);
+
+    $this->assertAuthenticated();
+    $this->assertDatabaseHas('connected_accounts', [
+        'provider' => 'github',
+        'provider_id' => $githubId,
+        'email' => 'joel@socialstream.dev',
+    ]);
 });
