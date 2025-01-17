@@ -22,7 +22,11 @@ export default function Login({
     socialstream: SocialstreamType;
     errors: { socialstream?: string };
 }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        email: string;
+        password: string;
+        remember: boolean;
+    }>({
         email: '',
         password: '',
         remember: false,
