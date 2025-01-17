@@ -26,6 +26,7 @@
         "paragonie/constant_time_encoding": "^2.7"
     },
     "require-dev": {
+        "laravel/breeze": "^2.3",
         "laravel/jetstream": "^5.0",
         "laravel/sanctum": "^4.0",
         "livewire/livewire": "^3.3.5",
