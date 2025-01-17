@@ -14,8 +14,8 @@ export default function Login({
     canResetPassword,
     socialstream,
     errors: {
-        socialstream: socialstreamErrors
-    }
+        socialstream: socialstreamErrors,
+    },
 }: {
     status?: string;
     canResetPassword: boolean;
