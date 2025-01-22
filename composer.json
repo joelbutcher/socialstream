@@ -22,8 +22,7 @@
         "php": "^8.2",
         "illuminate/contracts": "^11.0",
         "laravel/prompts": "^0.1|^0.2|^0.3",
-        "laravel/socialite": "^5.12",
-        "paragonie/constant_time_encoding": "^2.7"
+        "laravel/socialite": "^5.12"
     },
     "require-dev": {
         "laravel/jetstream": "^5.0",
