@@ -1,6 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.0...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.1...6.x)
+
+## [v6.2.1](https://github.com/joelbutcher/socialstream/compare/v6.2.0...v6.2.1) - 2025-01-17
+
+### What's Changed
+
+* [6.x] fix for actions by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/390
+* [6.x] Fix Breeze React ts files by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/393
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.2.0...v6.2.1
 
 ## [v6.2.0](https://github.com/joelbutcher/socialstream/compare/v6.1.11...v6.2.0) - 2024-12-20
 
