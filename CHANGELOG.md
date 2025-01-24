@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.1...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.2...6.x)
+
+## [v6.2.2](https://github.com/joelbutcher/socialstream/compare/v6.2.1...v6.2.2) - 2025-01-22
+
+### What's Changed
+
+* [6.x] (deps): drop paragonie/constant_time_encoding by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/395
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.2.1...v6.2.2
 
 ## [v6.2.1](https://github.com/joelbutcher/socialstream/compare/v6.2.0...v6.2.1) - 2025-01-17
 
