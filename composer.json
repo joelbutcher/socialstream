@@ -25,6 +25,7 @@
         "laravel/socialite": "^5.12"
     },
     "require-dev": {
+        "inertiajs/inertia-laravel": "^2.0",
         "laravel/breeze": "^2.3",
         "laravel/jetstream": "^5.0",
         "laravel/sanctum": "^4.0",

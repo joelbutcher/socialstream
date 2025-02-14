@@ -3,7 +3,9 @@
 namespace JoelButcher\Socialstream;
 
 use Closure;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
+use Inertia\Response;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
@@ -53,6 +55,13 @@ class Socialstream
      * @var array<string, Closure|string>
      */
     public static array $refreshTokenResolvers = [];
+
+    /**
+     * The callback that should be used to prompt the user to confirm their OAuth authorization.
+     *
+     * @var ?(Closure(string): (Response|View))
+     */
+    public static ?Closure $oAuthConfirmationPrompt = null;
 
     /**
      * Get the name of the user model used by the application.
@@ -389,5 +398,15 @@ class Socialstream
         }
 
         return (new $callback)->refreshToken($connectedAccount);
+    }
+
+    /**
+     * Register a callback that should be used to prompt the user to confirm their OAuth.
+     *
+     * @param ?(callable(string): (Response|View)) $callback
+     */
+    public static function promptOAuthLinkUsing(?callable $callback): void
+    {
+        self::$oAuthConfirmationPrompt = $callback ? $callback(...) : null;
     }
 }

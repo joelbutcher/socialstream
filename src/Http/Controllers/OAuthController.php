@@ -7,10 +7,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
+use Inertia\Response as InertiaResponse;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
@@ -20,6 +20,7 @@ use JoelButcher\Socialstream\Contracts\SocialstreamResponse;
 use JoelButcher\Socialstream\Events\OAuthProviderLinkFailed;
 use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkFailedResponse;
 use JoelButcher\Socialstream\Providers;
+use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
@@ -71,8 +72,12 @@ class OAuthController extends Controller
     /**
      * Show the oauth confirmation page.
      */
-    public function prompt(string $provider): View
+    public function prompt(string $provider): View|InertiaResponse
     {
+        if (Socialstream::$oAuthConfirmationPrompt) {
+            return app(Socialstream::$oAuthConfirmationPrompt)($provider);
+        }
+
         return view('socialstream::oauth.prompt', [
             'provider' => $provider,
         ]);
