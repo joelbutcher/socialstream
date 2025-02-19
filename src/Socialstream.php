@@ -405,8 +405,17 @@ class Socialstream
      *
      * @param ?(callable(string): (Response|View)) $callback
      */
-    public static function promptOAuthLinkUsing(?callable $callback): void
+    public static function promptOAuthLinkUsing(?Closure $callback = null): void
     {
-        self::$oAuthConfirmationPrompt = $callback ? $callback(...) : null;
+        self::$oAuthConfirmationPrompt = $callback;
+    }
+
+    public static function getOAuthConfirmationPrompt(): Closure
+    {
+        return self::$oAuthConfirmationPrompt ?? function (string $provider): View {
+            return view('socialstream::oauth.prompt', [
+                'provider' => $provider,
+            ]);
+        };
     }
 }
