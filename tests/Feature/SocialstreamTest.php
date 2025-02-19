@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -305,8 +306,23 @@ it('can render the prompt page', function () {
         'password' => Hash::make('password'),
     ]));
 
-    get('http://localhost/oauth/github/callback/prompt')
-        ->assertSee('Confirm connection of your GitHub account.');
+    expect(get('http://localhost/oauth/github/callback/prompt'))
+        ->getStatusCode()->toBe(200)
+        ->getContent()->toContain('Confirm connection of your GitHub account.');
+});
+
+it('can render a custom prompt', function () {
+    Socialstream::promptOAuthLinkUsing(fn (string $provider) => view('socialstream::oauth.test-prompt', compact('provider')));
+
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
+
+    expect(get('http://localhost/oauth/github/callback/prompt'))
+        ->getStatusCode()->toBe(200)
+        ->getContent()->toContain('Confirm Your github OAuth Request (Test)');
 });
 
 it('denies an attempt to link an account', function () {

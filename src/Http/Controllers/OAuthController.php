@@ -74,13 +74,7 @@ class OAuthController extends Controller
      */
     public function prompt(string $provider): View|InertiaResponse
     {
-        if (Socialstream::$oAuthConfirmationPrompt) {
-            return app(Socialstream::$oAuthConfirmationPrompt)($provider);
-        }
-
-        return view('socialstream::oauth.prompt', [
-            'provider' => $provider,
-        ]);
+        return app()->call(Socialstream::getOAuthConfirmationPrompt(), ['provider' => $provider]);
     }
 
     public function confirm(string $provider): SocialstreamResponse|RedirectResponse
