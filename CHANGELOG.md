@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.3...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.4...6.x)
+
+## [v6.2.4](https://github.com/joelbutcher/socialstream/compare/v6.2.3...v6.2.4) - 2025-02-19
+
+### What's Changed
+
+* [6.x] fix: custom oauth prompt callback registration by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/398
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.2.3...v6.2.4
 
 ## [v6.2.3](https://github.com/joelbutcher/socialstream/compare/v6.2.2...v6.2.3) - 2025-02-14
 
