@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream\Installer\Drivers\Breeze;
 
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;

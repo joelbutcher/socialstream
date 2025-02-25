@@ -10,8 +10,8 @@ use JoelButcher\Socialstream\HasConnectedAccounts;
 
 class User extends Authenticatable
 {
-    use HasFactory;
     use HasConnectedAccounts;
+    use HasFactory;
     use Notifiable;
 
     /**

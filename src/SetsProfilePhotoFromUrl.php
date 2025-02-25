@@ -17,7 +17,7 @@ trait SetsProfilePhotoFromUrl
         $name = pathinfo($url)['basename'];
         $response = Http::get($url);
 
-        //Determine if the status code is >= 200 and < 300
+        // Determine if the status code is >= 200 and < 300
         if ($response->successful()) {
             file_put_contents($file = sys_get_temp_dir().'/'.Str::uuid()->toString(), $response);
 

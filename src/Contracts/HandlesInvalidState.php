@@ -11,5 +11,5 @@ interface HandlesInvalidState
     /**
      * Handle an invalid state exception from a Socialite provider.
      */
-    public function handle(InvalidStateException $exception): Response | RedirectResponse;
+    public function handle(InvalidStateException $exception): Response|RedirectResponse;
 }

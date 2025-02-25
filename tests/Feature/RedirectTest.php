@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\ConnectedAccount;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
@@ -38,7 +38,7 @@ it('can configure a login redirect', function () {
         'refresh_token' => 'refresh-token',
     ]);
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId,
             'nickname' => 'joel',
@@ -65,7 +65,7 @@ it('can configure a register redirect', function () {
     Config::set('socialstream.redirects.register', '/foo');
     Route::get('foo', fn () => 'ok');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => fake()->numerify('########'),
             'nickname' => 'joel',
@@ -94,7 +94,7 @@ it('can configure a login failed redirect', function () {
         'foo' => 'failed',
     ]));
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => fake()->numerify('########'),
             'nickname' => 'joel',

@@ -58,7 +58,7 @@ abstract class JetstreamDriver extends Driver
                     fn (InstallOptions $option) => "--$option->value",
                 ),
                 '--quiet',
-                '--no-interaction'
+                '--no-interaction',
             ], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) {
@@ -112,6 +112,6 @@ abstract class JetstreamDriver extends Driver
         $this->ensureTeamsCompatibility(...$options);
 
         // This action is added when actions are published, this needs to be removed
-        (new Filesystem())->delete(app_path('Actions/Socialstream/CreateUserWithTeamsFromProvider.php'));
+        (new Filesystem)->delete(app_path('Actions/Socialstream/CreateUserWithTeamsFromProvider.php'));
     }
 }

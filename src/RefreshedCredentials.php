@@ -19,8 +19,7 @@ class RefreshedCredentials implements Arrayable, Jsonable, JsonSerializable, Ref
         protected ?string $tokenSecret = null,
         protected ?string $refreshToken = null,
         protected ?DateTimeInterface $expiry = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Get token for the credentials.

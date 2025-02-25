@@ -5,7 +5,4 @@ namespace JoelButcher\Socialstream\Contracts;
 /**
  * @deprecated in v7, use OAuthFailedResponse instead.
  */
-interface OAuthLoginFailedResponse extends SocialstreamResponse
-{
-
-}
+interface OAuthLoginFailedResponse extends SocialstreamResponse {}

@@ -2,14 +2,14 @@
 
 namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Contracts\Auth\StatefulGuard;
-use Laravel\Fortify\Actions\ConfirmPassword;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Actions\ConfirmPassword;
 
 class ConnectedAccountController extends Controller
 {

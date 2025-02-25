@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +12,6 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
-
 use Orchestra\Testbench\Concerns\WithWorkbench;
 
 use function Pest\Laravel\get;
@@ -34,7 +32,7 @@ test('users can login on registration', function (): void {
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
@@ -75,7 +73,7 @@ test('users cannot login on registration without feature enabled', function (): 
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
@@ -117,7 +115,7 @@ test('users cannot login on registration from random route without feature enabl
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',

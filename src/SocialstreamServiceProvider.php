@@ -23,10 +23,10 @@ use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
 use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
 use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
+use JoelButcher\Socialstream\Http\Responses\OAuthFailedResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthLoginResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkedResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkFailedResponse;
-use JoelButcher\Socialstream\Http\Responses\OAuthFailedResponse;
 use JoelButcher\Socialstream\Http\Responses\OAuthRegisterResponse;
 use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOAuth2RefreshResolver;
@@ -87,7 +87,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->bootFilament();
         $this->bootInertia();
 
-        if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
+        if (config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
             Livewire::component('profile.set-password-form', SetPasswordForm::class);
             Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
         }

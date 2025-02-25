@@ -47,7 +47,7 @@ class SocialstreamRegistrationTest extends TestCase
             $this->markTestSkipped("Registration support with the $socialiteProvider provider is not enabled.");
         }
 
-        $user = (new User())
+        $user = (new User)
             ->map([
                 'id' => 'abcdefgh',
                 'nickname' => 'Jane',

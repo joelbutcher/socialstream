@@ -42,7 +42,7 @@ class RedirectIfTwoFactorAuthenticatable extends BaseAction
 
         $socialUser = $this->resolver->resolve($request->route('provider'));
 
-        $connectedAccount = tap(Socialstream::$connectedAccountModel::where('email', $socialUser->getEmail())->first(), function ($connectedAccount) use ($request, $socialUser) {
+        $connectedAccount = tap(Socialstream::$connectedAccountModel::where('email', $socialUser->getEmail())->first(), function ($connectedAccount) use ($request) {
             if (! $connectedAccount) {
                 event(new Failed($this->guard?->name ?? config('fortify.guard'), user: null, credentials: [
                     'provider' => $request->route('provider'),

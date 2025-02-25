@@ -7,7 +7,6 @@ use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\spin;
@@ -21,14 +20,14 @@ class FilamentDriver extends Driver
             warning('Filament Admin Panel is not installed.');
 
             spin(function () use ($composerBinary) {
-            $this->requireComposerPackages(['filament/filament'], $composerBinary);
+                $this->requireComposerPackages(['filament/filament'], $composerBinary);
 
-            (new Process([$this->phpBinary(), 'artisan', 'filament:install', '--panels', '--force', '--quiet'], base_path()))
-                ->setTimeout(null)
-                ->run(function ($type, $output) {
-                    (new BufferedOutput)->write($output);
-                });
-        }, message: 'Installing Filament Admin Panel...');
+                (new Process([$this->phpBinary(), 'artisan', 'filament:install', '--panels', '--force', '--quiet'], base_path()))
+                    ->setTimeout(null)
+                    ->run(function ($type, $output) {
+                        (new BufferedOutput)->write($output);
+                    });
+            }, message: 'Installing Filament Admin Panel...');
 
             \Laravel\Prompts\info('Filament Admin Panel has been installed successfully!');
         }
