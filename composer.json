@@ -22,20 +22,20 @@
         "php": "^8.2",
         "illuminate/contracts": "^11.0|^12.0",
         "laravel/prompts": "^0.1|^0.2|^0.3",
-        "laravel/socialite": "^5.12"
+        "laravel/socialite": "^5.18"
     },
     "require-dev": {
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/breeze": "^2.3",
         "laravel/jetstream": "^5.0",
         "laravel/sanctum": "^4.0",
-        "livewire/livewire": "^3.3.5",
+        "livewire/livewire": "^3.5.0",
         "mockery/mockery": "^1.6",
-        "orchestra/testbench": "^9.0",
-        "orchestra/testbench-core": "^9.9.1",
-        "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.2",
-        "phpunit/phpunit": "^10.5"
+        "orchestra/testbench": "^9.0|^10.0",
+        "orchestra/testbench-core": "^9.9.1|^10.0",
+        "pestphp/pest": "^2.0|^3.0",
+        "pestphp/pest-plugin-laravel": "^2.2|^3.0",
+        "phpunit/phpunit": "^10.5.35|^11.5.3|^12.0.1"
     },
     "autoload": {
         "psr-4": {
