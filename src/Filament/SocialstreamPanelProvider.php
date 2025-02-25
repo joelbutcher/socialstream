@@ -10,7 +10,7 @@ class SocialstreamPanelProvider extends AdminPanelProvider
     public function panel(Panel $panel): Panel
     {
         return parent::panel($panel)->plugin(
-            new SocialstreamPlugin(),
+            new SocialstreamPlugin,
         );
     }
 }

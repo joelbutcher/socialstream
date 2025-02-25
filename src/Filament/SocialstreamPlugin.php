@@ -25,7 +25,7 @@ class SocialstreamPlugin implements Plugin
         $panel->renderHook('panels::auth.login.form.after', function () {
             return Socialstream::show() ?
                 view(config('socialstream.component', 'socialstream::components.socialstream'), [
-                    'errors' => session('errors') ?? new ViewErrorBag(),
+                    'errors' => session('errors') ?? new ViewErrorBag,
                 ]) : '';
         });
 
@@ -33,7 +33,7 @@ class SocialstreamPlugin implements Plugin
             $panel->renderHook('panels::auth.register.form.after', function () {
                 return Socialstream::show() ?
                     view(config('socialstream.component', 'socialstream::components.socialstream'), [
-                        'errors' => session('errors') ?? new ViewErrorBag(),
+                        'errors' => session('errors') ?? new ViewErrorBag,
                     ]) : '';
             });
         }

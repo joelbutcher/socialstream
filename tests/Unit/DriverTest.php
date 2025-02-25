@@ -10,9 +10,7 @@ use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 it('can build a composer require command for an array of packages', function () {
     $driver = new class($this->app->make(Kernel::class), $this->app->make(Repository::class)) extends Driver
     {
-        protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
-        {
-        }
+        protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void {}
     };
 
     $reflection = new \ReflectionClass($driver);
@@ -28,9 +26,7 @@ it('can build a composer require command for an array of packages', function () 
 it('can build a composer require dev command for an array of packages', function () {
     $driver = new class($this->app->make(Kernel::class), $this->app->make(Repository::class)) extends Driver
     {
-        protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
-        {
-        }
+        protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void {}
     };
 
     $reflection = new \ReflectionClass($driver);
@@ -46,9 +42,7 @@ it('can build a composer require dev command for an array of packages', function
 it('can build a composer remove dev command for an array of packages', function () {
     $driver = new class($this->app->make(Kernel::class), $this->app->make(Repository::class)) extends Driver
     {
-        protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
-        {
-        }
+        protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void {}
     };
 
     $reflection = new \ReflectionClass($driver);

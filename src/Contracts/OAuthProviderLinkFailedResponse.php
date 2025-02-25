@@ -2,7 +2,4 @@
 
 namespace JoelButcher\Socialstream\Contracts;
 
-interface OAuthProviderLinkFailedResponse extends SocialstreamResponse
-{
-
-}
+interface OAuthProviderLinkFailedResponse extends SocialstreamResponse {}

@@ -12,7 +12,7 @@ test('the \'$token\' property cannot be empty', function (): void {
     $this->assertEquals('token', $credentials->getToken());
 
     $this->expectException(ArgumentCountError::class);
-    new RefreshedCredentials();
+    new RefreshedCredentials;
 });
 
 test('the \'$tokenSecret\' property can be nullable', function (): void {

@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Events;
 
-use App\Models\ConnectedAccount;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;

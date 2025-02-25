@@ -143,8 +143,8 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 
                     return $next($request);
                 },
-            ]))->then(fn() => app(OAuthRegisterResponse::class)),
-            fn() => event(new NewOAuthRegistration($user, $provider, $providerAccount))
+            ]))->then(fn () => app(OAuthRegisterResponse::class)),
+            fn () => event(new NewOAuthRegistration($user, $provider, $providerAccount))
         );
     }
 
@@ -156,8 +156,8 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
 
         return tap(
-            $this->loginPipeline(request(), $user)->then(fn() => app(OAuthLoginResponse::class)),
-            fn() => event(new OAuthLogin($user, $provider, $account, $providerAccount)),
+            $this->loginPipeline(request(), $user)->then(fn () => app(OAuthLoginResponse::class)),
+            fn () => event(new OAuthLogin($user, $provider, $account, $providerAccount)),
         );
     }
 
@@ -215,7 +215,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return app(OAuthProviderLinkFailedResponse::class);
         }
 
-        if (!$account) {
+        if (! $account) {
             $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
         }
 
@@ -266,7 +266,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             }
         }
 
-        Session::flash('errors', (new ViewErrorBag())->put(
+        Session::flash('errors', (new ViewErrorBag)->put(
             'default',
             new MessageBag(['socialstream' => $error])
         ));
@@ -281,7 +281,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             return true;
         }
 
-        if (class_exists(Fortify::class) && !FortifyFeatures::enabled(FortifyFeatures::registration())) {
+        if (class_exists(Fortify::class) && ! FortifyFeatures::enabled(FortifyFeatures::registration())) {
             return false;
         }
 

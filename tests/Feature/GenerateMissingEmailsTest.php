@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -12,7 +11,6 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
-
 use Orchestra\Testbench\Concerns\WithWorkbench;
 
 use function Pest\Laravel\get;
@@ -24,7 +22,7 @@ it('generates missing emails', function (): void {
         Features::generateMissingEmails(),
     ]);
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',

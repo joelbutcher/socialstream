@@ -13,8 +13,8 @@ use JoelButcher\Socialstream\HasConnectedAccounts;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
     use HasConnectedAccounts;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -49,7 +49,6 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
-
 
     public function canAccessPanel(Panel $panel): bool
     {

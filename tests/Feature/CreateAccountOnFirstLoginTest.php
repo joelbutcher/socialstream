@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream\Tests\Feature;
 
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -11,7 +10,6 @@ use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
-
 use Orchestra\Testbench\Concerns\WithWorkbench;
 
 use function Pest\Laravel\get;
@@ -26,7 +24,7 @@ test('new users can register from login page', function (): void {
     $this->assertDatabaseEmpty('users');
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
@@ -67,7 +65,7 @@ test('new users can register from random page', function (): void {
     $this->assertDatabaseEmpty('users');
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
@@ -103,7 +101,7 @@ test('new users cannot register from login page without feature enabled', functi
     $this->assertDatabaseEmpty('users');
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
@@ -134,7 +132,7 @@ test('new users cannot register from random page without feature enabled', funct
     $this->assertDatabaseEmpty('users');
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',

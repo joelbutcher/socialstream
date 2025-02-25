@@ -13,7 +13,6 @@ use JoelButcher\Socialstream\Installer\Enums\InstallStarterKit;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
 use JoelButcher\Socialstream\Installer\InstallManager;
 use Laravel\Fortify\Features as FortifyFeatures;
-use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\Jetstream;
 use Pest\TestSuite;
 use RuntimeException;
@@ -185,10 +184,10 @@ class InstallCommand extends Command implements PromptsForMissingInput
     {
         if ($this->isUsingFilament()) {
             $input->setOption('pest', $this->isUsingPest() || $this->option('pest') || select(
-                    label: 'Which testing framework do you prefer?',
-                    options: ['PHPUnit', 'Pest'],
-                    default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
-                ) === 'Pest');
+                label: 'Which testing framework do you prefer?',
+                options: ['PHPUnit', 'Pest'],
+                default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+            ) === 'Pest');
 
             return;
         }
@@ -235,16 +234,16 @@ class InstallCommand extends Command implements PromptsForMissingInput
                 ))->each(fn ($option) => $input->setOption($option, true));
             } else {
                 $input->setOption('dark', $this->option('dark') || confirm(
-                        label: 'Would you like dark mode support?',
-                        default: false
-                    ));
+                    label: 'Would you like dark mode support?',
+                    default: false
+                ));
             }
 
             $input->setOption('pest', $this->isUsingPest() || $this->option('pest') || select(
-                    label: 'Which testing framework do you prefer?',
-                    options: ['PHPUnit', 'Pest'],
-                    default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
-                ) === 'Pest');
+                label: 'Which testing framework do you prefer?',
+                options: ['PHPUnit', 'Pest'],
+                default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+            ) === 'Pest');
         }
     }
 

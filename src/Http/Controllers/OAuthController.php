@@ -98,7 +98,7 @@ class OAuthController extends Controller
             return app(OAuthProviderLinkFailedResponse::class);
         }
 
-        if (!$providerAccount) {
+        if (! $providerAccount) {
             throw new \DomainException(
                 message: 'Could not retrieve social provider information.'
             );
@@ -118,10 +118,9 @@ class OAuthController extends Controller
             }
         }
 
-        Session::flash('errors', (new ViewErrorBag())->put(
+        Session::flash('errors', (new ViewErrorBag)->put(
             'default',
             new MessageBag(['socialstream' => $error])
         ));
     }
-
 }

@@ -17,7 +17,7 @@ uses(RefreshDatabase::class);
 it('caches routes and redirects to provider', function () {
     // Cache routes
     $this->defineCacheRoutes(file_get_contents(
-        __DIR__ . '/../../routes/inertia.php',
+        __DIR__.'/../../routes/inertia.php',
     ));
 
     get('/oauth/github')
@@ -27,10 +27,10 @@ it('caches routes and redirects to provider', function () {
 it('caches routes and authenticates via GET', function () {
     // Cache routes
     $this->defineCacheRoutes(file_get_contents(
-        __DIR__ . '/../../routes/inertia.php',
+        __DIR__.'/../../routes/inertia.php',
     ));
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => fake()->numerify('########'),
             'nickname' => 'joel',
@@ -56,10 +56,10 @@ it('caches routes and authenticates via GET', function () {
 it('caches routes and authenticates via POST', function () {
     // Cache routes
     $this->defineCacheRoutes(file_get_contents(
-        __DIR__ . '/../../routes/inertia.php',
+        __DIR__.'/../../routes/inertia.php',
     ));
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => fake()->numerify('########'),
             'nickname' => 'joel',

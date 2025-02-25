@@ -9,7 +9,6 @@ use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\OAuthRegisterResponse as RegisterResponseContract;
 use JoelButcher\Socialstream\Socialstream;
-use Laravel\Fortify\Contracts\RegisterResponse as FortifyRegisterResponse;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Responses\RegisterResponse;
 

@@ -28,7 +28,7 @@ trait InteractsWithComposer
      */
     protected function requireComposerPackages(array $packages, string $composerBinary = 'global'): bool
     {
-        $outputStyle = new BufferedOutput();
+        $outputStyle = new BufferedOutput;
 
         $command = $this->buildBaseComposerCommand('require', $packages, $composerBinary);
 
@@ -44,7 +44,7 @@ trait InteractsWithComposer
      */
     protected function removeComposerDevPackages(array $packages, string $composerBinary = 'global'): bool
     {
-        $outputStyle = new BufferedOutput();
+        $outputStyle = new BufferedOutput;
 
         $command = $this->buildBaseComposerCommand('remove', $packages, $composerBinary, dev: true);
 
@@ -60,7 +60,7 @@ trait InteractsWithComposer
      */
     protected function requireComposerDevPackages(array $packages, string $composerBinary = 'global'): bool
     {
-        $outputStyle = new BufferedOutput();
+        $outputStyle = new BufferedOutput;
 
         $command = $this->buildBaseComposerCommand('require', $packages, $composerBinary, dev: true);
 
@@ -89,6 +89,6 @@ trait InteractsWithComposer
      */
     protected function phpBinary(): string
     {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
+        return (new PhpExecutableFinder)->find(false) ?: 'php';
     }
 }

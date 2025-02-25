@@ -6,9 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
-use JoelButcher\Socialstream\Installer\Drivers\Jetstream\InertiaDriver;
-use JoelButcher\Socialstream\Installer\Drivers\Jetstream\JetstreamDriver;
-use JoelButcher\Socialstream\Installer\Drivers\Jetstream\LivewireDriver;
 use JoelButcher\Socialstream\Installer\Enums\InstallStarterKit;
 use JoelButcher\Socialstream\Socialstream;
 
@@ -16,9 +13,6 @@ use function Laravel\Prompts\alert;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\intro;
-use function Laravel\Prompts\multiselect;
-use function Laravel\Prompts\outro;
-use function Laravel\Prompts\spin;
 
 class UpgradeCommand extends Command implements PromptsForMissingInput
 {

@@ -11,4 +11,3 @@ Route::middleware('auth')->group(function () {
     Route::post('password', [PasswordController::class, 'store'])
         ->name('password.set');
 });
-

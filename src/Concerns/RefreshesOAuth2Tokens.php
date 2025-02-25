@@ -21,7 +21,7 @@ trait RefreshesOAuth2Tokens
      */
     public function refreshToken($connectedAccount): RefreshedCredentials
     {
-        if(!$connectedAccount instanceof ConnectedAccount) {
+        if (! $connectedAccount instanceof ConnectedAccount) {
             throw new \RuntimeException('Given parameter must be of type ConnectedAccount.');
         }
 

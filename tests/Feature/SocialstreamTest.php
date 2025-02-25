@@ -4,10 +4,8 @@ namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -16,7 +14,6 @@ use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Fortify\Features;
-use Laravel\Fortify\Fortify;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -40,7 +37,7 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
     Config::set('services.github.manage_repos', $manageRepos);
 
     Socialstream::generatesProvidersRedirectsUsing(
-        callback: fn () => new class() implements GeneratesProviderRedirect
+        callback: fn () => new class implements GeneratesProviderRedirect
         {
             public function generate(string $provider): RedirectResponse
             {
@@ -79,7 +76,7 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
 ]);
 
 test('users can register', function (): void {
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
@@ -133,7 +130,7 @@ test('existing users can login', function (): void {
         'email' => 'joel@socialstream.dev',
     ]);
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId,
             'nickname' => 'joel',
@@ -190,7 +187,7 @@ test('existing users with 2FA enabled are redirected', function (): void {
         'email' => 'joel@socialstream.dev',
     ]);
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId,
             'nickname' => 'joel',
@@ -224,7 +221,7 @@ test('authenticated users can link to provider', function (): void {
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
     $this->assertDatabaseEmpty('connected_accounts');
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
@@ -273,7 +270,7 @@ test('users can be authenticated with the same provider if they change the email
         'token' => Str::random(64),
     ]);
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId,
             'nickname' => 'joel',
@@ -332,7 +329,7 @@ it('denies an attempt to link an account', function () {
         'password' => Hash::make('password'),
     ]));
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => fake()->numerify('########'),
             'nickname' => 'joel',
@@ -365,7 +362,7 @@ it('confirms an attempt to link an account', function () {
         'password' => Hash::make('password'),
     ]));
 
-    $user = (new SocialiteUser())
+    $user = (new SocialiteUser)
         ->map([
             'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',

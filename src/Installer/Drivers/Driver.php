@@ -273,7 +273,7 @@ abstract class Driver
      */
     protected function runCommands(array $commands, array $env = []): Process
     {
-        $output = new BufferedOutput();
+        $output = new BufferedOutput;
         $process = Process::fromShellCommandline(implode(' && ', $commands), null, $env, null, null);
 
         $process->run(function ($type, $line) use ($output) {
