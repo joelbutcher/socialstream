@@ -2,19 +2,16 @@
 
 namespace JoelButcher\Socialstream\Tests\Fixtures;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use JoelButcher\Socialstream\HasConnectedAccounts;
+use App\Models\User as BaseUser;
+use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends BaseUser
 {
-    use HasApiTokens, HasConnectedAccounts, HasTeams;
+    use HasApiTokens, HasTeams, HasProfilePhoto;
 
-    /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
-     */
     protected $guarded = [];
+
+    protected $fillable = [];
 }

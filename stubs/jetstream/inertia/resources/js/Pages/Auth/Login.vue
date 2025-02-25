@@ -89,7 +89,7 @@ const submit = () => {
         </form>
 
         <Socialstream v-if="$page.props.socialstream.show && $page.props.socialstream.providers.length"
-                      :error="$page.props.errors.socialstream" :prompt="$page.props.socialstream.prompt"
+                      :error="$page.props?.errors?.socialstream || null" :prompt="$page.props.socialstream.prompt"
                       :labels="$page.props.socialstream.labels" :providers="$page.props.socialstream.providers"/>
     </AuthenticationCard>
 </template>

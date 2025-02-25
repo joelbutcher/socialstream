@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
@@ -21,7 +22,7 @@ state([
 
 rules([
     'name' => ['required', 'string', 'max:255'],
-    'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+    'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
     'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
 ]);
 
@@ -32,9 +33,9 @@ $register = function () {
 
     event(new Registered($user = User::create($validated)));
 
-    auth()->login($user);
+    Auth::login($user);
 
-    $this->redirect(RouteServiceProvider::HOME, navigate: true);
+    $this->redirect(route('dashboard', absolute: false), navigate: true);
 };
 
 ?>
@@ -83,7 +84,7 @@ $register = function () {
                 {{ __('Already registered?') }}
             </a>
 
-            <x-primary-button class="ml-4">
+            <x-primary-button class="ms-4">
                 {{ __('Register') }}
             </x-primary-button>
         </div>

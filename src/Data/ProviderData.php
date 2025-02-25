@@ -4,7 +4,6 @@ namespace JoelButcher\Socialstream\Data;
 
 use JoelButcher\Socialstream\Enums\ProviderEnum;
 use JoelButcher\Socialstream\Providers;
-use Webmozart\Assert\Assert;
 
 /**
  * @internal
@@ -16,15 +15,23 @@ final class ProviderData
         public readonly string $name,
         public readonly ?string $buttonLabel = null,
     ) {
-        Assert::stringNotEmpty($id);
-        Assert::stringNotEmpty($name);
+        if ($id === '') {
+            throw new \InvalidArgumentException('Expected a different value than \'\'');
+        }
+        if ($name === '') {
+            throw new \InvalidArgumentException('Expected a different value than \'\'');
+        }
     }
 
     public static function from(ProviderEnum|string|array $provider): self
     {
         if (is_array($provider)) {
-            Assert::keyExists($provider, 'id');
-            Assert::keyExists($provider, 'name');
+            if (! array_key_exists('id', $provider)) {
+                throw new \InvalidArgumentException('Expected the key \'id\' to exist');
+            }
+            if (! array_key_exists('name', $provider)) {
+                throw new \InvalidArgumentException('Expected the key \'name\' to exist');
+            }
         }
 
         return match (true) {

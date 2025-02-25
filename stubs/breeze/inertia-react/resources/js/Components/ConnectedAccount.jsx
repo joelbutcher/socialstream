@@ -7,7 +7,7 @@ export default function ConnectedAccount({ children, provider, connectedAccount 
                 <div className="flex items-center">
                     <ProviderIcon provider={provider} className="h-6 w-6" />
 
-                    <div className="ml-2">
+                    <div className="ms-2">
                         <div className="text-sm font-semibold text-gray-600 dark:text-gray-400">{provider.name}</div>
 
                         {connectedAccount?.created_at ? (

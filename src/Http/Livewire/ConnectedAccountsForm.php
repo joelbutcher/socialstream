@@ -81,7 +81,7 @@ class ConnectedAccountsForm extends Component
             $user->setProfilePhotoFromUrl($account->avatar_path);
         }
 
-        session()->flash('flash.banner', __('Profile photo updated'));
+        $this->banner(__('Profile photo updated'));
 
         redirect()->route('profile.show');
     }
@@ -104,7 +104,7 @@ class ConnectedAccountsForm extends Component
             ->where('user_id', auth()->user()->id)
             ->delete();
 
-        session()->flash('flash.banner', __('Account removed'));
+        $this->banner(__('Account removed.'));
 
         redirect()->route('profile.show');
     }

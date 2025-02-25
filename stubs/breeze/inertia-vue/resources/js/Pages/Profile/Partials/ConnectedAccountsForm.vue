@@ -75,13 +75,15 @@ const closeModal = () => {
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Connected Accounts</h2>
 
             <p class="max-w-xl mt-1 text-sm text-gray-600 dark:text-gray-400">
-                You are free to connect any social accounts to your profile and may remove any connected accounts at any
-                time. If you feel any of your connected accounts have been compromised, you should disconnect them
-                immediately and change your password.
+               Connect your social media accounts to enable Sign In with OAuth.
             </p>
         </header>
 
-        <div class="mt-5 space-y-6">
+       <div class="p-4 bg-red-500/10 dark:bg-red-500/5 text-red-500 border-l-4 border-red-600 dark:border-red-700 rounded font-medium text-sm">
+          If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.
+       </div>
+
+        <div class="space-y-6 mt-6">
             <div v-for="provider in providers" :key="provider.id">
                 <ConnectedAccount :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider)?.created_at : ''" :provider="provider">
                     <template #action>
@@ -135,7 +137,7 @@ const closeModal = () => {
                 <DangerButton
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
-                    class="ml-3"
+                    class="ms-3"
                     @click="removeAccount"
                 >
                     Remove Account

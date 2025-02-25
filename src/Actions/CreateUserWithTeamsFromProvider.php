@@ -3,7 +3,7 @@
 namespace JoelButcher\Socialstream\Actions;
 
 use App\Models\Team;
-use app\Models\User;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;

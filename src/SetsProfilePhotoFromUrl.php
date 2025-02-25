@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 trait SetsProfilePhotoFromUrl
@@ -22,8 +23,8 @@ trait SetsProfilePhotoFromUrl
 
             $this->updateProfilePhoto(new UploadedFile($file, $name));
         } else {
-            session()->flash('flash.banner', 'Unable to retrive image');
-            session()->flash('flash.bannerStyle', 'danger');
+            Session::flash('flash.banner', 'Unable to retrieve image');
+            Session::flash('flash.bannerStyle', 'danger');
         }
     }
 }

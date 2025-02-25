@@ -1,24 +1,27 @@
 <?php
 
+use App\Livewire\Actions\Logout;
+use Illuminate\Support\Facades\Auth;
+
 use Livewire\Attributes\Rule;
 use Livewire\Volt\Component;
 
-new class extends Component
-{
-    #[Rule(['required', 'string', 'current_password'])]
+new class extends Component {
     public string $password = '';
 
-    public function deleteUser(): void
+    /**
+     * Delete the currently authenticated user.
+     */
+    public function deleteUser(Logout $logout): void
     {
-        $this->validate();
+        $this->validate([
+            'password' => ['required', 'string', 'current_password'],
+        ]);
 
-        $user = tap(auth()->user(), fn () => auth()->logout());
+        $user = tap(Auth::user(), $logout(...));
 
         $user->connectedAccounts->each->delete();
         $user->delete();
-
-        session()->invalidate();
-        session()->regenerateToken();
 
         $this->redirect('/', navigate: true);
     }
@@ -71,7 +74,7 @@ new class extends Component
                     {{ __('Cancel') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ml-3">
+                <x-danger-button class="ms-3">
                     {{ __('Delete Account') }}
                 </x-danger-button>
             </div>

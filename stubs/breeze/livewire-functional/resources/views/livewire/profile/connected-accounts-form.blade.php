@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 use function Livewire\Volt\rules;
 use function Livewire\Volt\state;
 
@@ -10,7 +12,7 @@ rules(['password' => ['required', 'string', 'current_password']]);
 $removeAccount = function (string|int $id) {
     $this->validate();
 
-    auth()->user()->connectedAccounts()
+    Auth::user()->connectedAccounts()
         ->where('id', $id)
         ->delete();
 
@@ -26,24 +28,28 @@ $removeAccount = function (string|int $id) {
         </h2>
 
         <p class="max-w-xl mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.') }}
+            {{ __('Connect your social media accounts to enable Sign In with OAuth.') }}
         </p>
     </header>
 
     <x-input-error :messages="$errors->get('socialstream')" class="mt-2" />
 
-    <div class="mt-5 space-y-6">
+    <div class="p-4 bg-red-500/10 dark:bg-red-500/5 text-red-500 border-l-4 border-red-600 dark:border-red-700 rounded font-medium text-sm">
+        {{ __('If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.') }}
+    </div>
+
+    <div class="space-y-6 mt-6">
         @foreach (JoelButcher\Socialstream\Socialstream::providers() as $provider)
             @php
                 $account = null;
-                $account = auth()->user()->connectedAccounts->where('provider', $provider['id'])->first();
+                $account = Auth::user()->connectedAccounts->where('provider', $provider['id'])->first();
             @endphp
 
             <x-connected-account :provider="$provider" created-at="{{ $account?->created_at->diffForHumans() ?? null }}">
                 <x-slot name="action">
                     @if (! is_null($account))
                         <div class="flex items-center space-x-6">
-                            @if ((auth()->user()->connectedAccounts->count() > 1 || ! is_null(auth()->user()->getAuthPassword())))
+                            @if ((Auth::user()->connectedAccounts->count() > 1 || ! is_null(Auth::user()->getAuthPassword())))
                                 <x-danger-button
                                         x-data=""
                                         x-on:click.prevent="$dispatch('open-modal', 'confirm-connected-account-deletion')"
@@ -92,7 +98,7 @@ $removeAccount = function (string|int $id) {
                                 {{ __('Cancel') }}
                             </x-secondary-button>
 
-                            <x-danger-button class="ml-3">
+                            <x-danger-button class="ms-3">
                                 {{ __('Remove Account') }}
                             </x-danger-button>
                         </div>

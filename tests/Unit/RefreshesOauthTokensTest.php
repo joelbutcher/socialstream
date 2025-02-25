@@ -7,13 +7,18 @@ use App\Actions\Socialstream\CreateUserFromProvider;
 use App\Models\ConnectedAccount;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\RefreshedCredentials;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Two\User as OAuth2User;
 
-it('can refresh expired tokens', function (): void {
-    $this->migrate();
+beforeEach(function () {
+    $features = $this->app['config']->get('socialstream.features', []);
+    $features[] = Features::refreshOAuthTokens();
+    $this->app['config']->set('socialstream.features', $features);
+});
 
+it('can refresh expired tokens', function (): void {
     Socialstream::refreshesTokensForProviderUsing('github', function () {
         return new RefreshedCredentials(
             'new-token',
@@ -43,8 +48,6 @@ it('can refresh expired tokens', function (): void {
 });
 
 it('does not refresh active tokens', function (): void {
-    $this->migrate();
-
     Socialstream::refreshesTokensForProviderUsing('github', function () {
         return new RefreshedCredentials(
             'new-token',
@@ -76,8 +79,6 @@ it('does not refresh active tokens', function (): void {
 });
 
 it('does not refresh tokens if the feature is disabled', function (): void {
-    $this->migrate();
-
     Config::set('socialstream.features', []);
 
     $newTime = now()->addSeconds(3600);
@@ -111,8 +112,6 @@ it('does not refresh tokens if the feature is disabled', function (): void {
 });
 
 it('does not allow refreshing tokens if a callback does not exist', function () {
-    $this->migrate();
-
     $providerUser = new OAuth2User;
     $providerUser->id = '1234567890';
     $providerUser->name = 'Joel Butcher';

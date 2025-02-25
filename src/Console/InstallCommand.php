@@ -4,6 +4,7 @@ namespace JoelButcher\Socialstream\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Concerns\InteractsWithNode;
 use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
@@ -12,9 +13,11 @@ use JoelButcher\Socialstream\Installer\Enums\InstallStarterKit;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
 use JoelButcher\Socialstream\Installer\InstallManager;
 use Laravel\Fortify\Features as FortifyFeatures;
+use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\Jetstream;
 use Pest\TestSuite;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -26,6 +29,7 @@ use function Laravel\Prompts\outro;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\warning;
 
+#[AsCommand(name: 'socialstream:install')]
 class InstallCommand extends Command implements PromptsForMissingInput
 {
     use InteractsWithComposer;
@@ -62,7 +66,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         $installManager->driver(match (true) {
             $this->getStarterKit() === InstallStarterKit::Filament => 'filament',
             ($this->getStarterKit() === InstallStarterKit::Breeze &&
-            $this->getStack() === BreezeInstallStack::Livewire) => 'livewire-breeze',
+            $this->getStack() === BreezeInstallStack::Livewire) => 'breeze-livewire-functional',
             default => $this->getStarterKit()->value.'-'.$this->getStack()->value,
         })->install(
             $this->option('composer'),
@@ -82,6 +86,18 @@ class InstallCommand extends Command implements PromptsForMissingInput
         });
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Register the Fortify service provider in the application configuration file.
+     */
+    protected function registerFortifyServiceProvider(): void
+    {
+        if (! method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')) {
+            return;
+        }
+
+        ServiceProvider::addProviderToBootstrapFile(\App\Providers\FortifyServiceProvider::class);
     }
 
     /**
@@ -168,11 +184,11 @@ class InstallCommand extends Command implements PromptsForMissingInput
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
         if ($this->isUsingFilament()) {
-            $input->setOption('pest', select(
-                label: 'Which testing framework do you prefer?',
-                options: ['PHPUnit', 'Pest'],
-                default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
-            ) === 'Pest');
+            $input->setOption('pest', $this->isUsingPest() || $this->option('pest') || select(
+                    label: 'Which testing framework do you prefer?',
+                    options: ['PHPUnit', 'Pest'],
+                    default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+                ) === 'Pest');
 
             return;
         }
@@ -218,17 +234,17 @@ class InstallCommand extends Command implements PromptsForMissingInput
                     ]
                 ))->each(fn ($option) => $input->setOption($option, true));
             } else {
-                $input->setOption('dark', confirm(
-                    label: 'Would you like dark mode support?',
-                    default: false
-                ));
+                $input->setOption('dark', $this->option('dark') || confirm(
+                        label: 'Would you like dark mode support?',
+                        default: false
+                    ));
             }
 
-            $input->setOption('pest', select(
-                label: 'Which testing framework do you prefer?',
-                options: ['PHPUnit', 'Pest'],
-                default: $this->isUsingPest() ? 'pest' : 'phpunit'
-            ) === 'Pest');
+            $input->setOption('pest', $this->isUsingPest() || $this->option('pest') || select(
+                    label: 'Which testing framework do you prefer?',
+                    options: ['PHPUnit', 'Pest'],
+                    default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+                ) === 'Pest');
         }
     }
 

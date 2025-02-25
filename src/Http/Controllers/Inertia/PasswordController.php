@@ -5,6 +5,7 @@ namespace JoelButcher\Socialstream\Http\Controllers\Inertia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 
 class PasswordController extends Controller
@@ -16,7 +17,7 @@ class PasswordController extends Controller
     {
         $setter->set($request->user(), $request->only(['password', 'password_confirmation']));
 
-        session()->flash('flash.banner', __('Your password has been set.'));
+        Session::flash('flash.banner', __('Your password has been set.'));
 
         return back(303);
     }

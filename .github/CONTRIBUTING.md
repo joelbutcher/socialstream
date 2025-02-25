@@ -8,28 +8,23 @@ Like Laravel, Socialstream tries to keep to the [PSR-2](https://github.com/php-f
 
 ### PHPDoc
 
-Below is an example of a valid documentation block, taken from the Laravel website. Note that the @param attribute is followed by two spaces, the argument type, two more spaces, and finally the variable name:
+Below is an example of a valid documentation block. Where possible, please fully type your method arguments and return types.
 
 ```php
 /**
  * Register a binding with the container.
  *
- * @param  string|array  $abstract
- * @param  \Closure|string|null  $concrete
- * @param  bool  $shared
- * @return void
- *
  * @throws \Exception
  */
-public function bind($abstract, $concrete = null, $shared = false)
+public function bind(string $abstract, callable|string|null $concrete = null, bool $shared = false): void
 {
     //
 }
 ```
 
-### StyleCI
+### Code Style
 
-Don't worry if your code styling isn't perfect! StyleCI will automatically merge any style fixes into the repository after pull requests are merged. This allows us to focus on the content of the contribution and not the code style.
+Don't worry if your code styling isn't perfect! Code styling will be resolved when your PR is merged into `main`.
 
 ## Creating Pull Requests
 

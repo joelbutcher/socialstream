@@ -21,24 +21,19 @@ class ReactInertiaDriver extends BreezeDriver
             resource_path('js/Pages/Auth'),
             resource_path('js/Pages/Profile'),
             resource_path('js/Pages/Profile/Partials'),
+            resource_path('js/types'),
         ];
     }
 
-    /**
-     * Copy all the app files required for the stack.
-     */
     protected function copyAppFiles(): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/ConnectedAccountController.php', app_path('Http/Controllers/Auth/ConnectedAccountController.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/inertia-common/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
-        copy(__DIR__.'/../../../../stubs/breeze/inertia-common/app/Http/Controllers/ProfileController.php', app_path('Http/Controllers/ProfileController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/inertia/app/Http/Controllers/Auth/PasswordController.php', app_path('Http/Controllers/Auth/PasswordController.php'));
+        copy(__DIR__.'/../../../../stubs/breeze/inertia/app/Http/Controllers/ProfileController.php', app_path('Http/Controllers/ProfileController.php'));
 
         return $this;
     }
 
-    /**
-     * Copy the auth views to the app "resources" directory for the given stack.
-     */
     public function copyAuthViews(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
@@ -54,9 +49,6 @@ class ReactInertiaDriver extends BreezeDriver
         return $this;
     }
 
-    /**
-     * Copy the profile views to the app "resources" directory for the given stack.
-     */
     public function copyProfileViews(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {
@@ -74,9 +66,6 @@ class ReactInertiaDriver extends BreezeDriver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream components to the app "resources" directory for the given stack.
-     */
     public function copySocialstreamComponents(InstallOptions ...$options): static
     {
         if (in_array(InstallOptions::TypeScript, $options)) {

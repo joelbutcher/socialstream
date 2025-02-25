@@ -4,23 +4,30 @@ namespace JoelButcher\Socialstream\Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
-use JoelButcher\Socialstream\Features;
+use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Features;
+use Laravel\Fortify\Fortify;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
+use Orchestra\Testbench\Concerns\WithWorkbench;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use function Pest\Laravel\get;
+use function Pest\Laravel\post;
 
-uses(WithFaker::class, RefreshDatabase::class);
+uses(RefreshDatabase::class, WithWorkbench::class);
 
 it('redirects users', function (): void {
     $response = get('http://localhost/oauth/github');
@@ -74,7 +81,7 @@ it('generates a redirect using an overriding closure', function (bool $manageRep
 test('users can register', function (): void {
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
             'email' => 'joel@socialstream.dev',
@@ -86,15 +93,15 @@ test('users can register', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('register'));
 
     $response = get('http://localhost/oauth/github/callback');
 
-    $response->assertRedirect('/home');
+    $response->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
@@ -114,7 +121,7 @@ test('existing users can login', function (): void {
 
     $user->connectedAccounts()->create([
         'provider' => 'github',
-        'provider_id' => $githubId = $this->faker->numerify('########'),
+        'provider_id' => $githubId = fake()->numerify('########'),
         'email' => 'joel@socialstream.dev',
         'token' => Str::random(64),
     ]);
@@ -140,14 +147,71 @@ test('existing users can login', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
+
+    Session::put('socialstream.previous_url', route('login'));
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
+        ->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
+});
+
+test('existing users with 2FA enabled are redirected', function (): void {
+    Config::set('socialstream.providers', [Providers::github()]);
+    Config::set('fortify.features', array_merge(Config::get('fortify.features'), [
+        Features::twoFactorAuthentication(options: [
+            'confirm' => false,
+            'confirmPassword' => true,
+        ]),
+    ]));
+
+    $user = Socialstream::$userModel::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+        'two_factor_secret' => 'foo',
+        'two_factor_recovery_codes' => 'bar',
+    ]);
+
+    $user->connectedAccounts()->create([
+        'provider' => 'github',
+        'provider_id' => $githubId = fake()->numerify('########'),
+        'email' => 'joel@socialstream.dev',
+        'token' => Str::random(64),
+    ]);
+
+    $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
+    $this->assertDatabaseHas('connected_accounts', [
+        'provider' => 'github',
+        'provider_id' => $githubId,
+        'email' => 'joel@socialstream.dev',
+    ]);
+
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => $githubId,
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
+
+    $provider = Mockery::mock(GithubProvider::class);
+    $provider->shouldReceive('user')->andReturn($user);
+
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
+
+    Session::put('socialstream.previous_url', route('login'));
+
+    get('http://localhost/oauth/github/callback')
+        ->assertRedirect(route('two-factor.login'));
 });
 
 test('authenticated users can link to provider', function (): void {
@@ -162,7 +226,7 @@ test('authenticated users can link to provider', function (): void {
 
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId = fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
             'email' => 'joel@socialstream.dev',
@@ -174,12 +238,17 @@ test('authenticated users can link to provider', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/user/profile');
+        ->assertRedirect('/oauth/github/callback/prompt');
+
+    post('http://localhost/oauth/github/callback/confirm', data: [
+        'provider' => 'github',
+        'result' => 'confirm',
+    ]);
 
     $this->assertAuthenticated();
     $this->assertDatabaseHas('connected_accounts', [
@@ -189,60 +258,24 @@ test('authenticated users can link to provider', function (): void {
     ]);
 });
 
-test('new users can register from login page', function (): void {
-    Config::set('socialstream.features', [
-        Features::createAccountOnFirstLogin(),
-    ]);
-
-    $this->assertDatabaseEmpty('users');
-    $this->assertDatabaseEmpty('connected_accounts');
-
-    $user = (new SocialiteUser())
-        ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
-            'nickname' => 'joel',
-            'name' => 'Joel',
-            'email' => 'joel@socialstream.dev',
-            'avatar' => null,
-            'avatar_original' => null,
-        ])
-        ->setToken('user-token')
-        ->setRefreshToken('refresh-token')
-        ->setExpiresIn(3600);
-
-    $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
-
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
-
-    get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
-
-    $this->assertAuthenticated();
-    $this->assertDatabaseHas('connected_accounts', [
-        'provider' => 'github',
-        'provider_id' => $githubId,
-        'email' => 'joel@socialstream.dev',
-    ]);
-});
-
-test('users can login on registration', function (): void {
-    Config::set('socialstream.features', [
-        Features::loginOnRegistration(),
-    ]);
-
-    User::create([
+test('users can be authenticated with the same provider if they change the email associated with their user', function () {
+    $user = User::create([
         'name' => 'Joel Butcher',
         'email' => 'joel@socialstream.dev',
         'password' => Hash::make('password'),
     ]);
 
-    $this->assertDatabaseHas('users', ['email' => 'joel@socialstream.dev']);
-    $this->assertDatabaseEmpty('connected_accounts');
+    $user->connectedAccounts()->create([
+        'provider' => 'github',
+        'provider_id' => $githubId = fake()->numerify('########'),
+        'name' => 'Joel',
+        'email' => 'joel@socialstream.dev',
+        'token' => Str::random(64),
+    ]);
 
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => $githubId,
             'nickname' => 'joel',
             'name' => 'Joel',
             'email' => 'joel@socialstream.dev',
@@ -254,33 +287,57 @@ test('users can login on registration', function (): void {
         ->setExpiresIn(3600);
 
     $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    $provider->shouldReceive('user')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
 
-    session()->put('socialstream.previous_url', route('register'));
+    Session::put('socialstream.previous_url', route('login'));
 
     get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
+        ->assertRedirect('/dashboard');
 
     $this->assertAuthenticated();
-    $this->assertDatabaseHas('connected_accounts', [
-        'provider' => 'github',
-        'provider_id' => $githubId,
-        'email' => 'joel@socialstream.dev',
-    ]);
 });
 
-it('generates missing emails', function (): void {
-    Config::set('socialstream.features', [
-        Features::generateMissingEmails(),
-    ]);
+it('can render the prompt page', function () {
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
+
+    expect(get('http://localhost/oauth/github/callback/prompt'))
+        ->getStatusCode()->toBe(200)
+        ->getContent()->toContain('Confirm connection of your GitHub account.');
+});
+
+it('can render a custom prompt', function () {
+    Socialstream::promptOAuthLinkUsing(fn (string $provider) => view('socialstream::oauth.test-prompt', compact('provider')));
+
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
+
+    expect(get('http://localhost/oauth/github/callback/prompt'))
+        ->getStatusCode()->toBe(200)
+        ->getContent()->toContain('Confirm Your github OAuth Request (Test)');
+});
+
+it('denies an attempt to link an account', function () {
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
 
     $user = (new SocialiteUser())
         ->map([
-            'id' => $githubId = $this->faker->numerify('########'),
+            'id' => fake()->numerify('########'),
             'nickname' => 'joel',
             'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
             'avatar' => null,
             'avatar_original' => null,
         ])
@@ -288,23 +345,55 @@ it('generates missing emails', function (): void {
         ->setRefreshToken('refresh-token')
         ->setExpiresIn(3600);
 
-    $provider = Mockery::mock(GithubProvider::class);
-    $provider->shouldReceive('user')->once()->andReturn($user);
+    Cache::shouldReceive('pull')->andReturn($user);
 
-    Socialite::shouldReceive('driver')->once()->with('github')->andReturn($provider);
+    post('http://localhost/oauth/github/callback/confirm', data: [
+        'provider' => 'github',
+        'result' => 'deny',
+    ])
+        ->assertRedirect('/user/profile')
+        ->assertSessionHas([
+            'flash.banner' => 'Failed to link GitHub account. User denied request.',
+            'flash.bannerStyle' => 'danger',
+        ]);
+});
 
-    session()->put('socialstream.previous_url', route('register'));
+it('confirms an attempt to link an account', function () {
+    $this->actingAs(User::create([
+        'name' => 'Joel Butcher',
+        'email' => 'joel@socialstream.dev',
+        'password' => Hash::make('password'),
+    ]));
 
-    get('http://localhost/oauth/github/callback')
-        ->assertRedirect('/home');
+    $user = (new SocialiteUser())
+        ->map([
+            'id' => $githubId = fake()->numerify('########'),
+            'nickname' => 'joel',
+            'name' => 'Joel',
+            'email' => 'joel@socialstream.dev',
+            'avatar' => null,
+            'avatar_original' => null,
+        ])
+        ->setToken('user-token')
+        ->setRefreshToken('refresh-token')
+        ->setExpiresIn(3600);
 
-    $user = User::first();
+    Cache::shouldReceive('pull')->andReturn($user);
+
+    post('http://localhost/oauth/github/callback/confirm', data: [
+        'provider' => 'github',
+        'result' => 'confirm',
+    ])
+        ->assertRedirect('/user/profile')
+        ->assertSessionHas([
+            'flash.banner' => 'You have successfully linked your GitHub account.',
+            'flash.bannerStyle' => 'success',
+        ]);
 
     $this->assertAuthenticated();
-    $this->assertEquals("$githubId@github", $user->email);
     $this->assertDatabaseHas('connected_accounts', [
         'provider' => 'github',
         'provider_id' => $githubId,
-        'email' => $user->email,
+        'email' => 'joel@socialstream.dev',
     ]);
 });

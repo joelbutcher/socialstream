@@ -19,20 +19,23 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "laravel/prompts": "^0.1.10",
-        "laravel/socialite": "^5.9",
-        "webmozart/assert": "^1.11"
+        "php": "^8.2",
+        "illuminate/contracts": "^11.0|^12.0",
+        "laravel/prompts": "^0.1|^0.2|^0.3",
+        "laravel/socialite": "^5.18"
     },
     "require-dev": {
-        "laravel/breeze": "^1.25",
-        "laravel/jetstream": "^4.0",
-        "laravel/sanctum": "^3.3",
-        "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^8.0",
-        "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.2",
-        "phpunit/phpunit": "^10.0"
+        "inertiajs/inertia-laravel": "^2.0",
+        "laravel/breeze": "^2.3",
+        "laravel/jetstream": "^5.0",
+        "laravel/sanctum": "^4.0",
+        "livewire/livewire": "^3.5.0",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^9.0|^10.0",
+        "orchestra/testbench-core": "^9.9.1|^10.0",
+        "pestphp/pest": "^2.0|^3.0",
+        "pestphp/pest-plugin-laravel": "^2.2|^3.0",
+        "phpunit/phpunit": "^10.5.35|^11.5.3|^12.0.1"
     },
     "autoload": {
         "psr-4": {
@@ -42,24 +45,16 @@
     "autoload-dev": {
         "psr-4": {
             "JoelButcher\\Socialstream\\Tests\\": "tests/",
-            "Database\\Factories\\": [
-                "stubs/database/factories",
-                "stubs/breeze/database/factories",
-                "stubs/jetstream/database/factories",
-                "stubs/filament/database/factories"
-            ],
             "App\\": [
-                "stubs/app/",
-                "stubs/breeze/default/app/",
-                "stubs/breeze/inertia-common/app/",
-                "stubs/jetstream/app/",
-                "stubs/filament/app/"
-            ]
+                "stubs/app",
+                "stubs/jetstream/app"
+            ],
+            "Database\\Factories\\": "workbench/database/factories/"
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "5.x-dev"
+            "dev-main": "6.x-dev"
         },
         "laravel": {
             "providers": [

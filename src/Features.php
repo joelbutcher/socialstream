@@ -30,13 +30,33 @@ class Features
     }
 
     /**
+     * Determine if the application supports authenticating users from any page.
+     */
+    public static function hasGlobalLoginFeatures(): bool
+    {
+        return static::enabled(static::globalLogin());
+    }
+
+    /**
      * Determine if the application supports logging into existing
-     * accounts when registering with a provider who's email address
+     * accounts when registering with a provider whose email address
      * is already registered.
+     *
+     * @deprecated in v7, use static::hasLoginOnRegistrationFeatures() instead.
      */
     public static function hasLoginOnRegistrationFeatures(): bool
     {
         return static::enabled(static::loginOnRegistration());
+    }
+
+    /**
+     * Determine if the application supports authenticating an existing
+     * user to a provider who has not yet been linked to a user.
+     */
+    public static function authenticatesExistingUnlinkedUsers(): bool
+    {
+        return static::hasLoginOnRegistrationFeatures() ||
+            static::enabled(static::authExistingUnlinkedUsers());
     }
 
     /**
@@ -80,11 +100,30 @@ class Features
     }
 
     /**
+     * Allows users to be authenticated from any page.
+     */
+    public static function globalLogin(): string
+    {
+        return 'global-login';
+    }
+
+    /**
      * Enable the login on registration feature.
+     *
+     * @deprecated in v7, use self::authUnlinkedUsers() instead.
      */
     public static function loginOnRegistration(): string
     {
         return 'login-on-registration';
+    }
+
+    /**
+     * Enable the ability to auth an existing user who
+     * is not yet associated with a new provider.
+     */
+    public static function authExistingUnlinkedUsers(): string
+    {
+        return 'auth-existing-unlinked-users';
     }
 
     /**

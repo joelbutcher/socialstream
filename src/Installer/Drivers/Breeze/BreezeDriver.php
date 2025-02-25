@@ -2,6 +2,8 @@
 
 namespace JoelButcher\Socialstream\Installer\Drivers\Breeze;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\BreezeInstallStack;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
@@ -14,9 +16,6 @@ use function Laravel\Prompts\warning;
 
 abstract class BreezeDriver extends Driver
 {
-    /**
-     * Specify the stack used by this installer.
-     */
     abstract protected static function stack(): BreezeInstallStack;
 
     protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
@@ -32,7 +31,7 @@ abstract class BreezeDriver extends Driver
 
         spin(function () use ($options, $composerBinary) {
             if (! $this->hasComposerPackage('laravel/breeze')) {
-                $this->requireComposerPackages(['laravel/breeze'], $composerBinary);
+                $this->requireComposerPackages(['laravel/breeze:^2.0'], $composerBinary);
             }
 
             (new Process([
@@ -42,7 +41,7 @@ abstract class BreezeDriver extends Driver
                 static::stack()->value,
                 "--composer=$composerBinary",
                 ...collect($options)->reject(
-                    fn (InstallOptions $option) => ! in_array($option, InstallOptions::breezeOptions()),
+                    fn (InstallOptions $option) => ! in_array($option, InstallOptions::breezeOptions(static::stack())),
                 )->map(
                     fn (InstallOptions $option) => "--$option->value",
                 ),
@@ -57,9 +56,15 @@ abstract class BreezeDriver extends Driver
         \Laravel\Prompts\info('Laravel Breeze has been installed successfully!');
     }
 
-    /**
-     * Copy all the app files required for the stack.
-     */
+    protected function installRoutes(): static
+    {
+        copy(__DIR__.'/../../../../stubs/breeze/default/routes/socialstream.php', base_path('routes/socialstream.php'));
+
+        File::append(base_path('routes/web.php'), data: "require __DIR__.'/socialstream.php';");
+
+        return $this;
+    }
+
     protected function copyAppFiles(): static
     {
         copy(__DIR__.'/../../../../stubs/breeze/default/app/Http/Controllers/Auth/ConnectedAccountController.php', app_path('Http/Controllers/Auth/ConnectedAccountController.php'));
@@ -69,9 +74,6 @@ abstract class BreezeDriver extends Driver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream models and their factories to the base "app" directory.
-     */
     protected function copyModelsAndFactories(): static
     {
         parent::copyModelsAndFactories();
@@ -82,9 +84,6 @@ abstract class BreezeDriver extends Driver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream test files to the apps "tests" directory for the given test runner.
-     */
     protected function copyTests(TestRunner $testRunner): static
     {
         copy(from: match ($testRunner) {

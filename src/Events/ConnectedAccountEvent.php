@@ -13,10 +13,8 @@ abstract class ConnectedAccountEvent
 
     /**
      * Create a new event instance.
-     *
-     * @param  ConnectedAccount  $connectedAccount
      */
-    public function __construct(public $connectedAccount)
+    public function __construct(public mixed $connectedAccount)
     {
         //
     }

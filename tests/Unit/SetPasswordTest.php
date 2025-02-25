@@ -3,12 +3,10 @@
 namespace JoelButcher\Socialstream\Tests\Unit;
 
 use App\Actions\Socialstream\SetUserPassword;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use JoelButcher\Socialstream\Tests\Fixtures\User;
 
 test('users password can be set', function (): void {
-    $this->migrate();
-
     $user = User::forceCreate([
         'name' => 'Joel Butcher',
         'email' => 'joel@socialstream.com',

@@ -45,7 +45,7 @@ class UserFactory extends Factory
     /**
      * Indicate that the user should have a connected account for the given provider.
      */
-    public function withConnectedAccount(string $provider, callable $callback = null): static
+    public function withConnectedAccount(string $provider, ?callable $callback = null): static
     {
         if (! Providers::enabled($provider)) {
             return $this->state([]);

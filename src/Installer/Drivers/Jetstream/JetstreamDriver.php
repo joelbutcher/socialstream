@@ -2,6 +2,8 @@
 
 namespace JoelButcher\Socialstream\Installer\Drivers\Jetstream;
 
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\File;
 use JoelButcher\Socialstream\Installer\Drivers\Driver;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\JetstreamInstallStack;
@@ -20,9 +22,17 @@ abstract class JetstreamDriver extends Driver
      */
     abstract protected static function stack(): JetstreamInstallStack;
 
-    /**
-     * Check for, and install Laravel Jetstream, if required,.
-     */
+    protected function installRoutes(): static
+    {
+        $stack = static::stack()->value;
+
+        copy(__DIR__.'/../../../../routes/'.$stack.'.php', base_path('routes/socialstream.php'));
+
+        File::append(base_path('routes/web.php'), data: "require __DIR__.'/socialstream.php';");
+
+        return $this;
+    }
+
     protected function ensureDependenciesAreInstalled(string $composerBinary, InstallOptions ...$options): void
     {
         if (file_exists(config_path('jetstream.php'))) {
@@ -48,6 +58,7 @@ abstract class JetstreamDriver extends Driver
                     fn (InstallOptions $option) => "--$option->value",
                 ),
                 '--quiet',
+                '--no-interaction'
             ], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) {
@@ -58,9 +69,6 @@ abstract class JetstreamDriver extends Driver
         \Laravel\Prompts\info('Laravel Jetstream has been installed successfully!');
     }
 
-    /**
-     * Copy the Socialstream models to the base "app" directory.
-     */
     protected function copyModelsAndFactories(): static
     {
         parent::copyModelsAndFactories();
@@ -71,9 +79,6 @@ abstract class JetstreamDriver extends Driver
         return $this;
     }
 
-    /**
-     * Copy the Socialstream test files to the apps "tests" directory for the stacks given test runner.
-     */
     protected function copyTests(TestRunner $testRunner): static
     {
         copy(from: match ($testRunner) {
@@ -98,16 +103,15 @@ abstract class JetstreamDriver extends Driver
         copy(__DIR__.'/../../../../stubs/app/Actions/Jetstream/DeleteUserWithTeams.php', app_path('Actions/Jetstream/DeleteUser.php'));
         copy(__DIR__.'/../../../../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php', app_path('Actions/Socialstream/CreateUserFromProvider.php'));
         copy(__DIR__.'/../../../../stubs/jetstream/app/Models/UserWithTeams.php', app_path('Models/User.php'));
-        copy(__DIR__.'/../../../../stubs/app/Providers/TeamsAuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
 
         return $this;
     }
 
-    /**
-     * Execute a script to be run post-installation of the stack.
-     */
     protected function postInstall(string $composerBinary, InstallOptions ...$options): void
     {
         $this->ensureTeamsCompatibility(...$options);
+
+        // This action is added when actions are published, this needs to be removed
+        (new Filesystem())->delete(app_path('Actions/Socialstream/CreateUserWithTeamsFromProvider.php'));
     }
 }

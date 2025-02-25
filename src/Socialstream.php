@@ -3,7 +3,9 @@
 namespace JoelButcher\Socialstream;
 
 use Closure;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
+use Inertia\Response;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
@@ -20,7 +22,7 @@ use RuntimeException;
 
 class Socialstream
 {
-    public const VERSION = '5.0.0';
+    public const VERSION = '6.0.0';
 
     /**
      * Determines if the application is using Socialstream.
@@ -34,11 +36,15 @@ class Socialstream
 
     /**
      * The user model that should be used by Jetstream.
+     *
+     * @var class-string
      */
     public static string $userModel = 'App\\Models\\User';
 
     /**
      * The user model that should be used by Jetstream.
+     *
+     * @var class-string
      */
     public static string $connectedAccountModel = 'App\\Models\\ConnectedAccount';
 
@@ -49,6 +55,13 @@ class Socialstream
      * @var array<string, Closure|string>
      */
     public static array $refreshTokenResolvers = [];
+
+    /**
+     * The callback that should be used to prompt the user to confirm their OAuth authorization.
+     *
+     * @var ?(Closure(string): (Response|View))
+     */
+    public static ?Closure $oAuthConfirmationPrompt = null;
 
     /**
      * Get the name of the user model used by the application.
@@ -81,7 +94,7 @@ class Socialstream
     /**
      * Determine whether Socialstream is enabled in the application.
      */
-    public static function enabled(callable|bool $callback = null): bool
+    public static function enabled(callable|bool|null $callback = null): bool
     {
         if (is_callable($callback)) {
             static::$enabled = $callback();
@@ -114,7 +127,18 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Bitbucket provider..
+     * Get a completion redirect path for a specific feature.
+     */
+    public static function redirects(string $redirect, mixed $default = null)
+    {
+        return config(
+            key: "socialstream.redirects.$redirect",
+            default: $default ?? config('socialstream.home')
+        );
+    }
+
+    /**
+     * Determine if the application has support for the Bitbucket provider.
      */
     public static function hasBitbucketSupport(): bool
     {
@@ -122,7 +146,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Facebook provider..
+     * Determine if the application has support for the Facebook provider.
      */
     public static function hasFacebookSupport(): bool
     {
@@ -130,7 +154,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Gitlab provider..
+     * Determine if the application has support for the Gitlab provider.
      */
     public static function hasGitlabSupport(): bool
     {
@@ -138,7 +162,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Github provider..
+     * Determine if the application has support for the Github provider.
      */
     public static function hasGithubSupport(): bool
     {
@@ -146,7 +170,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Google provider..
+     * Determine if the application has support for the Google provider.
      */
     public static function hasGoogleSupport(): bool
     {
@@ -186,7 +210,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Twitter OAuth 1.0 provider..
+     * Determine if the application has support for the Twitter OAuth 1.0 provider.
      */
     public static function hasTwitterOAuth1Support(): bool
     {
@@ -194,7 +218,7 @@ class Socialstream
     }
 
     /**
-     * Determine if the application has support for the Twitter OAuth 2.0 provider..
+     * Determine if the application has support for the Twitter OAuth 2.0 provider.
      */
     public static function hasTwitterOAuth2Support(): bool
     {
@@ -246,7 +270,7 @@ class Socialstream
     }
 
     /**
-     * Find a connected account instance fot a given provider and provider ID.
+     * Find a connected account instance for a given provider and provider ID.
      */
     public static function findConnectedAccountForProviderAndId(string $provider, string $providerId): mixed
     {
@@ -374,5 +398,24 @@ class Socialstream
         }
 
         return (new $callback)->refreshToken($connectedAccount);
+    }
+
+    /**
+     * Register a callback that should be used to prompt the user to confirm their OAuth.
+     *
+     * @param ?(callable(string): (Response|View)) $callback
+     */
+    public static function promptOAuthLinkUsing(?Closure $callback = null): void
+    {
+        self::$oAuthConfirmationPrompt = $callback;
+    }
+
+    public static function getOAuthConfirmationPrompt(): Closure
+    {
+        return self::$oAuthConfirmationPrompt ?? function (string $provider): View {
+            return view('socialstream::oauth.prompt', [
+                'provider' => $provider,
+            ]);
+        };
     }
 }

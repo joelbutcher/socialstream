@@ -5,12 +5,12 @@ namespace JoelButcher\Socialstream\Installer\Drivers;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Installer\Enums\InstallOptions;
 use JoelButcher\Socialstream\Installer\Enums\TestRunner;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 use function Laravel\Prompts\spin;
@@ -42,6 +42,9 @@ abstract class Driver
         //
     }
 
+    /**
+     * Install the stack with the given options
+     */
     public function install(string $composerBinary = 'global', InstallOptions ...$options): void
     {
         $this->ensureDependenciesAreInstalled($composerBinary, ...$options);
@@ -52,8 +55,10 @@ abstract class Driver
             ->ensureDirectoriesExist(array_merge(static::directoriesToCreateForStack(), [
                 app_path('Actions/Socialstream'),
                 app_path('Policies'),
+                app_path('Providers'),
             ]))
             ->installServiceProviders()
+            ->installRoutes()
             ->copyAppFiles()
             ->copyModelsAndFactories()
             ->copyPolicies()
@@ -80,25 +85,25 @@ abstract class Driver
         spin(callback: function () {
             $outputStyle = new BufferedOutput;
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-routes', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-routes'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
                 });
 
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-actions', '--force'], base_path()))
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-actions'], base_path()))
                 ->setTimeout(null)
                 ->run(function ($type, $output) use ($outputStyle) {
                     $outputStyle->write($output);
@@ -133,8 +138,18 @@ abstract class Driver
      */
     protected function installServiceProviders(): static
     {
-        copy(__DIR__.'/../../../stubs/app/Providers/AuthServiceProvider.php', app_path('Providers/AuthServiceProvider.php'));
+        copy(__DIR__.'/../../../stubs/app/Providers/SocialstreamServiceProvider.php', app_path('Providers/SocialstreamServiceProvider.php'));
 
+        ServiceProvider::addProviderToBootstrapFile('App\Providers\SocialstreamServiceProvider');
+
+        return $this;
+    }
+
+    /**
+     * Copy the Socialstream routes.
+     */
+    protected function installRoutes(): static
+    {
         return $this;
     }
 
@@ -244,14 +259,6 @@ abstract class Driver
     }
 
     /**
-     * Replace a given string within a given file.
-     */
-    protected function replaceInFile(string $search, string $replace, string $path): void
-    {
-        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
-    }
-
-    /**
      * Remove any dark classes, if dark mode has not been specified.
      */
     protected function removeDarkClasses(Finder $finder): void
@@ -276,11 +283,9 @@ abstract class Driver
         return $process;
     }
 
-    /**
-     * Get the path to the appropriate PHP binary.
-     */
-    protected function phpBinary(): string
+    /** Replace a given string within a given file. */
+    protected function replaceInFile($search, $replace, $path)
     {
-        return (new PhpExecutableFinder())->find(false) ?: 'php';
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
     }
 }
