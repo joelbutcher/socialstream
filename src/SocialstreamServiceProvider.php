@@ -2,32 +2,20 @@
 
 namespace JoelButcher\Socialstream;
 
+use App\Models\ConnectedAccount;
 use Illuminate\Contracts\Auth\StatefulGuard;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Actions\AuthenticateOAuthCallback;
 use JoelButcher\Socialstream\Actions\CreateConnectedAccount;
 use JoelButcher\Socialstream\Actions\CreateUserFromProvider;
-use JoelButcher\Socialstream\Actions\CreateUserWithTeamsFromProvider;
 use JoelButcher\Socialstream\Actions\GenerateRedirectForProvider;
 use JoelButcher\Socialstream\Actions\HandleInvalidState;
 use JoelButcher\Socialstream\Actions\HandleOAuthCallbackErrors;
 use JoelButcher\Socialstream\Actions\ResolveSocialiteUser;
-use JoelButcher\Socialstream\Actions\SetUserPassword;
 use JoelButcher\Socialstream\Actions\UpdateConnectedAccount;
-use JoelButcher\Socialstream\Auth\SocialstreamUserProvider;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
-use JoelButcher\Socialstream\Http\Livewire\ConnectedAccountsForm;
-use JoelButcher\Socialstream\Http\Livewire\SetPasswordForm;
-use JoelButcher\Socialstream\Http\Middleware\ShareInertiaData;
-use JoelButcher\Socialstream\Http\Responses\OAuthLoginResponse;
-use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkedResponse;
-use JoelButcher\Socialstream\Http\Responses\OAuthProviderLinkFailedResponse;
-use JoelButcher\Socialstream\Http\Responses\OAuthFailedResponse;
-use JoelButcher\Socialstream\Http\Responses\OAuthRegisterResponse;
 use JoelButcher\Socialstream\Resolvers\OAuth\BitbucketOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\FacebookOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\GithubOAuth2RefreshResolver;
@@ -36,8 +24,6 @@ use JoelButcher\Socialstream\Resolvers\OAuth\GoogleOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\LinkedInOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\SlackOAuth2RefreshResolver;
 use JoelButcher\Socialstream\Resolvers\OAuth\TwitterOAuth2RefreshResolver;
-use Laravel\Jetstream\Jetstream;
-use Livewire\Livewire;
 
 class SocialstreamServiceProvider extends ServiceProvider
 {
@@ -50,8 +36,6 @@ class SocialstreamServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
 
-        $this->registerResponseBindings();
-
         // if there's no fortify, we need to bind a stateful guard to the container
         if (! config('fortify.guard')) {
             $this->app->bind(StatefulGuard::class, function () {
@@ -61,44 +45,14 @@ class SocialstreamServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the response bindings.
-     */
-    protected function registerResponseBindings(): void
-    {
-        $this->app->singleton(Contracts\OAuthLoginResponse::class, OAuthLoginResponse::class);
-        $this->app->singleton(Contracts\OAuthProviderLinkedResponse::class, OAuthProviderLinkedResponse::class);
-        $this->app->singleton(Contracts\OAuthProviderLinkFailedResponse::class, OAuthProviderLinkFailedResponse::class);
-        $this->app->singleton(Contracts\OAuthRegisterResponse::class, OAuthRegisterResponse::class);
-        $this->app->singleton(Contracts\OAuthFailedResponse::class, OAuthFailedResponse::class);
-    }
-
-    /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
-        $this->configureAuth();
         $this->configureDefaults();
         $this->configureRoutes();
         $this->configureCommands();
         $this->configureRefreshTokenResolvers();
-        $this->bootLaravelBreeze();
-        $this->bootLaravelJetstream();
-        $this->bootFilament();
-        $this->bootInertia();
-
-        if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
-            Livewire::component('profile.set-password-form', SetPasswordForm::class);
-            Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
-        }
-    }
-
-    private function configureAuth(): void
-    {
-        Auth::provider('eloquent', fn ($app, array $config) => new SocialstreamUserProvider(
-            hasher: $app['hash'],
-            model: $config['model']
-        ));
     }
 
     /**
@@ -106,7 +60,14 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     private function configureDefaults(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'socialstream');
+        $this->publishes([
+            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
+        ], 'socialstream-config');
+
+        $this->publishesMigrations([
+            __DIR__.'/../database/migrations/2025_02_27_000000_update_users_table.php' => database_path('migrations/2025_02_27_000000_update_users_table.php'),
+            __DIR__.'/../database/migrations/2025_02_27_000001_create_connected_accounts_table.php' => database_path('migrations/2025_02_27_000001_create_connected_accounts_table.php'),
+        ], 'socialstream-migrations');
 
         Socialstream::useConnectedAccountModel(ConnectedAccount::class);
         Gate::policy(Socialstream::connectedAccountModel(), Policies\ConnectedAccountPolicy::class);
@@ -128,22 +89,11 @@ class SocialstreamServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+                __DIR__.'/../routes/web.php' => base_path('routes/socialstream.php'),
             ], 'socialstream-routes');
         }
 
-        if (! Socialstream::$registersRoutes) {
-            return;
-        }
-
-        Route::group([
-            'namespace' => 'JoelButcher\Socialstream\Http\Controllers',
-            'domain' => config('socialstream.domain'),
-            'prefix' => config('socialstream.prefix', config('socialstream.path')),
-        ], function () {
-            $this->loadRoutesFrom(path: __DIR__.'/../routes/web.php');
-            $this->loadRoutesFrom(path: __DIR__.'/../routes/'.config('jetstream.stack', 'livewire').'.php');
-        });
+        $this->loadRoutesFrom(path: __DIR__.'/../routes/web.php');
     }
 
     /**
@@ -157,8 +107,6 @@ class SocialstreamServiceProvider extends ServiceProvider
 
         $this->commands([
             Console\InstallCommand::class,
-            Console\UpgradeCommand::class,
-            Console\CreateProviderCommand::class,
         ]);
     }
 
@@ -177,136 +125,5 @@ class SocialstreamServiceProvider extends ServiceProvider
         Socialstream::refreshesTokensForProviderUsing(Providers::slack(), SlackOAuth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth1(), TwitterOAuth2RefreshResolver::class);
         Socialstream::refreshesTokensForProviderUsing(Providers::twitterOAuth2(), TwitterOAuth2RefreshResolver::class);
-    }
-
-    /**
-     * Boot the services required for Laravel Breeze.
-     */
-    protected function bootLaravelBreeze(): void
-    {
-        if (! $this->hasComposerPackage('laravel/breeze') || ! $this->app->runningInConsole()) {
-            return;
-        }
-
-        $this->publishes([
-            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
-        ], 'socialstream-config');
-
-        $this->publishes([
-            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
-        ], 'socialstream-actions');
-
-        $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
-        ], 'socialstream-migrations');
-
-        if (class_exists('\App\Providers\VoltServiceProvider')) {
-            return;
-        }
-
-        $this->publishes($this->hasComposerPackage('inertiajs/inertia-laravel') ? [
-            __DIR__.'/../stubs/breeze/inertia/routes/socialstream.php' => base_path('routes/socialstream.php'),
-        ] : [
-            __DIR__.'/../stubs/breeze/default/routes/socialstream.php' => base_path('routes/socialstream.php'),
-        ], groups: 'socialstream-routes');
-    }
-
-    /**
-     * Boot the services required for Laravel Jetstream.
-     */
-    protected function bootLaravelJetstream(): void
-    {
-        if (! $this->hasComposerPackage('laravel/jetstream') || ! class_exists(Jetstream::class)) {
-            return;
-        }
-
-        Socialstream::setUserPasswordsUsing(SetUserPassword::class);
-        Socialstream::createUsersFromProviderUsing(match (Jetstream::hasTeamFeatures()) {
-            true => CreateUserWithTeamsFromProvider::class,
-            false => CreateUserFromProvider::class,
-        });
-
-        if (Socialstream::$registersRoutes) {
-            Route::group([
-                'namespace' => 'JoelButcher\Socialstream\Http\Controllers',
-                'domain' => config('socialstream.domain'),
-                'prefix' => config('socialstream.prefix', config('socialstream.path')),
-            ], function () {
-                $this->loadRoutesFrom(path: __DIR__.'/../routes/'.config('jetstream.stack').'.php');
-            });
-        }
-
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
-
-        $this->publishes([
-            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
-        ], 'socialstream-config');
-
-        $this->publishes(array_merge([
-            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
-            __DIR__.'/../stubs/app/Actions/Jetstream/DeleteUser.php' => app_path('Actions/Jetstream/DeleteUser.php'),
-        ], Jetstream::hasTeamFeatures() ? [
-            __DIR__.'/../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php' => app_path('Actions/Socialstream/CreateUserFromProvider.php'),
-        ] : []), 'socialstream-actions');
-
-        $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
-        ], 'socialstream-migrations');
-
-        $this->publishes(config('jetstream.stack') === 'inertia' ? [
-            __DIR__.'/../routes/inertia.php' => base_path('routes/socialstream.php'),
-        ] : [
-            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
-        ], 'socialstream-routes');
-    }
-
-    /**
-     * Boot the services required for Filament.
-     */
-    protected function bootFilament(): void
-    {
-        if (! $this->hasComposerPackage('filament/filament') || ! $this->app->runningInConsole()) {
-            return;
-        }
-
-        $this->publishes([
-            __DIR__.'/../config/filament.php' => config_path('socialstream.php'),
-        ], 'socialstream-config');
-
-        $this->publishes([
-            __DIR__.'/../stubs/app/Actions/Socialstream' => app_path('Actions/Socialstream'),
-        ], 'socialstream-actions');
-
-        $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
-        ], 'socialstream-migrations');
-
-        $this->publishes([
-            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
-        ], 'socialstream-routes');
-
-        $this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/socialstream'),
-        ], 'socialstream-views');
-    }
-
-    /**
-     * Boot any Inertia related services.
-     */
-    protected function bootInertia(): void
-    {
-        if (! $this->hasComposerPackage('inertiajs/inertia-laravel')) {
-            return;
-        }
-
-        $kernel = $this->app->make(Kernel::class);
-
-        $kernel->appendMiddlewareToGroup('web', ShareInertiaData::class);
-        $kernel->appendToMiddlewarePriority(ShareInertiaData::class);
     }
 }

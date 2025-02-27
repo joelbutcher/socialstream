@@ -2,6 +2,6 @@
 
 use JoelButcher\Socialstream\Tests\OrchestraTestCase;
 
-uses(OrchestraTestCase::class)->in('Feature', 'Unit');
+pest()->printer()->compact();
 
-uses()->compact();
+uses(OrchestraTestCase::class)->in('Feature', 'Unit');

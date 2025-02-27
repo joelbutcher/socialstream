@@ -2,7 +2,7 @@
 
 namespace JoelButcher\Socialstream\Actions;
 
-use JoelButcher\Socialstream\ConnectedAccount;
+use App\Models\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
@@ -21,7 +21,7 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             'name' => $providerUser->getName(),
             'nickname' => $providerUser->getNickname(),
             'email' => $providerUser->getEmail(),
-            'avatar_path' => $providerUser->getAvatar(),
+            'avatar' => $providerUser->getAvatar(),
             'token' => $providerUser->token,
             'secret' => $providerUser->tokenSecret ?? null,
             'refresh_token' => $providerUser->refreshToken ?? null,

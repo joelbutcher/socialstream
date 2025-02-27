@@ -2,7 +2,7 @@
 
 namespace JoelButcher\Socialstream\Contracts;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Illuminate\Http\RedirectResponse;
 
 interface GeneratesProviderRedirect
 {

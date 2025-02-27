@@ -2,7 +2,7 @@
 
 namespace JoelButcher\Socialstream\Contracts;
 
-use JoelButcher\Socialstream\ConnectedAccount;
+use App\Models\ConnectedAccount;
 use Laravel\Socialite\Contracts\User;
 
 interface UpdatesConnectedAccounts

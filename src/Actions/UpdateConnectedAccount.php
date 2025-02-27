@@ -3,7 +3,7 @@
 namespace JoelButcher\Socialstream\Actions;
 
 use Illuminate\Support\Facades\Gate;
-use JoelButcher\Socialstream\ConnectedAccount;
+use App\Models\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User;
@@ -23,7 +23,7 @@ class UpdateConnectedAccount implements UpdatesConnectedAccounts
             'name' => $providerUser->getName(),
             'nickname' => $providerUser->getNickname(),
             'email' => $providerUser->getEmail(),
-            'avatar_path' => $providerUser->getAvatar(),
+            'avatar' => $providerUser->getAvatar(),
             'token' => $providerUser->token,
             'secret' => $providerUser->tokenSecret ?? null,
             'refresh_token' => $providerUser->refreshToken ?? null,

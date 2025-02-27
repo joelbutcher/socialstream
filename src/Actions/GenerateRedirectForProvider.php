@@ -2,10 +2,10 @@
 
 namespace JoelButcher\Socialstream\Actions;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use Laravel\Socialite\Facades\Socialite;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class GenerateRedirectForProvider implements GeneratesProviderRedirect
 {

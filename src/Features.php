@@ -38,33 +38,12 @@ class Features
     }
 
     /**
-     * Determine if the application supports logging into existing
-     * accounts when registering with a provider whose email address
-     * is already registered.
-     *
-     * @deprecated in v7, use static::hasLoginOnRegistrationFeatures() instead.
-     */
-    public static function hasLoginOnRegistrationFeatures(): bool
-    {
-        return static::enabled(static::loginOnRegistration());
-    }
-
-    /**
      * Determine if the application supports authenticating an existing
      * user to a provider who has not yet been linked to a user.
      */
     public static function authenticatesExistingUnlinkedUsers(): bool
     {
-        return static::hasLoginOnRegistrationFeatures() ||
-            static::enabled(static::authExistingUnlinkedUsers());
-    }
-
-    /**
-     * Determine if the application should use provider avatars when registering.
-     */
-    public static function hasProviderAvatarsFeature(): bool
-    {
-        return static::enabled(static::providerAvatars());
+        return static::enabled(static::authExistingUnlinkedUsers());
     }
 
     /**
@@ -108,30 +87,12 @@ class Features
     }
 
     /**
-     * Enable the login on registration feature.
-     *
-     * @deprecated in v7, use self::authUnlinkedUsers() instead.
-     */
-    public static function loginOnRegistration(): string
-    {
-        return 'login-on-registration';
-    }
-
-    /**
      * Enable the ability to auth an existing user who
      * is not yet associated with a new provider.
      */
     public static function authExistingUnlinkedUsers(): string
     {
         return 'auth-existing-unlinked-users';
-    }
-
-    /**
-     * Enable the provider avatars feature.
-     */
-    public static function providerAvatars(): string
-    {
-        return 'provider-avatars';
     }
 
     /**

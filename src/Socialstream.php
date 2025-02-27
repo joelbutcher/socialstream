@@ -4,7 +4,9 @@ namespace JoelButcher\Socialstream;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 use Inertia\Response;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
@@ -13,11 +15,8 @@ use JoelButcher\Socialstream\Contracts\GeneratesProviderRedirect;
 use JoelButcher\Socialstream\Contracts\HandlesInvalidState;
 use JoelButcher\Socialstream\Contracts\HandlesOAuthCallbackErrors;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
-use JoelButcher\Socialstream\Contracts\SetsUserPasswords;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
-use JoelButcher\Socialstream\Data\ProviderData;
-use JoelButcher\Socialstream\Enums\ProviderEnum;
-use Laravel\Jetstream\Jetstream;
+use JoelButcher\Socialstream\Enums\Provider;
 use RuntimeException;
 
 class Socialstream
@@ -30,19 +29,14 @@ class Socialstream
     public static bool $enabled = true;
 
     /**
-     * Indicates if Socialstream routes will be registered.
-     */
-    public static bool $registersRoutes = true;
-
-    /**
-     * The user model that should be used by Jetstream.
+     * The user model that should be used by Socialstream.
      *
      * @var class-string
      */
     public static string $userModel = 'App\\Models\\User';
 
     /**
-     * The user model that should be used by Jetstream.
+     * The user model that should be used by Socialstream.
      *
      * @var class-string
      */
@@ -59,7 +53,7 @@ class Socialstream
     /**
      * The callback that should be used to prompt the user to confirm their OAuth authorization.
      *
-     * @var ?(Closure(string): (Response|View))
+     * @var ?(Closure(Provider): (Response|View))
      */
     public static ?Closure $oAuthConfirmationPrompt = null;
 
@@ -82,7 +76,7 @@ class Socialstream
     }
 
     /**
-     * Specify the user model that should be used by Jetstream.
+     * Specify the user model that should be used by Socialstream.
      */
     public static function useUserModel(string $model): static
     {
@@ -115,114 +109,20 @@ class Socialstream
         return static::$enabled;
     }
 
+    public static function divideText(): string
+    {
+        return config('socialstream.divide_text');
+    }
+
     /**
      * Determine which providers the application supports.
+     *
+     * @return Collection<int, Provider>
      */
-    public static function providers(): array
+    public static function providers(): Collection
     {
-        return array_map(
-            fn (ProviderEnum|string|array $provider) => ProviderData::from($provider)->toArray(),
-            config('socialstream.providers'),
-        );
-    }
-
-    /**
-     * Get a completion redirect path for a specific feature.
-     */
-    public static function redirects(string $redirect, mixed $default = null)
-    {
-        return config(
-            key: "socialstream.redirects.$redirect",
-            default: $default ?? config('socialstream.home')
-        );
-    }
-
-    /**
-     * Determine if the application has support for the Bitbucket provider.
-     */
-    public static function hasBitbucketSupport(): bool
-    {
-        return Providers::hasBitbucketSupport();
-    }
-
-    /**
-     * Determine if the application has support for the Facebook provider.
-     */
-    public static function hasFacebookSupport(): bool
-    {
-        return Providers::hasFacebookSupport();
-    }
-
-    /**
-     * Determine if the application has support for the Gitlab provider.
-     */
-    public static function hasGitlabSupport(): bool
-    {
-        return Providers::hasGitlabSupport();
-    }
-
-    /**
-     * Determine if the application has support for the Github provider.
-     */
-    public static function hasGithubSupport(): bool
-    {
-        return Providers::hasGithubSupport();
-    }
-
-    /**
-     * Determine if the application has support for the Google provider.
-     */
-    public static function hasGoogleSupport(): bool
-    {
-        return Providers::hasGoogleSupport();
-    }
-
-    /**
-     * Determine if the application has support for the LinkedIn provider.
-     */
-    public static function hasLinkedInSupport(): bool
-    {
-        return Providers::hasLinkedInSupport();
-    }
-
-    /**
-     * Determine if the application has support for the LinkedIn OpenID provider.
-     */
-    public static function hasLinkedInOpenIdSupport(): bool
-    {
-        return Providers::hasLinkedInOpenIdSupport();
-    }
-
-    /**
-     * Determine if the application has support for the Slack provider.
-     */
-    public static function hasSlackSupport(): bool
-    {
-        return Providers::hasSlackSupport();
-    }
-
-    /**
-     * Determine if the application has support for the Twitter provider.
-     */
-    public static function hasTwitterSupport(): bool
-    {
-        return Providers::hasTwitterSupport();
-    }
-
-    /**
-     * Determine if the application has support for the Twitter OAuth 1.0 provider.
-     */
-    public static function hasTwitterOAuth1Support(): bool
-    {
-        return Providers::hasTwitterOAuth1Support();
-    }
-
-    /**
-     * Determine if the application has support for the Twitter OAuth 2.0 provider.
-     */
-    public static function hasTwitterOAuth2Support(): bool
-    {
-        return Providers::hasTwitterOAuth2Support();
+        return collect(config('socialstream.providers'))
+            ->map(fn ($provider) => Provider::from($provider));
     }
 
     /**
@@ -239,18 +139,6 @@ class Socialstream
     public static function hasCreateAccountOnFirstLoginFeatures(): bool
     {
         return Features::hasCreateAccountOnFirstLoginFeatures();
-    }
-
-    /**
-     * Determine if the application should use provider avatars when registering.
-     */
-    public static function hasProviderAvatarsFeature(): bool
-    {
-        if (! class_exists(Jetstream::class)) {
-            return false;
-        }
-
-        return Features::hasProviderAvatarsFeature() && Jetstream::managesProfilePhotos();
     }
 
     /**
@@ -299,7 +187,7 @@ class Socialstream
     }
 
     /**
-     * Specify the connected account model that should be used by Jetstream.
+     * Specify the connected account model that should be used by Socialstream.
      */
     public static function useConnectedAccountModel(string $model): void
     {
@@ -341,14 +229,6 @@ class Socialstream
     /**
      * Register a class / callback that should be used to set user passwords.
      */
-    public static function setUserPasswordsUsing(callable|string $callback): void
-    {
-        app()->singleton(SetsUserPasswords::class, $callback);
-    }
-
-    /**
-     * Register a class / callback that should be used to set user passwords.
-     */
     public static function handlesInvalidStateUsing(callable|string $callback): void
     {
         app()->singleton(HandlesInvalidState::class, $callback);
@@ -383,7 +263,7 @@ class Socialstream
     /**
      * Refresh the given connected account token.
      */
-    public static function refreshConnectedAccountToken(ConnectedAccount $connectedAccount): RefreshedCredentials
+    public static function refreshConnectedAccountToken($connectedAccount): RefreshedCredentials
     {
         $provider = Str::lower($connectedAccount->provider);
 
@@ -403,7 +283,7 @@ class Socialstream
     /**
      * Register a callback that should be used to prompt the user to confirm their OAuth.
      *
-     * @param ?(callable(string): (Response|View)) $callback
+     * @param ?(Closure(Provider): (Response|View)) $callback
      */
     public static function promptOAuthLinkUsing(?Closure $callback = null): void
     {
@@ -412,9 +292,9 @@ class Socialstream
 
     public static function getOAuthConfirmationPrompt(): Closure
     {
-        return self::$oAuthConfirmationPrompt ?? function (string $provider): View {
-            return view('socialstream::oauth.prompt', [
-                'provider' => $provider,
+        return self::$oAuthConfirmationPrompt ?? function (Provider $provider): Response|View {
+            return Inertia::render('auth/confirm-link-account', [
+                'provider' => $provider->toArray(),
             ]);
         };
     }

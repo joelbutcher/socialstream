@@ -2,26 +2,21 @@
 
 namespace JoelButcher\Socialstream\Actions;
 
+use DateInterval;
+use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Pipeline;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\ViewErrorBag;
-use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
+use Illuminate\Validation\ValidationException;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
-use JoelButcher\Socialstream\Contracts\OAuthFailedResponse;
-use JoelButcher\Socialstream\Contracts\OAuthLoginResponse;
-use JoelButcher\Socialstream\Contracts\OAuthProviderLinkedResponse;
-use JoelButcher\Socialstream\Contracts\OAuthProviderLinkFailedResponse;
-use JoelButcher\Socialstream\Contracts\OAuthRegisterResponse;
-use JoelButcher\Socialstream\Contracts\SocialstreamResponse;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Events\NewOAuthRegistration;
 use JoelButcher\Socialstream\Events\OAuthFailed;
@@ -31,19 +26,10 @@ use JoelButcher\Socialstream\Events\OAuthProviderLinkFailed;
 use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Providers;
 use JoelButcher\Socialstream\Socialstream;
-use Laravel\Fortify\Actions\AttemptToAuthenticate as FortifyAttemptToAuthenticate;
-use Laravel\Fortify\Actions\CanonicalizeUsername;
-use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
-use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
-use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable as FortifyRedirectIfTwoFactorAuthenticatable;
-use Laravel\Fortify\Features as FortifyFeatures;
-use Laravel\Fortify\Fortify;
-use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
 {
-    use ConfirmsFilament;
     use InteractsWithComposer;
 
     /**
@@ -53,7 +39,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         protected StatefulGuard $guard,
         protected CreatesUserFromProvider $createsUser,
         protected CreatesConnectedAccounts $createsConnectedAccounts,
-        protected UpdatesConnectedAccounts $updatesConnectedAccounts
+        protected UpdatesConnectedAccounts $updatesConnectedAccounts,
     ) {
         //
     }
@@ -61,255 +47,191 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
     /**
      * Handle the authentication of the user.
      */
-    public function authenticate(string $provider, ProviderUser $providerAccount): SocialstreamResponse|RedirectResponse
+    public function authenticate(Request $request, string $provider, ProviderUser $providerAccount): RedirectResponse
     {
-        // If the user is authenticated, link the provider to the authenticated user.
-        if ($user = auth()->user()) {
-            // cache the provider account for 10 mins whilst the user is redirected to the confirmation screen.
-            cache()->put("socialstream.{$user->id}:$provider.provider", $providerAccount, ttl: new \DateInterval('PT10M'));
+        // User is logged in, prompt the user confirm they wish to link their account.
+        if ($user = $request->user()) {
+            cache()->put("socialstream.{$user->id}:$provider.provider", $providerAccount, ttl: new DateInterval('PT10M'));
 
-            return redirect()->route('oauth.callback.prompt', $provider);
+            return to_route('oauth.confirm.show', ['provider' => $provider]);
         }
 
-        // Check if the user has an existing OAuth account.
+        try {
+            return $this->attempt($request, $provider, $providerAccount);
+        } catch (QueryException $exception) {
+            report(new \DomainException(
+                message: 'Something went wrong while trying to authenticate a user.',
+                previous: $exception,
+            ));
+
+            event(new OAuthFailed($provider, $providerAccount));
+
+            return to_route('login')
+                ->with('socialstream.error', 'Oops! Something went wrong.');
+        }
+    }
+
+    /**
+     * Attempt to authenticate the user.
+     */
+    protected function attempt(Request $request, string $provider, ProviderUser $providerAccount): RedirectResponse
+    {
+        // Registration...
         $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
-
-        // If the user has an existing OAuth account, log the user in.
-        if ($account) {
-            return $this->login(
-                user: $account->user,
-                account: $account,
-                provider: $provider,
-                providerAccount: $providerAccount
-            );
-        }
-
-        // Otherwise, check if a user exists with the same email address.
         $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
-        // If a user exists, check the features to make sure we can link unlinked existing users.
-        if ($user) {
+
+        if (!$account && !$user) {
+            return $this->register($request, $provider, $providerAccount);
+        }
+
+        // This should never happen...
+        if ($account && !$user) {
+            // Notify the developers something went wrong.
+            report(new \DomainException(
+                message: 'Could not retrieve user information.',
+            ));
+
+            // Gracefully handle the error for the user.
+            return redirect()->route('login')
+                ->with('socialstream.error', 'These credentials do not match our records.');
+        }
+
+        if ($user && !$account) {
             if (! Features::authenticatesExistingUnlinkedUsers()) {
-                // If we cannot link, return an error asking the user to log in to link their account.
-                return $this->oauthFailed(
-                    error: __('An account already exists with the same email address. Please log in to connect your :provider account.', ['provider' => Providers::name($provider)]),
-                    provider: $provider,
-                    providerAccount: $providerAccount,
-                );
+                return to_route('login')
+                    ->with('socialstream.error', 'These credentials do not match our records.');
             }
 
-            // Otherwise, log the user in.
-            return $this->login(
-                user: $user,
-                account: $this->createsConnectedAccounts->create(
-                    user: $user,
-                    provider: $provider,
-                    providerUser: $providerAccount,
-                ),
-                provider: $provider,
-                providerAccount: $providerAccount
-            );
+            $account = $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
         }
 
-        // If a user does not exist for the provider account, check if registration is supported.
-        if ($this->canRegister()) {
-            // If registration is supported, register the user.
-            return $this->register($provider, $providerAccount);
-        }
-
-        // Otherwise, return an error.
-        $error = Route::has('login') && Session::get('socialstream.previous_url') === route('login')
-            ? __('Account not found, please register to create an account.')
-            : __('Registration is disabled.');
-
-        return $this->oauthFailed(
-            error: $error,
-            provider: $provider,
-            providerAccount: $providerAccount,
-        );
+        return $this->login($request, $user, $account, $provider, $providerAccount);
     }
 
     /**
      * Handle the registration of a new user.
      */
-    protected function register(string $provider, ProviderUser $providerAccount): SocialstreamResponse|RedirectResponse
+    protected function register(Request $request, string $provider, ProviderUser $providerAccount): RedirectResponse
     {
+        if (! $this->canRegister($request)) {
+            return to_route('login')
+                ->with('socialstream.error', 'These credentials do not match our records.');
+        }
+
         $user = $this->createsUser->create($provider, $providerAccount);
 
-        return tap(
-            (new Pipeline(app()))->send(request())->through(array_filter([
-                function ($request, $next) use ($user) {
-                    $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
+        $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-                    return $next($request);
-                },
-            ]))->then(fn() => app(OAuthRegisterResponse::class)),
-            fn() => event(new NewOAuthRegistration($user, $provider, $providerAccount))
-        );
+        event(new NewOAuthRegistration($user, $provider, $providerAccount));
+
+        return redirect()->intended(route('dashboard', absolute: false) ?? config('socialstream.home'));
     }
 
     /**
      * Authenticate the given user and return a login response.
      */
-    protected function login(Authenticatable $user, mixed $account, string $provider, ProviderUser $providerAccount): SocialstreamResponse|RedirectResponse
+    protected function login(Request $request, Authenticatable $user, mixed $account, string $provider, ProviderUser $providerAccount): RedirectResponse
     {
         $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
 
-        return tap(
-            $this->loginPipeline(request(), $user)->then(fn() => app(OAuthLoginResponse::class)),
-            fn() => event(new OAuthLogin($user, $provider, $account, $providerAccount)),
-        );
+        $this->ensureLoginIsNotRateLimited($request, $user);
+
+        if (! Auth::loginUsingId($user->getAuthIdentifier(), Socialstream::hasRememberSessionFeatures())) {
+            RateLimiter::hit($user->getAuthIdentifier());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($user->getAuthIdentifier());
+
+        event(new OAuthLogin($user, $provider, $account, $providerAccount));
+
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
-    protected function loginPipeline(Request $request, Authenticatable $user): Pipeline
+    /**
+     * Ensure the login request is not rate limited.
+     */
+    protected function ensureLoginIsNotRateLimited(Request $request, Authenticatable $user): void
     {
-        if (! class_exists(Fortify::class)) {
-            return (new Pipeline(app()))->send($request)->through(array_filter([
-                function ($request, $next) use ($user) {
-                    app(StatefulGuard::class)->loginUsingId($user->getAuthIdentifier(), Socialstream::hasRememberSessionFeatures());
-
-                    return $next($request);
-                },
-                function ($request, $next) {
-                    if ($request->hasSession()) {
-                        $request->session()->regenerate();
-                    }
-
-                    return $next($request);
-                },
-            ]));
+        if (! RateLimiter::tooManyAttempts($user->getAuthIdentifier(), 5)) {
+            return;
         }
 
-        if (Fortify::$authenticateThroughCallback) {
-            return (new Pipeline(app()))->send($request)->through($this->replaceFortifyAuthPipes(array_filter(
-                call_user_func(Fortify::$authenticateThroughCallback, $request)
-            )));
-        }
+        event(new Lockout($request));
 
-        if (is_array(config('fortify.pipelines.login'))) {
-            return (new Pipeline(app()))->send($request)->through($this->replaceFortifyAuthPipes(array_filter(
-                config('fortify.pipelines.login')
-            )));
-        }
+        $seconds = RateLimiter::availableIn($user->getAuthIdentifier());
 
-        return (new Pipeline(app()))->send($request)->through(array_filter([
-            config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
-            config('fortify.lowercase_usernames') ? CanonicalizeUsername::class : null,
-            FortifyFeatures::enabled(FortifyFeatures::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
-            AttemptToAuthenticate::class.':'.$user->getAuthIdentifier(),
-            PrepareAuthenticatedSession::class,
-        ]));
+        throw ValidationException::withMessages([
+            'email' => __('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => ceil($seconds / 60),
+            ]),
+        ]);
     }
 
-    public function link(Authenticatable $user, string $provider, ProviderUser $providerAccount): SocialstreamResponse
+    /**
+     * Handle the linking of a provider account to an already authenticated user.
+     */
+    public function link(Request $request): RedirectResponse
     {
+        $user = $request->user();
+        $provider = $request->input('provider');
+
+        $providerAccount = cache()->pull("socialstream.{$user->id}:$provider.provider");
+
+        $result = request()->input('result');
+
+        if ($result === 'deny') {
+            event(new OAuthProviderLinkFailed($user, $provider, null, $providerAccount));
+
+            return to_route('linked-accounts')
+                ->with('socialstream.error', __('Failed to link :provider account. User denied request.', ['provider' => Providers::name($provider)]));
+        }
+
+        if (! $providerAccount) {
+            throw new \DomainException(
+                message: 'Could not retrieve social provider information.',
+            );
+        }
+
         $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
 
-        if ($account && $user->id !== $account->user_id) {
+        if ($account && $user->getAuthIdentifier() !== $account->user_id) {
             event(new OAuthProviderLinkFailed($user, $provider, $account, $providerAccount));
 
-            $this->flashError(
-                __('It looks like this :provider account is used by another user. Please log in.', ['provider' => Providers::name($provider)]),
-            );
-
-            return app(OAuthProviderLinkFailedResponse::class);
+            return to_route('linked-accounts')
+                ->with('socialstream.error', __('It looks like this :provider account is used by another user. Please log in.', ['provider' => Providers::name($provider)]));
         }
 
-        if (!$account) {
+        if (! $account) {
             $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
         }
 
         event(new OAuthProviderLinked($user, $provider, $account, $providerAccount));
 
-        $this->flashStatus(
-            __('You have successfully linked your :provider account.', ['provider' => Providers::name($provider)]),
-        );
-
-        return app(OAuthProviderLinkedResponse::class);
-    }
-
-    private function oauthFailed(string $error, string $provider, ProviderUser $providerAccount): OAuthFailedResponse
-    {
-        event(new OAuthFailed($provider, $providerAccount));
-
-        $this->flashError($error);
-
-        return app(OAuthFailedResponse::class);
-    }
-
-    /**
-     * Flash a status message to the session.
-     */
-    private function flashStatus(string $status): void
-    {
-        if (class_exists(Jetstream::class)) {
-            Session::flash('flash.banner', $status);
-            Session::flash('flash.bannerStyle', 'success');
-
-            return;
-        }
-
-        Session::flash('status', $status);
-    }
-
-    /**
-     * Flash an error message to the session.
-     */
-    private function flashError(string $error): void
-    {
-        if (auth()->check()) {
-            if (class_exists(Jetstream::class)) {
-                Session::flash('flash.banner', $error);
-                Session::flash('flash.bannerStyle', 'danger');
-
-                return;
-            }
-        }
-
-        Session::flash('errors', (new ViewErrorBag())->put(
-            'default',
-            new MessageBag(['socialstream' => $error])
-        ));
+        return to_route('linked-accounts')
+            ->with('status', __(':provider account linked.', ['provider' => Providers::name($provider)]));
     }
 
     /**
      * Determine if we can register a new user.
      */
-    private function canRegister(): bool
+    protected function canRegister(Request $request): bool
     {
-        if ($this->usesFilament() && $this->canRegisterUsingFilament()) {
+        if (Route::has('register') && $request->session()->get('socialstream.previous_url') === route('register')) {
             return true;
         }
 
-        if (class_exists(Fortify::class) && !FortifyFeatures::enabled(FortifyFeatures::registration())) {
-            return false;
-        }
-
-        $previousRoute = Session::get('socialstream.previous_url');
-
-        if (Route::has('register') && $previousRoute === route('register')) {
-            return true;
-        }
-
-        if (Route::has('login') && $previousRoute === route('login')) {
+        if (Route::has('login') && $request->session()->get('socialstream.previous_url') === route('login')) {
             return Features::hasCreateAccountOnFirstLoginFeatures();
         }
 
-        return Features::hasCreateAccountOnFirstLoginFeatures() && Features::hasGlobalLoginFeatures();
-    }
-
-    private function replaceFortifyAuthPipes(mixed $pipes): array
-    {
-        return array_map(function ($pipe) {
-            if ($pipe === FortifyAttemptToAuthenticate::class) {
-                return AttemptToAuthenticate::class;
-            }
-
-            if ($pipe === FortifyRedirectIfTwoFactorAuthenticatable::class) {
-                return RedirectIfTwoFactorAuthenticatable::class;
-            }
-
-            return $pipe;
-        }, $pipes);
+        return Features::hasGlobalLoginFeatures();
     }
 }
