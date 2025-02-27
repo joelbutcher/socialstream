@@ -5,7 +5,7 @@ namespace JoelButcher\Socialstream\Concerns;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
-use JoelButcher\Socialstream\ConnectedAccount;
+use App\Models\ConnectedAccount;
 use JoelButcher\Socialstream\RefreshedCredentials;
 use Laravel\Socialite\Two\AbstractProvider;
 

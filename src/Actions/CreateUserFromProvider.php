@@ -33,12 +33,9 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             return tap(User::create([
                 'name' => $providerUser->getName() ?? $providerUser->getNickname(),
                 'email' => $providerUser->getEmail(),
+                'avatar' => $providerUser->getAvatar(),
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
-
-                if (Socialstream::hasProviderAvatarsFeature() && $providerUser->getAvatar()) {
-                    $user->setProfilePhotoFromUrl($providerUser->getAvatar());
-                }
 
                 $this->createsConnectedAccounts->create($user, $provider, $providerUser);
             });

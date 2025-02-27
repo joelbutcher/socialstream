@@ -4,7 +4,7 @@ namespace JoelButcher\Socialstream\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use JoelButcher\Socialstream\ConnectedAccount;
+use App\Models\ConnectedAccount;
 
 class ConnectedAccountPolicy
 {

@@ -1,14 +1,10 @@
 providers:
-  - Laravel\Fortify\FortifyServiceProvider
-  - Laravel\Jetstream\JetstreamServiceProvider
-  - Livewire\LivewireServiceProvider
   - Laravel\Socialite\SocialiteServiceProvider
   - JoelButcher\Socialstream\SocialstreamServiceProvider
 
 migrations:
-  - vendor/laravel/jetstream/database/migrations
-  - database/migrations
   - vendor/laravel/fortify/database/migrations
+  - database/migrations
 
 workbench:
   install: false
