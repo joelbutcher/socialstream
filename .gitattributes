@@ -7,7 +7,7 @@
 *.php diff=php
 
 /.github export-ignore
-/resources/views/oauth/test-prompt.blade.php export-ignore
+/resources export-ignore
 /workbench export-ignore
 /tests export-ignore
 .editorconfig export-ignore

@@ -3,8 +3,12 @@ providers:
   - JoelButcher\Socialstream\SocialstreamServiceProvider
 
 migrations:
-  - vendor/laravel/fortify/database/migrations
   - database/migrations
 
 workbench:
-  install: false
+  start: '/'
+  install: true
+  build:
+    - create-sqlite-db
+    - db:wipe
+    - migrate:refresh
