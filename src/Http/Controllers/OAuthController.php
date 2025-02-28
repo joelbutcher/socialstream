@@ -68,7 +68,7 @@ class OAuthController extends Controller
     /**
      * Show the oauth confirmation page.
      */
-    public function prompt(Request $request): RedirectResponse|InertiaResponse
+    public function prompt(Request $request): View|RedirectResponse|InertiaResponse
     {
         $request->validate([
             'provider' => ['required', Rule::in(config('socialstream.providers'))],

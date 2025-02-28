@@ -53,6 +53,10 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->configureRoutes();
         $this->configureCommands();
         $this->configureRefreshTokenResolvers();
+
+        if ($this->app->runningUnitTests()) {
+            $this->loadViewsFrom(__DIR__.'/../resources/views', 'socialstream');
+        }
     }
 
     /**

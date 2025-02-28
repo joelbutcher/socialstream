@@ -3,6 +3,8 @@
 namespace JoelButcher\Socialstream;
 
 use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -52,7 +54,7 @@ class Socialstream
     /**
      * The callback that should be used to prompt the user to confirm their OAuth authorization.
      *
-     * @var ?(Closure(Provider): (Response|RedirectResponse))
+     * @var ?(Closure(Provider): (Response|RedirectResponse|View))
      */
     public static ?Closure $oAuthConfirmationPrompt = null;
 
@@ -290,7 +292,7 @@ class Socialstream
     /**
      * Register a callback that should be used to prompt the user to confirm their OAuth.
      *
-     * @param ?(Closure(Provider): (Response|RedirectResponse)) $callback
+     * @param ?(Closure(Provider): (Response|RedirectResponse|View)) $callback
      */
     public static function promptOAuthLinkUsing(?Closure $callback = null): void
     {
@@ -299,7 +301,7 @@ class Socialstream
 
     public static function getOAuthConfirmationPrompt(): Closure
     {
-        return self::$oAuthConfirmationPrompt ?? function (Provider $provider): Response {
+        return self::$oAuthConfirmationPrompt ?? function (Provider $provider): View|Response {
             return Inertia::render('auth/confirm-link-account', [
                 'provider' => $provider->toArray(),
             ]);
