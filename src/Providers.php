@@ -2,7 +2,6 @@
 
 namespace JoelButcher\Socialstream;
 
-use BadMethodCallException;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Enums\Provider;
 

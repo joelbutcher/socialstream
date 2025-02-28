@@ -5,7 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Enums\Provider;
 use JoelButcher\Socialstream\Socialstream;
-use Livewire\Volt\Volt;
 
 class SocialstreamServiceProvider extends ServiceProvider
 {

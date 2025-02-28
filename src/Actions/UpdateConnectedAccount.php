@@ -2,8 +2,8 @@
 
 namespace JoelButcher\Socialstream\Actions;
 
-use Illuminate\Support\Facades\Gate;
 use App\Models\ConnectedAccount;
+use Illuminate\Support\Facades\Gate;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User;

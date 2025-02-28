@@ -15,6 +15,7 @@ class ConnectedAccount extends Model
 {
     /** @use HasFactory<\Database\Factories\ConnectedAccountFactory> */
     use HasFactory;
+
     use HasOAuth2Tokens;
     use HasTimestamps;
 
@@ -68,7 +69,7 @@ class ConnectedAccount extends Model
         return [
             'created_at' => 'datetime',
             'expires_at' => 'datetime',
-            'provider' => Provider::class
+            'provider' => Provider::class,
         ];
     }
 
