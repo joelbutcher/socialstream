@@ -191,7 +191,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
             event(new OAuthProviderLinkFailed($user, $provider, null, $providerAccount));
 
             return to_route('linked-accounts')
-                ->with('socialstream.error', __('Failed to link :provider account. User denied request.', ['provider' => Providers::name($provider)]));
+                ->with('socialstream.error', __('Failed to link :provider account. User denied the request.', ['provider' => Providers::name($provider)]));
         }
 
         if (! $providerAccount) {
