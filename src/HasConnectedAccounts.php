@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 /**
- * @property Collection $connectedAccounts
+ * @property Collection<int, \App\Models\ConnectedAccount> $connectedAccounts
  */
 trait HasConnectedAccounts
 {
