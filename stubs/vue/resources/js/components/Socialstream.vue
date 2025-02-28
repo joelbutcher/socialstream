@@ -23,10 +23,10 @@ defineProps<{
          <a
             v-for="provider in socialstream.providers"
             :key="provider.id"
-            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm h-9 px-3 py-2 border hover:border-black transition"
+            class="inline-flex items-center justify-center rounded-md px-4 py-2 border hover:border-black transition duration-300 ease-out"
             :href="route('oauth.redirect', { provider: provider.id })"
          >
-            <SocialstreamIcon :provider="provider.id" class="h-6 w-6 mx-2" />
+            <SocialstreamIcon :provider="provider.id" class="h-6 w-6" />
          </a>
       </div>
    </div>
