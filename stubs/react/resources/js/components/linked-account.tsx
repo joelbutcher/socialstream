@@ -17,7 +17,6 @@ import { FormEventHandler, useRef } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { UserInfo } from '@/components/user-info';
-import UpdateAvatar from '@/components/update-avatar';
 
 interface LinkedAccountProps {
     account: ConnectedAccount;
@@ -26,6 +25,19 @@ interface LinkedAccountProps {
 
 export default function LinkedAccount({ account, socialstream }: LinkedAccountProps) {
     const passwordInput = useRef<HTMLInputElement>(null);
+
+    const { patch, processing: updatingAvatar } = useForm({
+        avatar: account.avatar,
+    });
+
+    const updateAvatar: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        patch(route('profile.avatar.update'), {
+            preserveScroll: true,
+        });
+    };
+
 
     const { data, setData, delete: destroy, processing, reset, errors, clearErrors } = useForm({
         password: '',
@@ -48,28 +60,32 @@ export default function LinkedAccount({ account, socialstream }: LinkedAccountPr
     };
 
     return (
-      <div className="flex px-3 py-6 gap-4">
-          <SocialstreamIcon provider={account.provider.id} className="w-5"/>
+      <div className="flex px-6 py-4 gap-4 border rounded-xl">
+          <div className="grid w-full md:grid-cols-2 items-center gap-6">
+              <div className="flex flex-row-reverse md:flex-row justify-between md:justify-start md:items-center gap-3">
+                  <SocialstreamIcon provider={account.provider.id} className="h-6 w-6 md:h-8 md:w-8"/>
 
-          <div className="grid items-center gap-6 grid-cols-2 w-full">
-              <div className="flex items-center justify-between gap-3 md:justify-start">
-                  <UserInfo user={account} showEmail={true} />
+                  <div className="flex items-center justify-center gap-2">
+                      <UserInfo user={account} showEmail={true} />
+                  </div>
               </div>
 
-              <div className="grid items-center gap-4 md:flex md:justify-end">
-                  <UpdateAvatar account={account} />
+              <div className="flex flex-col md:flex-row items-center justify-between md:justify-end gap-3 md:gap-2">
+                  <form onSubmit={updateAvatar} className="flex w-full md:w-auto">
+                      <Button variant="link" type="submit" disabled={updatingAvatar} className="w-full">
+                          Use Avatar
+                      </Button>
+                  </form>
 
                   {!socialstream.hasPassword && (
                     <Tooltip delayDuration={0}>
-                        <TooltipTrigger>
-                            <Button variant="destructive" disabled={!socialstream.hasPassword}>
+                        <TooltipTrigger className="flex w-full md:w-auto">
+                            <Button variant="destructive" disabled={!socialstream.hasPassword} className="w-full">
                                 Unlink
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent side="left">
-                            {!socialstream.hasPassword && (
-                              <p>You must set a password to unlink this account.</p>
-                            )}
+                            <p>Set a password to unlink this account</p>
                         </TooltipContent>
                     </Tooltip>
                   )}
@@ -77,7 +93,7 @@ export default function LinkedAccount({ account, socialstream }: LinkedAccountPr
                   {account && socialstream.hasPassword && (
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button variant="destructive" disabled={!socialstream.hasPassword}>
+                            <Button variant="destructive" disabled={!socialstream.hasPassword} className="w-full md:w-auto">
                                 Unlink
                             </Button>
                         </DialogTrigger>

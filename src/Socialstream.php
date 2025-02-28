@@ -3,7 +3,6 @@
 namespace JoelButcher\Socialstream;
 
 use Closure;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -53,7 +52,7 @@ class Socialstream
     /**
      * The callback that should be used to prompt the user to confirm their OAuth authorization.
      *
-     * @var ?(Closure(Provider): (Response|View))
+     * @var ?(Closure(Provider): (Response|RedirectResponse))
      */
     public static ?Closure $oAuthConfirmationPrompt = null;
 
@@ -112,6 +111,14 @@ class Socialstream
     public static function divideText(): string
     {
         return config('socialstream.divide_text');
+    }
+
+    /**
+     * Attemp to get a provider for the given input.
+     */
+    public static function provider(Provider|string $provider): Provider
+    {
+        return is_string($provider) ? Provider::from($provider) : $provider;
     }
 
     /**
@@ -283,7 +290,7 @@ class Socialstream
     /**
      * Register a callback that should be used to prompt the user to confirm their OAuth.
      *
-     * @param ?(Closure(Provider): (Response|View)) $callback
+     * @param ?(Closure(Provider): (Response|RedirectResponse)) $callback
      */
     public static function promptOAuthLinkUsing(?Closure $callback = null): void
     {
@@ -292,7 +299,7 @@ class Socialstream
 
     public static function getOAuthConfirmationPrompt(): Closure
     {
-        return self::$oAuthConfirmationPrompt ?? function (Provider $provider): Response|View {
+        return self::$oAuthConfirmationPrompt ?? function (Provider $provider): Response {
             return Inertia::render('auth/confirm-link-account', [
                 'provider' => $provider->toArray(),
             ]);

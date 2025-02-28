@@ -59,17 +59,14 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return self::FAILURE;
         }
 
-        $stack = $this->stack();
+        $this->installFor(
+            $stack = $this->stack()
+        );
 
-        // $tester = $this->tester();
-        // @todo publish tests for given $tester
-
-        $this->installFor($stack);
+        $this->runDatabaseMigrations();
 
         $this->runCommands(['npm install', 'npm run build']);
         $this->line('');
-
-        $this->runDatabaseMigrations();
 
         $this->components->info("Socialstream has been installed for the $stack starter kit.");
 
@@ -77,26 +74,33 @@ class InstallCommand extends Command implements PromptsForMissingInput
     }
 
     /**
-     * Determine if Socialstream is already installed.
-     */
-    protected function alreadyInstalled(): bool
-    {
-        return file_exists(config_path('socialstream.php'));
-    }
-
-    /**
-     * Determine if Socialstream conflicts with WorkOS.
-     */
-    protected function conflictsWithWorkOS(): bool
-    {
-        return $this->hasComposerPackage('laravel/workos');
-    }
-
-    /**
      * Install Socialstream for the given stack.
      */
     protected function installFor(string $stack): void
     {
+        $this->ensureDirectoriesExist([
+            app_path('Models'),
+            app_path('Models/Providers'),
+            database_path('factories'),
+        ]);
+
+        $this->publishConfigAndMigrations();
+
+        ServiceProvider::addProviderToBootstrapFile('JoelButcher\Socialstream\SocialstreamServiceProvider');
+
+        // Models
+        $this->copyFiles([
+            __DIR__.'/../../stubs/app/Models/User.php' => app_path('Models/User.php'),
+            __DIR__.'/../../stubs/app/Models/ConnectedAccount.php' => app_path('Models/ConnectedAccount.php'),
+            __DIR__.'/../../stubs/database/Factories/ConnectedAccountFactory.php' => database_path('factories/ConnectedAccountFactory.php'),
+        ]);
+
+        // Stack specific service provider
+        $this->copyFiles([
+            __DIR__."/../../stubs/$stack/app/Providers/SocialstreamServiceProvider.php" => app_path('Providers/SocialstreamServiceProvider.php'),
+        ]);
+        ServiceProvider::addProviderToBootstrapFile('App\Providers\SocialstreamServiceProvider');
+
         if (in_array($stack, ['react', 'vue'])) {
             $this->installInertia();
 
@@ -112,19 +116,211 @@ class InstallCommand extends Command implements PromptsForMissingInput
     }
 
     /**
-     * Run the database migrations.
-     *
-     * @return void
+     * Install Socialstream for either the React, or Vue starter kit.
      */
-    protected function runDatabaseMigrations(): void
+    protected function installInertia(): void
     {
-        if (confirm('New database migrations were added. Would you like to re-run your migrations?', true)) {
-            (new Process([$this->phpBinary(), 'artisan', 'migrate:fresh', '--force'], base_path()))
+        $this->ensureDirectoriesExist([
+            app_path('Http/Middleware'),
+            resource_path('js/types'),
+        ]);
+
+        // Middleware
+        $this->copyFiles([
+            __DIR__.'/../../stubs/inertia/app/Http/Middleware/HandleInertiaRequests.php' => app_path('Http/Middleware/HandleInertiaRequests.php'),
+        ]);
+
+        // Types
+        $this->copyFiles([
+            __DIR__.'/../../stubs/inertia/resources/js/types/index.ts' => resource_path('js/types/index.ts'),
+            __DIR__.'/../../stubs/inertia/resources/js/types/socialstream.ts' => resource_path('js/types/socialstream.ts'),
+        ]);
+    }
+
+    /**
+     * Install Socialstream for the React starter kit.
+     */
+    protected function installReact(): void
+    {
+        $this->ensureDirectoriesExist([
+            app_path('Http/Controllers/Settings'),
+            resource_path('js/components/SocialstreamIcons'),
+            resource_path('js/components'),
+            resource_path('js/layouts/settings'),
+            resource_path('js/pages/auth'),
+            resource_path('js/pages/settings'),
+        ]);
+
+        // Controllers
+        $this->copyFiles([
+            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/AvatarController.php' => app_path('Http/Controllers/Settings/AvatarController.php'),
+            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/LinkedAccountController.php' => app_path('Http/Controllers/Settings/LinkedAccountController.php'),
+            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/PasswordController.php' => app_path('Http/Controllers/Settings/PasswordController.php'),
+            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/ProfileController.php' => app_path('Http/Controllers/Settings/ProfileController.php'),
+        ]);
+
+        // Components
+        $this->copyFiles([
+            __DIR__.'/../../stubs/react/resources/js/components/linked-account.tsx' => resource_path('js/components/linked-account.tsx'),
+            __DIR__.'/../../stubs/react/resources/js/components/socialstream.tsx' => resource_path('js/components/socialstream.tsx'),
+            __DIR__.'/../../stubs/react/resources/js/components/socialstream-icon.tsx' => resource_path('js/components/socialstream-icon.tsx'),
+            __DIR__.'/../../stubs/react/resources/js/components/user-info.tsx' => resource_path('js/components/user-info.tsx'),
+        ]);
+
+        // Layouts
+        $this->copyFiles([
+            __DIR__.'/../../stubs/react/resources/js/layouts/settings/layout.tsx' => resource_path('js/layouts/settings/layout.tsx'),
+        ]);
+
+        // Auth Pages
+        $this->copyFiles([
+            __DIR__.'/../../stubs/react/resources/js/pages/auth/confirm-link-account.tsx' => resource_path('js/pages/auth/confirm-link-account.tsx'),
+            __DIR__.'/../../stubs/react/resources/js/pages/auth/login.tsx' => resource_path('js/pages/auth/login.tsx'),
+            __DIR__.'/../../stubs/react/resources/js/pages/auth/register.tsx' => resource_path('js/pages/auth/register.tsx'),
+        ]);
+
+        // Settings Pages
+        $this->copyFiles([
+            __DIR__.'/../../stubs/react/resources/js/pages/settings/linked-accounts.tsx' => resource_path('js/pages/settings/linked-accounts.tsx'),
+            __DIR__.'/../../stubs/react/resources/js/pages/settings/password.tsx' => resource_path('js/pages/settings/password.tsx'),
+        ]);
+
+        // Routes
+        $this->copyFiles([
+            __DIR__.'/../../stubs/react/routes/settings.php' => base_path('routes/settings.php'),
+        ]);
+    }
+
+    /**
+     * Install Socialstream for the Vue starter kit.
+     */
+    protected function installVue(): void
+    {
+        $this->ensureDirectoriesExist([
+            app_path('Http/Controllers/Settings'),
+            resource_path('js/components/SocialstreamIcons'),
+            resource_path('js/components'),
+            resource_path('js/layouts/settings'),
+            resource_path('js/pages/auth'),
+            resource_path('js/pages/settings'),
+        ]);
+
+        // Controllers
+        $this->copyFiles([
+            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/AvatarController.php' => app_path('Http/Controllers/Settings/AvatarController.php'),
+            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/LinkedAccountController.php' => app_path('Http/Controllers/Settings/LinkedAccountController.php'),
+            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/PasswordController.php' => app_path('Http/Controllers/Settings/PasswordController.php'),
+            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/ProfileController.php' => app_path('Http/Controllers/Settings/ProfileController.php'),
+        ]);
+
+        // Icons
+        (new Filesystem())->copyDirectory(__DIR__.'/../../stubs/vue/resources/js/components/SocialstreamIcons', resource_path('js/components/SocialstreamIcons'));
+
+        // Components
+        $this->copyFiles([
+            __DIR__.'/../../stubs/vue/resources/js/components/LinkedAccount.vue' => resource_path('js/components/LinkedAccount.vue'),
+            __DIR__.'/../../stubs/vue/resources/js/components/Socialstream.vue' => resource_path('js/components/Socialstream.vue'),
+            __DIR__.'/../../stubs/vue/resources/js/components/SocialstreamIcon.vue' => resource_path('js/components/SocialstreamIcon.vue'),
+            __DIR__.'/../../stubs/vue/resources/js/components/UserInfo.vue' => resource_path('js/components/UserInfo.vue'),
+        ]);
+
+        // Layouts
+        $this->copyFiles([
+            __DIR__.'/../../stubs/vue/resources/js/layouts/settings/Layout.vue' => resource_path('js/layouts/settings/Layout.vue'),
+        ]);
+
+        // Auth Pages
+        $this->copyFiles([
+            __DIR__.'/../../stubs/vue/resources/js/pages/auth/ConfirmLinkAccount.vue' => resource_path('js/pages/auth/ConfirmLinkAccount.vue'),
+            __DIR__.'/../../stubs/vue/resources/js/pages/auth/Login.vue' => resource_path('js/pages/auth/Login.vue'),
+            __DIR__.'/../../stubs/vue/resources/js/pages/auth/Register.vue' => resource_path('js/pages/auth/Register.vue'),
+        ]);
+
+        // Settings Pages
+        $this->copyFiles([
+            __DIR__.'/../../stubs/vue/resources/js/pages/settings/LinkedAccounts.vue' => resource_path('js/pages/settings/LinkedAccounts.vue'),
+            __DIR__.'/../../stubs/vue/resources/js/pages/settings/Password.vue' => resource_path('js/pages/settings/Password.vue'),
+        ]);
+
+        // Routes
+        $this->copyFiles([
+            __DIR__.'/../../stubs/vue/routes/settings.php' => base_path('routes/settings.php'),
+        ]);
+    }
+
+    /**
+     * Install Socialstream for the Livewire starter kit.
+     */
+    protected function installLivewire(): void
+    {
+        $this->ensureDirectoriesExist([
+            resource_path('views/components/layouts/app'),
+            resource_path('views/components/layouts/settings'),
+            resource_path('views/components/socialstream-icons'),
+            resource_path('views/livewire/auth'),
+            resource_path('views/livewire/settings'),
+        ]);
+
+        // Layouts
+        $this->copyFiles([
+            __DIR__.'/../../stubs/livewire/resources/views/components/layouts/app/sidebar.blade.php' => resource_path('views/components/layouts/app/sidebar.blade.php'),
+            __DIR__.'/../../stubs/livewire/resources/views/components/layouts/settings/layout.blade.php' => resource_path('views/components/layouts/settings/layout..blade.php'),
+        ]);
+
+        // Icons
+        (new Filesystem())->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
+
+        // Components
+        $this->copyFiles([
+            __DIR__.'/../../stubs/livewire/resources/views/components/socialstream.blade.php' => resource_path('views/components/socialstream.blade.php'),
+            __DIR__.'/../../stubs/livewire/resources/views/components/socialstream-icon.blade.php' => resource_path('views/components/socialstream-icon.blade.php'),
+        ]);
+
+        // Auth Views
+        $this->copyFiles([
+            __DIR__.'/../../stubs/livewire/resources/views/livewire/auth/confirm-link-account.blade.php' => resource_path('views/livewire/auth/confirm-link-account.blade.php'),
+            __DIR__.'/../../stubs/livewire/resources/views/livewire/auth/login.blade.php' => resource_path('views/livewire/auth/login.blade.php'),
+            __DIR__.'/../../stubs/livewire/resources/views/livewire/auth/register.blade.php' => resource_path('views/livewire/auth/register.blade.php'),
+        ]);
+
+        // Settings Views
+        $this->copyFiles([
+            __DIR__.'/../../stubs/livewire/resources/views/livewire/settings/linked-account.blade.php' => resource_path('views/livewire/settings/linked-account.blade.php'),
+            __DIR__.'/../../stubs/livewire/resources/views/livewire/settings/linked-accounts.blade.php' => resource_path('views/livewire/settings/linked-accounts.blade.php'),
+            __DIR__.'/../../stubs/livewire/resources/views/livewire/settings/password.blade.php' => resource_path('views/livewire/settings/password.blade.php'),
+            __DIR__.'/../../stubs/livewire/resources/views/livewire/settings/update-avatar.blade.php' => resource_path('views/livewire/settings/update-avatar.blade.php'),
+        ]);
+
+        // Routes
+        $this->copyFiles([
+            __DIR__.'/../../stubs/livewire/routes/web.php' => base_path('routes/web.php'),
+        ]);
+    }
+
+    /**
+     * Call the underlying vendor:publish commands to publish the Socialstream config and migrations.
+     */
+    protected function publishConfigAndMigrations(): static
+    {
+        spin(callback: function () {
+            $outputStyle = new BufferedOutput;
+
+            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config'], base_path()))
                 ->setTimeout(null)
-                ->run(function ($type, $output) {
-                    $this->output->write($output);
+                ->run(function ($type, $output) use ($outputStyle) {
+                    $outputStyle->write($output);
                 });
-        }
+
+            if (! $this->migrationsExist()) {
+                (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations'], base_path()))
+                    ->setTimeout(null)
+                    ->run(function ($type, $output) use ($outputStyle) {
+                        $outputStyle->write($output);
+                    });
+            }
+        }, message: 'Publishing config and migration');
+
+        return $this;
     }
 
     /**
@@ -179,195 +375,24 @@ class InstallCommand extends Command implements PromptsForMissingInput
     }
 
     /**
-     * Determine which tester to install Socialstream for.
+     * Determine if Socialstream is already installed.
      */
-    protected function tester(): string
+    protected function alreadyInstalled(): bool
     {
-        return class_exists(\Pest\TestSuite::class) ? 'pest' : 'phpunit';
+        return file_exists(config_path('socialstream.php'));
     }
 
     /**
-     * Install Socialstream for either the React, or Vue starter kit.
+     * Determine if Socialstream conflicts with WorkOS.
      */
-    protected function installInertia(): void
+    protected function conflictsWithWorkOS(): bool
     {
-        $this->publishFiles();
-
-        ServiceProvider::addProviderToBootstrapFile('JoelButcher\Socialstream\SocialstreamServiceProvider');
-
-        $this->ensureDirectoriesExist([
-            app_path('Http/Controllers/Settings'),
-            resource_path('js/components'),
-            resource_path('js/layouts/settings'),
-            resource_path('js/pages/auth'),
-            resource_path('js/pages/settings'),
-            resource_path('js/types'),
-        ]);
-
-        // Models
-        $this->copyFiles([
-           __DIR__.'/../../stubs/app/models/User.php' => app_path('Models/User.php'),
-           __DIR__.'/../../stubs/app/models/ConnectedAccount.php' => app_path('Models/ConnectedAccount.php'),
-        ]);
-
-        // Middleware
-        $this->copyFiles([
-            __DIR__.'/../../stubs/inertia/app/Http/Middleware/HandleInertiaRequests.php' => app_path('Http/Middleware/HandleInertiaRequests.php'),
-        ]);
-
-        // Types
-        $this->copyFiles([
-            __DIR__.'/../../stubs/inertia/resources/js/types/index.ts' => resource_path('js/types/index.ts'),
-            __DIR__.'/../../stubs/inertia/resources/js/types/socialstream.ts' => resource_path('js/types/socialstream.ts'),
-        ]);
+        return $this->hasComposerPackage('laravel/workos');
     }
 
     /**
-     * Install Socialstream for the React starter kit.
+     * Determine if the migrations already exist.
      */
-    protected function installReact(): void
-    {
-        // Service Provider
-        $this->copyFiles([
-            __DIR__.'/../../stubs/react/app/Providers/SocialstreamServiceProvider.php' => app_path('Providers/SocialstreamServiceProvider.php'),
-        ]);
-
-        ServiceProvider::addProviderToBootstrapFile('App\Providers\SocialstreamServiceProvider');
-
-        // Routes
-        $this->copyFiles([
-            __DIR__.'/../../stubs/react/routes/settings.php' => base_path('routes/settings.php'),
-        ]);
-
-        // Controllers
-        $this->copyFiles([
-            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/AvatarController.php' => app_path('Http/Controllers/Settings/AvatarController.php'),
-            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/LinkedAccountController.php' => app_path('Http/Controllers/Settings/LinkedAccountController.php'),
-            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/PasswordController.php' => app_path('Http/Controllers/Settings/PasswordController.php'),
-            __DIR__.'/../../stubs/react/app/Http/Controllers/Settings/ProfileController.php' => app_path('Http/Controllers/Settings/ProfileController.php'),
-        ]);
-
-        // Components
-        $this->copyFiles([
-            __DIR__.'/../../stubs/react/resources/js/components/linked-account.tsx' => resource_path('js/components/linked-account.tsx'),
-            __DIR__.'/../../stubs/react/resources/js/components/socialstream.tsx' => resource_path('js/components/socialstream.tsx'),
-            __DIR__.'/../../stubs/react/resources/js/components/socialstream-icon.tsx' => resource_path('js/components/socialstream-icon.tsx'),
-            __DIR__.'/../../stubs/react/resources/js/components/update-avatar.tsx' => resource_path('js/components/update-avatar.tsx'),
-            __DIR__.'/../../stubs/react/resources/js/components/user-info.tsx' => resource_path('js/components/user-info.tsx'),
-        ]);
-
-        // Layouts
-        $this->copyFiles([
-            __DIR__.'/../../stubs/react/resources/js/layouts/settings/layout.tsx' => resource_path('js/layouts/settings/layout.tsx'),
-        ]);
-
-        // Auth Pages
-        $this->copyFiles([
-            __DIR__.'/../../stubs/react/resources/js/pages/auth/confirm-link-account.tsx' => resource_path('js/pages/auth/confirm-link-account.tsx'),
-            __DIR__.'/../../stubs/react/resources/js/pages/auth/login.tsx' => resource_path('js/pages/auth/login.tsx'),
-            __DIR__.'/../../stubs/react/resources/js/pages/auth/register.tsx' => resource_path('js/pages/auth/register.tsx'),
-        ]);
-
-        // Settings Pages
-        $this->copyFiles([
-            __DIR__.'/../../stubs/react/resources/js/pages/settings/linked-accounts.tsx' => resource_path('js/pages/settings/linked-accounts.tsx'),
-            __DIR__.'/../../stubs/react/resources/js/pages/settings/password.tsx' => resource_path('js/pages/settings/password.tsx'),
-        ]);
-    }
-
-    /**
-     * Install Socialstream for the Vue starter kit.
-     */
-    protected function installVue(): void
-    {
-        // Service Provider
-        $this->copyFiles([
-            __DIR__.'/../../stubs/vue/app/Providers/SocialstreamServiceProvider.php' => app_path('Providers/SocialstreamServiceProvider.php'),
-        ]);
-
-        ServiceProvider::addProviderToBootstrapFile('App\Providers\SocialstreamServiceProvider');
-
-        // Routes
-        $this->copyFiles([
-            __DIR__.'/../../stubs/vue/routes/settings.php' => base_path('routes/settings.php'),
-        ]);
-
-        // Controllers
-        $this->copyFiles([
-            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/AvatarController.php' => app_path('Http/Controllers/Settings/AvatarController.php'),
-            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/LinkedAccountController.php' => app_path('Http/Controllers/Settings/LinkedAccountController.php'),
-            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/PasswordController.php' => app_path('Http/Controllers/Settings/PasswordController.php'),
-            __DIR__.'/../../stubs/vue/app/Http/Controllers/Settings/ProfileController.php' => app_path('Http/Controllers/Settings/ProfileController.php'),
-        ]);
-
-        // Components
-        $this->copyFiles([
-            __DIR__.'/../../stubs/vue/resources/js/components/LinkedAccount.vue' => resource_path('js/components/LinkedAccount.vue'),
-            __DIR__.'/../../stubs/vue/resources/js/components/Socialstream.vue' => resource_path('js/components/Socialstream.vue'),
-            __DIR__.'/../../stubs/vue/resources/js/components/SocialstreamIcon.vue' => resource_path('js/components/SocialstreamIcon.vue'),
-            __DIR__.'/../../stubs/vue/resources/js/components/UpdateAvatar.vue' => resource_path('js/components/UpdateAvatar.vue'),
-            __DIR__.'/../../stubs/vue/resources/js/components/UserInfo.vue' => resource_path('js/components/UserInfo.vue'),
-        ]);
-
-        // Layouts
-        $this->copyFiles([
-            __DIR__.'/../../stubs/vue/resources/js/layouts/settings/Layout.vue' => resource_path('js/layouts/settings/Layout.vue'),
-        ]);
-
-        // Auth Pages
-        $this->copyFiles([
-            __DIR__.'/../../stubs/vue/resources/js/pages/auth/ConfirmLinkAccount.vue' => resource_path('js/pages/auth/ConfirmLinkAccount.vue'),
-            __DIR__.'/../../stubs/vue/resources/js/pages/auth/Login.vue' => resource_path('js/pages/auth/Login.vue'),
-            __DIR__.'/../../stubs/vue/resources/js/pages/auth/Register.vue' => resource_path('js/pages/auth/Register.vue'),
-        ]);
-
-        // Settings Pages
-        $this->copyFiles([
-            __DIR__.'/../../stubs/vue/resources/js/pages/settings/LinkedAccounts.vue' => resource_path('js/pages/settings/LinkedAccounts.vue'),
-            __DIR__.'/../../stubs/vue/resources/js/pages/settings/Password.vue' => resource_path('js/pages/settings/Password.vue'),
-        ]);
-    }
-
-    /**
-     * Install Socialstream for the Livewire starter kit.
-     */
-    protected function installLivewire(): void
-    {
-        // @todo
-    }
-
-    /**
-     * Call the underlying vendor:publish command to publish the Socialstream config and required migrations.
-     */
-    protected function publishFiles(): static
-    {
-        spin(callback: function () {
-            $outputStyle = new BufferedOutput;
-
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-config'], base_path()))
-                ->setTimeout(null)
-                ->run(function ($type, $output) use ($outputStyle) {
-                    $outputStyle->write($output);
-                });
-
-            if (! $this->migrationsExist()) {
-                (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-migrations'], base_path()))
-                    ->setTimeout(null)
-                    ->run(function ($type, $output) use ($outputStyle) {
-                        $outputStyle->write($output);
-                    });
-            }
-
-            (new Process([$this->phpBinary(), 'artisan', 'vendor:publish', '--tag=socialstream-routes'], base_path()))
-                ->setTimeout(null)
-                ->run(function ($type, $output) use ($outputStyle) {
-                    $outputStyle->write($output);
-                });
-        }, message: 'Publishing config, migration and route files');
-
-        return $this;
-    }
-
     protected function migrationsExist(): bool
     {
         $stubs = ['update_users_table.php', 'create_connected_accounts_table.php'];
@@ -407,6 +432,20 @@ class InstallCommand extends Command implements PromptsForMissingInput
         foreach ($files as $location => $destination) {
             $filesystem->ensureDirectoryExists(dirname($destination));
             $filesystem->copy($location, $destination);
+        }
+    }
+
+    /**
+     * Run the database migrations.
+     */
+    protected function runDatabaseMigrations(): void
+    {
+        if (confirm('New database migrations were added. Would you like to re-run your migrations?', true)) {
+            (new Process([$this->phpBinary(), 'artisan', 'migrate:fresh', '--force'], base_path()))
+                ->setTimeout(null)
+                ->run(function ($type, $output) {
+                    $this->output->write($output);
+                });
         }
     }
 

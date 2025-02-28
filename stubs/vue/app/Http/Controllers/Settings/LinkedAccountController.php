@@ -26,12 +26,12 @@ class LinkedAccountController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
-        event(new ConnectedAccountDeleted($account));
-
         $account->delete();
 
+        event(new ConnectedAccountDeleted($account));
+
         return redirect()->route('linked-accounts')->with(
-            'status', __('Your :provider account has been unlinked.', ['provider' => Providers::name($account->provider)])
+            'status', __(':provider account unlinked.', ['provider' => Providers::name($account->provider)])
         );
     }
 }
