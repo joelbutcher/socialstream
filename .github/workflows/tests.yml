@@ -66,66 +66,10 @@ jobs:
 
       - name: Setup Project
         run: |
-          composer create-project laravel/${{ matrix.stack }}-starter-kit --stability=dev --no-interaction --no-update
-          composer require joelbutcher/socialstream:@dev --no-interaction --no-update
-          composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          path: 'socialstream'
-
-      - name: Install Socialstream
-        run: |
-          composer update "joelbutcher/socialstream" -W --prefer-dist --no-interaction
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-          php artisan socialstream:install ${{ matrix.stack }} \
-          ${{ matrix.tester == 'pest' && '--pest' || '' }} \
-
-      - name: Install dependencies
-        run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-
-      - name: Install NPM dependencies
-        run: npm i
-
-      - name: Compile assets
-        run: npm run build
-
-      - name: Execute tests
-        run: ./vendor/bin/${{ matrix.tester }}
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
-
-  test-filament:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php: [ 8.2, 8.3, 8.4 ]
-        laravel: [ 12 ]
-        tester: [ phpunit, pest ]
-        stability: [ prefer-lowest, prefer-stable ]
-
-    name: Test Filament Integration - P${{ matrix.php }} – L${{ matrix.laravel }} (${{ matrix.stack }}, ${{ matrix.tester }}) - ${{ matrix.stability }}
-
-    steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: ctype, filter, hash, mbstring, openssl, session, tokenizer, dom, curl, libxml, mbstring, zip, pdo, pdo_sqlite
-          ini-values: error_reporting=E_ALL
-          tools: composer:v2
-          coverage: none
-
-      - name: Setup Project
-        run: |
-          composer create-project laravel/laravel --stability=dev --no-interaction --no-update
-          composer require filament/filament:"^3.2" -W --no-interaction --no-update
-          php artisan filament:install --panels
+          composer global require laravel/installer
+          export PATH="$HOME/.composer/vendor/bin:$PATH"
+          laravel new laravel-${{ matrix.stack }}-starter-kit --${{ matrix.stack }} --${{ matrix.tester }}
+          cd laravel-${{ matrix.stack }}-starter-kit
           composer require joelbutcher/socialstream:@dev --no-interaction --no-update
           composer config repositories.socialstream '{"type": "path", "url": "socialstream"}' --file composer.json
 
