@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use JoelButcher\Socialstream\ConnectedAccount as SocialstreamConnectedAccount;
-use JoelButcher\Socialstream\Enums\Provider;
 use JoelButcher\Socialstream\Events\ConnectedAccountCreated;
 use JoelButcher\Socialstream\Events\ConnectedAccountDeleted;
 use JoelButcher\Socialstream\Events\ConnectedAccountUpdated;
@@ -16,6 +15,7 @@ class ConnectedAccount extends SocialstreamConnectedAccount
 {
     /** @use HasFactory<\Database\Factories\ConnectedAccountFactory> */
     use HasFactory;
+
     use HasTimestamps;
 
     /**

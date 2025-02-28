@@ -292,7 +292,7 @@ class Socialstream
     /**
      * Register a callback that should be used to prompt the user to confirm their OAuth.
      *
-     * @param ?(Closure(Provider): (Response|RedirectResponse|View)) $callback
+     * @param  ?(Closure(Provider): (Response|RedirectResponse|View))  $callback
      */
     public static function promptOAuthLinkUsing(?Closure $callback = null): void
     {

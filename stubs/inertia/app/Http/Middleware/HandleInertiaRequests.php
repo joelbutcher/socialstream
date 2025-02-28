@@ -51,7 +51,7 @@ class HandleInertiaRequests extends Middleware
                 'error' => $request->session()->get('socialstream.error'),
                 'providers' => Socialstream::providers()->toArray(),
                 'hasPassword' => $request->user() && ! is_null($request->user()->getAuthPassword()),
-            ]
+            ],
         ];
     }
 }

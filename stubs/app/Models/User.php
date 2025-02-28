@@ -11,9 +11,10 @@ use JoelButcher\Socialstream\HasConnectedAccounts;
 
 class User extends Authenticatable
 {
+    use HasConnectedAccounts;
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    use HasConnectedAccounts;
     use HasFactory, Notifiable;
 
     /**

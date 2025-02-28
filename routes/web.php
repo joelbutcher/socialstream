@@ -5,7 +5,7 @@ use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 
 Route::group([
     'prefix' => config('socialstream.prefix', config('socialstream.path')),
-    'middleware' => config('socialstream.middleware', ['web'])
+    'middleware' => config('socialstream.middleware', ['web']),
 ], function () {
     Route::get('/oauth/confirm', [OAuthController::class, 'prompt'])->name('oauth.confirm.show');
     Route::post('/oauth/confirm', [OAuthController::class, 'confirm'])->name(

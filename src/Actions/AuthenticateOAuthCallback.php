@@ -80,13 +80,12 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
         $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
         $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
-
-        if (!$account && !$user) {
+        if (! $account && ! $user) {
             return $this->register($request, $provider, $providerAccount);
         }
 
         // This should never happen...
-        if ($account && !$user) {
+        if ($account && ! $user) {
             // Notify the developers something went wrong.
             report(new \DomainException(
                 message: 'Could not retrieve user information.',
@@ -97,7 +96,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallback
                 ->with('socialstream.error', 'These credentials do not match our records.');
         }
 
-        if ($user && !$account) {
+        if ($user && ! $account) {
             if (! Features::authenticatesExistingUnlinkedUsers()) {
                 return to_route('login')
                     ->with('socialstream.error', 'These credentials do not match our records.');

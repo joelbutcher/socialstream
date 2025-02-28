@@ -2,9 +2,9 @@
 
 namespace JoelButcher\Socialstream\Policies;
 
+use App\Models\ConnectedAccount;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\ConnectedAccount;
 
 class ConnectedAccountPolicy
 {

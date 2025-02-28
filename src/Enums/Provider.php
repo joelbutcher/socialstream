@@ -4,7 +4,6 @@ namespace JoelButcher\Socialstream\Enums;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
-use JoelButcher\Socialstream\Providers;
 use JsonSerializable;
 
 enum Provider: string implements Arrayable, JsonSerializable

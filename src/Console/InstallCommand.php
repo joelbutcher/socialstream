@@ -9,7 +9,6 @@ use Illuminate\Support\ServiceProvider;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
-
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
 
@@ -104,7 +103,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         if (in_array($stack, ['react', 'vue'])) {
             $this->installInertia();
 
-            match($stack) {
+            match ($stack) {
                 'react' => $this->installReact(),
                 'vue' => $this->installVue(),
             };
@@ -214,7 +213,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         ]);
 
         // Icons
-        (new Filesystem())->copyDirectory(__DIR__.'/../../stubs/vue/resources/js/components/SocialstreamIcons', resource_path('js/components/SocialstreamIcons'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/vue/resources/js/components/SocialstreamIcons', resource_path('js/components/SocialstreamIcons'));
 
         // Components
         $this->copyFiles([
@@ -268,7 +267,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         ]);
 
         // Icons
-        (new Filesystem())->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/livewire/resources/views/components/socialstream-icons', resource_path('views/components/socialstream-icons'));
 
         // Components
         $this->copyFiles([
