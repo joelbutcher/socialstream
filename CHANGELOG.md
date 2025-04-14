@@ -1,6 +1,19 @@
 # Release Notes
 
-## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.2.4...6.x)
+## [Unreleased](https://github.com/joelbutcher/socialstream/compare/v6.3.0...6.x)
+
+## [v6.3.0](https://github.com/joelbutcher/socialstream/compare/v6.2.4...v6.3.0) - 2025-04-14
+
+### What's Changed
+
+* [6.x] Laravel 12 support by [@MichelYpma](https://github.com/MichelYpma) in https://github.com/joelbutcher/socialstream/pull/399
+* [6.x] fix: composer dependencies by [@joelbutcher](https://github.com/joelbutcher) in https://github.com/joelbutcher/socialstream/pull/401
+
+### New Contributors
+
+* [@MichelYpma](https://github.com/MichelYpma) made their first contribution in https://github.com/joelbutcher/socialstream/pull/399
+
+**Full Changelog**: https://github.com/joelbutcher/socialstream/compare/v6.2.4...v6.3.0
 
 ## [v6.2.4](https://github.com/joelbutcher/socialstream/compare/v6.2.3...v6.2.4) - 2025-02-19
 
